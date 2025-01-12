@@ -19,6 +19,7 @@
     "build-storybook": "storybook build"
   },
   "devDependencies": {
+    "@capacitor/cli": "^6.2.0",
     "@chromatic-com/storybook": "^3.2.3",
     "@playwright/test": "^1.45.3",
     "@storybook/addon-essentials": "^8.4.7",
@@ -40,6 +41,9 @@
     "vitest": "^2.0.4"
   },
   "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/ios": "^6.2.0",
     "@inlang/paraglide-sveltekit": "^0.11.1",
     "drizzle-orm": "^0.33.0",
     "postgres": "^3.4.4"
