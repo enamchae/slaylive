@@ -23,6 +23,9 @@ dependencies:
   postgres:
     specifier: ^3.4.4
     version: 3.4.5
+  ws:
+    specifier: ^8.18.0
+    version: 8.18.0
 
 devDependencies:
   '@capacitor/cli':
@@ -64,6 +67,9 @@ devDependencies:
   '@sveltejs/vite-plugin-svelte':
     specifier: ^4.0.0
     version: 4.0.4(svelte@5.17.3)(vite@5.4.11)
+  '@types/ws':
+    specifier: ^8.5.13
+    version: 8.5.13
   drizzle-kit:
     specifier: ^0.22.0
     version: 0.22.8
@@ -85,6 +91,9 @@ devDependencies:
   vite:
     specifier: ^5.4.11
     version: 5.4.11(sass@1.83.1)
+  vite-node:
+    specifier: ^2.1.8
+    version: 2.1.8(sass@1.83.1)
   vitest:
     specifier: ^2.0.4
     version: 2.1.8(sass@1.83.1)
@@ -2547,6 +2556,12 @@ packages:
     resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
     dev: true
 
+  /@types/ws@8.5.13:
+    resolution: {integrity: sha512-osM/gWBTPKgHV8XkTunnegTRIsvF6owmf5w+JtAfOw472dptdm0dlGv4xCt6GwQRcC2XVOvvRE/0bAoQcL2QkA==}
+    dependencies:
+      '@types/node': 22.10.5
+    dev: true
+
   /@vitest/expect@2.0.5:
     resolution: {integrity: sha512-yHZtwuP7JZivj65Gxoi8upUN2OzHTi3zVfjwdpu2WrvCZPLwsJ2Ey5ILIPccoW23dd/zQBlJ4/dhi7DWNyXCpA==}
     dependencies:
@@ -3986,6 +4001,7 @@ packages:
   /is-extglob@2.1.1:
     resolution: {integrity: sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
 
   /is-fullwidth-code-point@3.0.0:
     resolution: {integrity: sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==}
@@ -5446,7 +5462,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-    dev: true
 
   /xml2js@0.5.0:
     resolution: {integrity: sha512-drPFnkQJik/O+uPKpqSgr22mpuFHqKdbS835iAQrUC73L2F5WkboIRd63ai/2Yg6I1jzifPFKH2NTK+cfglkIA==}

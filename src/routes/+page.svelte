@@ -1,4 +1,6 @@
 <script lang="ts">
+import Chat from "$stories/Chat.svelte";
+
 let video = $state<HTMLVideoElement | null>(null);
 
 const startStream = async () => {
@@ -10,8 +12,10 @@ const startStream = async () => {
     <button onclick={startStream}>Start</button>
     <video
         bind:this={video}
-    autoplay
+        autoplay
     ></video>
+
+    <Chat />
 </div>
 
 
@@ -19,5 +23,9 @@ const startStream = async () => {
 div {
     display: flex;
     flex-direction: column;
+
+    > * {
+        width: 100%;
+    }
 }
 </style>
