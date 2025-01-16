@@ -1,25 +1,27 @@
 <script lang="ts">
-import Chat from "$stories/Chat.svelte";
+import Backstage from "$stories/Backstage.svelte";
 
-let video = $state<HTMLVideoElement | null>(null);
+// let video = $state<HTMLVideoElement | null>(null);
 
-const startStream = async () => {
-    video!.srcObject = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
-};
+// const startStream = async () => {
+//     video!.srcObject = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+// };
 </script>
 
+<Backstage />
+
+<!-- 
 <div>
     <button onclick={startStream}>Start</button>
     <video
         bind:this={video}
         autoplay
-    ></video>
+    ></video> -->
 
-    <Chat />
-</div>
+<!-- </div> -->
 
 
-<style lang="scss">
+<!-- <style lang="scss">
 div {
     display: flex;
     flex-direction: column;
@@ -28,4 +30,4 @@ div {
         width: 100%;
     }
 }
-</style>
+</style> -->
