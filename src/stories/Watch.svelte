@@ -29,12 +29,7 @@ let nParticipants = $state(0);
 
 let call = $state<Call | null>(null);
 let hostUserId = $state<string | null>(null);
-
-let host = $derived.by(() => {
-    if (call === null || hostUserId === null) return null;
-    return call.state.participants.find(participant => participant.userId === hostUserId) ?? null;
-});
-
+let hostSessionId = $state<string | null>(null);
 
 
 // $effect(() => {
@@ -51,7 +46,7 @@ let participants = $state<StreamVideoParticipant[]>([]);
 
     await call.join();
 
-    ({hostUserId} = await (await fetch(`/api/livestream/get-host?call_id=${callId}`)).json());
+    ({hostUserId, hostSessionId} = await (await fetch(`/api/livestream/get-host?call_id=${callId}`)).json());
 
 
     // Render the number of users who joined
@@ -69,13 +64,11 @@ let participants = $state<StreamVideoParticipant[]>([]);
 <watch-container>
     <div>Call id: {callId}</div>
     <div>Live: {nParticipants}</div>
-    {#if call !== null}
-        {#each participants as participant}
-            <ParticipantVideo
-                {call}
-                {participant}
-            />
-        {/each}
+    {#if call !== null && hostSessionId !== null}
+        <ParticipantVideo
+            {call}
+            sessionId={hostSessionId}
+        />
     {/if}
 </watch-container>
 

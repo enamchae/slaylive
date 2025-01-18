@@ -1,6 +1,6 @@
 import { error, type RequestHandler } from "@sveltejs/kit";
 
-import { callHosts } from "$api/global";
+import { callHostUserIds, callHostSessionIds } from "$api/global";
 
 export const GET: RequestHandler = async ({ url }) => {
     const callId = url.searchParams.get("call_id");
@@ -10,6 +10,7 @@ export const GET: RequestHandler = async ({ url }) => {
     }
 
     return new Response(JSON.stringify({
-        hostUserId: callHosts.get(callId) ?? null,
+        hostUserId: callHostUserIds.get(callId) ?? null,
+        hostSessionId: callHostSessionIds.get(callId) ?? null,
     }));
 };

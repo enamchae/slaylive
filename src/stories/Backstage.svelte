@@ -2,6 +2,7 @@
 import { StreamVideoClient, type Call, type User, type StreamVideoParticipant } from "@stream-io/video-client";
 
 import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
+import ParticipantVideo from "./ParticipantVideo.svelte";
 
 const {
     userToken,
@@ -12,8 +13,6 @@ const {
     userId: string,
     userName: string,
 } = $props();
-
-let video = $state<HTMLVideoElement | null>(null);
 
 // set up the user object
 const user: User = {
@@ -28,16 +27,6 @@ let started = $state(false);
 let call = $state<Call | null>(null);
 let callId = $state<string | null>(null);
 let localParticipant = $state<StreamVideoParticipant | null>(null);
-
-$effect(() => {
-    if (localParticipant === null || call === null || video === null) return;
-
-    const unbind = call.bindVideoElement(
-        video,
-        localParticipant.sessionId,
-        "videoTrack"
-    );
-});
 
 (async () => {
     ({callId} = await (await fetch("/api/livestream/start", {
@@ -61,6 +50,15 @@ $effect(() => {
         if (!participant) return;
 
         localParticipant = participant;
+
+        fetch("/api/livestream/set-host-session", {
+            method: "put",
+            body: JSON.stringify({
+                callId,
+                hostId: userId,
+                sessionId: participant.sessionId,
+            }),
+        });
     });
 
     // Render the number of users who joined
@@ -77,9 +75,14 @@ $effect(() => {
 <backstage-container>
     <div>Call id: {callId}</div>
     <div>Live: {nParticipants}</div>
-    <video bind:this={video}></video>
-    
     {#if call !== null}
+        {#if localParticipant !== null}
+            <ParticipantVideo
+                {call}
+                sessionId={localParticipant.sessionId}
+            />
+        {/if}
+    
         <button
             onclick={() => call.goLive()}
             disabled={started}
