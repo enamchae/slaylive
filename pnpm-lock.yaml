@@ -17,6 +17,9 @@ dependencies:
   '@inlang/paraglide-sveltekit':
     specifier: ^0.11.1
     version: 0.11.5(@sveltejs/kit@2.15.2)
+  '@stream-io/node-sdk':
+    specifier: ^0.4.9
+    version: 0.4.9
   '@stream-io/video-client':
     specifier: ^1.14.0
     version: 1.14.0
@@ -2417,6 +2420,16 @@ packages:
       storybook: 8.4.7
     dev: true
 
+  /@stream-io/node-sdk@0.4.9:
+    resolution: {integrity: sha512-sx71HBU0rAUXh/h9IJsHd/X9Tbacnz6id/ZaHPJoTsHlSdSRs9NW9EnDlbBr4qsfU+LOhb6ccNupYkQeMMKHmg==}
+    engines: {node: '>=18.0.0'}
+    dependencies:
+      '@types/jsonwebtoken': 9.0.7
+      '@types/node': 20.17.14
+      jsonwebtoken: 9.0.2
+      uuid: 9.0.1
+    dev: false
+
   /@stream-io/video-client@1.14.0:
     resolution: {integrity: sha512-UQgJKffa78hnWAq0EeyPH4M4G9BsSkLwu+Dt/4R3cm/bdGMXeIvKwl7xDIn53HfcSXy0C6E1ErplOwoMxjmNQQ==}
     dependencies:
@@ -2568,6 +2581,12 @@ packages:
   /@types/mdx@2.0.13:
     resolution: {integrity: sha512-+OWZQfAYyio6YkJb3HLxDrvnx6SWWDbC0zVPfBRzUk0/nqoDyf6dNxQi3eArPe8rJ473nobTMQ/8Zk+LxJ+Yuw==}
     dev: true
+
+  /@types/node@20.17.14:
+    resolution: {integrity: sha512-w6qdYetNL5KRBiSClK/KWai+2IMEJuAj+EujKCumalFOwXtvOXaEan9AuwcRID2IcOIAWSIfR495hBtgKlx2zg==}
+    dependencies:
+      undici-types: 6.19.8
+    dev: false
 
   /@types/node@22.10.5:
     resolution: {integrity: sha512-F8Q+SeGimwOo86fiovQh8qiXfFEh2/ocYv7tU5pJ3EXMSSxk1Joj5wefpFK2fHTf/N6HKGSxIDBT9f3gCxXPkQ==}
@@ -5270,6 +5289,10 @@ packages:
     hasBin: true
     dev: false
 
+  /undici-types@6.19.8:
+    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
+    dev: false
+
   /undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
@@ -5324,7 +5347,6 @@ packages:
   /uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
-    dev: true
 
   /v8-compile-cache@2.4.0:
     resolution: {integrity: sha512-ocyWc3bAHBB/guyqJQVI5o4BZkPhznPYUG2ea80Gond/BgNWpap8TOmLSeeQG7bnh2KMISxskdADG59j7zruhw==}

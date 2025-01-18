@@ -15,6 +15,8 @@ const config = {
 		alias: {
 			"$": "./src",
 			"$stories": "./src/stories",
+			"$api": "./src/routes/api",
+			"$routes": "./src/routes",
 		},
 	}
 };
