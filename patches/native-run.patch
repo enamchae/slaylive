@@ -1,0 +1,13 @@
+diff --git a/dist/android/utils/adb.js b/dist/android/utils/adb.js
+index a4b4ec5597e891dbfacc3e9b4a26cfe639872028..2c90c0225da749596462165fa0ed4e7a5c272f89 100644
+--- a/dist/android/utils/adb.js
++++ b/dist/android/utils/adb.js
+@@ -209,7 +209,7 @@ async function startActivity(sdk, device, packageName, activityName) {
+     const debug = Debug(`${modulePrefix}:${startActivity.name}`);
+     const args = ['-s', device.serial, 'shell', 'am', 'start', '-W', '-n', `${packageName}/${activityName}`];
+     debug('Invoking adb with args: %O', args);
+-    await execAdb(sdk, args, { timeout: 5000 });
++    await execAdb(sdk, args, { timeout: 300000 });
+ }
+ exports.startActivity = startActivity;
+ function parseAdbDevices(output) {

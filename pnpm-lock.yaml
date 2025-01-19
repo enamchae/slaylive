@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  native-run:
+    hash: n5kynex4y6tuks3g75pzbrpugu
+    path: patches/native-run.patch
+
 importers:
 
   .:
@@ -17,6 +22,9 @@ importers:
       '@capacitor/ios':
         specifier: ^6.2.0
         version: 6.2.0(@capacitor/core@6.2.0)
+      '@capgo/capacitor-social-login':
+        specifier: ^0.3.0
+        version: 0.3.0(@capacitor/core@6.2.0)
       '@inlang/paraglide-sveltekit':
         specifier: ^0.11.1
         version: 0.11.5(@sveltejs/kit@2.15.2(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.17.3)(vite@5.4.11(@types/node@22.10.5)(sass@1.83.1)))(svelte@5.17.3)(vite@5.4.11(@types/node@22.10.5)(sass@1.83.1)))
@@ -90,6 +98,9 @@ importers:
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.4.7
       drizzle-kit:
         specifier: ^0.22.0
         version: 0.22.8
@@ -156,6 +167,11 @@ packages:
     resolution: {integrity: sha512-gisvZBIrKT1siiumgpLPY63HmJe69Ed/dOmfQQ+U1MIJmOR5gWGWvfO7QSj/FMatVZS4Xt/8jCoUgzDD1U6kSw==}
     peerDependencies:
       '@capacitor/core': ^6.2.0
+
+  '@capgo/capacitor-social-login@0.3.0':
+    resolution: {integrity: sha512-hV8r2x9+Psp6C6pT8Lg2zrOJQ0sYl8m3FfsZw4gOm6CPIgdY31T/twsRQpXGi+a85uwb+Y5sg9TG2KP3PZPllg==}
+    peerDependencies:
+      '@capacitor/core': ^6.0.0
 
   '@chromatic-com/storybook@3.2.3':
     resolution: {integrity: sha512-3+hfANx79kIjP1qrOSLxpoAXOiYUA0S7A0WI0A24kASrv7USFNNW8etR5TjUilMb0LmqKUn3wDwUK2h6aceQ9g==}
@@ -1955,6 +1971,10 @@ packages:
   domutils@2.8.0:
     resolution: {integrity: sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A==}
 
+  dotenv@16.4.7:
+    resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
+    engines: {node: '>=12'}
+
   drizzle-kit@0.22.8:
     resolution: {integrity: sha512-VjI4wsJjk3hSqHSa3TwBf+uvH6M6pRHyxyoVbt935GUzP9tUR/BRZ+MhEJNgryqbzN2Za1KP0eJMTgKEPsalYQ==}
     hasBin: true
@@ -3365,7 +3385,7 @@ snapshots:
       debug: 4.4.0
       env-paths: 2.2.1
       kleur: 4.1.5
-      native-run: 2.0.1
+      native-run: 2.0.1(patch_hash=n5kynex4y6tuks3g75pzbrpugu)
       open: 8.4.2
       plist: 3.1.0
       prompts: 2.4.2
@@ -3382,6 +3402,10 @@ snapshots:
       tslib: 2.8.1
 
   '@capacitor/ios@6.2.0(@capacitor/core@6.2.0)':
+    dependencies:
+      '@capacitor/core': 6.2.0
+
+  '@capgo/capacitor-social-login@0.3.0(@capacitor/core@6.2.0)':
     dependencies:
       '@capacitor/core': 6.2.0
 
@@ -5120,6 +5144,8 @@ snapshots:
       domelementtype: 2.3.0
       domhandler: 4.3.1
 
+  dotenv@16.4.7: {}
+
   drizzle-kit@0.22.8:
     dependencies:
       '@esbuild-kit/esm-loader': 2.6.5
@@ -5789,7 +5815,7 @@ snapshots:
 
   nanoid@3.3.8: {}
 
-  native-run@2.0.1:
+  native-run@2.0.1(patch_hash=n5kynex4y6tuks3g75pzbrpugu):
     dependencies:
       '@ionic/utils-fs': 3.1.7
       '@ionic/utils-terminal': 2.3.5
