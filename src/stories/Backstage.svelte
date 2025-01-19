@@ -36,6 +36,8 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
         }),
     })).json());
 
+    if (!callId) return;
+
     const client = new StreamVideoClient({ apiKey: PUBLIC_STREAM_API_KEY, token: userToken, user });
     call = client.call('livestream', callId);
 
@@ -84,11 +86,11 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
         {/if}
     
         <button
-            onclick={() => call.goLive()}
+            onclick={() => call?.goLive()}
             disabled={started}
         >Go live</button>
         <button
-            onclick={() => call.stopLive()}
+            onclick={() => call?.stopLive()}
             disabled={!started}
         >Stop live</button>
     {/if}
