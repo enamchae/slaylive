@@ -2,12 +2,16 @@
 import { goto } from "$app/navigation";
 
 import { store } from "../store.svelte";
+import {PUBLIC_API_URL} from "$env/static/public";
 
 let joinCallId = $state("");
 
 const register = async () => {
-    const response = await (await fetch("/api/user/create", {
+    const response = await (await globalThis.fetch(new URL("/api/user/create", PUBLIC_API_URL).href, {
         method: "put",
+        headers: {
+            "Content-Type": "application/json",
+        },
     })).json();
 
     store.userId = response.userId;
@@ -15,16 +19,20 @@ const register = async () => {
 };
 
 const login = async () => {
-    const response = await (await fetch("/api/user/login", {
+    const response = await (await globalThis.fetch(new URL("/api/user/login", PUBLIC_API_URL).href, {
         method: "post",
         body: JSON.stringify({
             userId: store.userId,
         }),
+        headers: {
+            "Content-Type": "application/json",
+        },
     })).json();
 
     store.userToken = response.userToken;
 };
 </script>
+
 
 <button onclick={register}>
     Create a user

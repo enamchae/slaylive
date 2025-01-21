@@ -1,8 +1,8 @@
 <script lang="ts">
 import { StreamVideoClient, type Call, type User, type StreamVideoParticipant } from "@stream-io/video-client";
 
-import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
-    import ParticipantVideo from "./ParticipantVideo.svelte";
+import { PUBLIC_STREAM_API_KEY, PUBLIC_API_URL } from "$env/static/public";
+import ParticipantVideo from "./ParticipantVideo.svelte";
 
 let {
     callId,
@@ -46,7 +46,7 @@ let participants = $state<StreamVideoParticipant[]>([]);
 
     await call.join();
 
-    ({hostUserId, hostSessionId} = await (await fetch(`/api/livestream/get-host?call_id=${callId}`)).json());
+    ({hostUserId, hostSessionId} = await (await fetch(new URL(`/api/livestream/get-host?call_id=${callId}`, PUBLIC_API_URL).href)).json());
 
 
     // Render the number of users who joined

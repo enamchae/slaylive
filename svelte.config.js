@@ -26,7 +26,11 @@ const config = {
 			"$api": "./src/routes/api",
 			"$routes": "./src/routes",
 		},
-	}
+
+		csrf: {
+			checkOrigin: false,
+		},
+	},
 };
 
 export default config;

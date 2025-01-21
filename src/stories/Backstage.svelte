@@ -1,7 +1,8 @@
 <script lang="ts">
+import {onMount} from "svelte";
 import { StreamVideoClient, type Call, type User, type StreamVideoParticipant } from "@stream-io/video-client";
 
-import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
+import { PUBLIC_STREAM_API_KEY, PUBLIC_API_URL } from "$env/static/public";
 import ParticipantVideo from "./ParticipantVideo.svelte";
 
 const {
@@ -29,11 +30,14 @@ let callId = $state<string | null>(null);
 let localParticipant = $state<StreamVideoParticipant | null>(null);
 
 (async () => {
-    ({callId} = await (await fetch("/api/livestream/start", {
+    ({callId} = await (await fetch(new URL("/api/livestream/start", PUBLIC_API_URL).href, {
         method: "post",
         body: JSON.stringify({
             userId,
         }),
+        headers: {
+            "Content-Type": "application/json",
+        },
     })).json());
 
     if (!callId) return;
@@ -43,9 +47,15 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
 
     await call.join();
     
-    call.camera.enable();
-    call.microphone.enable();
-
+    try {
+        await Promise.all([
+            call.camera.enable(),
+            call.microphone.enable(),
+        ]);
+    } catch (error) {
+        alert(`Camera is inaccessible or permission was denied: ${error}`);
+        return;
+    }
 
     // Render local participant's video
     call.state.localParticipant$.subscribe(participant => {
@@ -53,13 +63,16 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
 
         localParticipant = participant;
 
-        fetch("/api/livestream/set-host-session", {
+        fetch(new URL("/api/livestream/set-host-session", PUBLIC_API_URL).href, {
             method: "put",
             body: JSON.stringify({
                 callId,
                 hostId: userId,
                 sessionId: participant.sessionId,
             }),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
     });
 
@@ -71,6 +84,7 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
     call.state.backstage$.subscribe((backstage) => {
         started = !backstage;
     });
+    
 })();
 </script>
 

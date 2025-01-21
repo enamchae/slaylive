@@ -6,4 +6,4 @@ export const store = $state({
 });
 
 
-export const authHeader = () => `Basic ${store.accessToken}`;
+export const authHeader = () => `Bearer ${store.accessToken}`;
