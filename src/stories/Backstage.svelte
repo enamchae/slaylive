@@ -30,7 +30,7 @@ let callId = $state<string | null>(null);
 let localParticipant = $state<StreamVideoParticipant | null>(null);
 
 (async () => {
-    ({callId} = await (await fetch(new URL("/api/livestream/start", PUBLIC_API_URL).href, {
+    const callResponse = await fetch(new URL("livestream/start", PUBLIC_API_URL), {
         method: "post",
         body: JSON.stringify({
             userId,
@@ -38,7 +38,14 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
         headers: {
             "Content-Type": "application/json",
         },
-    })).json());
+    });
+    if (!callResponse.ok) {
+        alert(callResponse.statusText)
+        return;
+    }
+
+    
+    ({callId} = await callResponse.json());
 
     if (!callId) return;
 
@@ -63,11 +70,10 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
 
         localParticipant = participant;
 
-        fetch(new URL("/api/livestream/set-host-session", PUBLIC_API_URL).href, {
+        fetch(new URL("livestream/set-host-session", PUBLIC_API_URL).href, {
             method: "put",
             body: JSON.stringify({
                 callId,
-                hostId: userId,
                 sessionId: participant.sessionId,
             }),
             headers: {

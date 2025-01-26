@@ -1,13 +1,29 @@
 import { error, type RequestHandler } from "@sveltejs/kit";
 
-import { callHostSessionIds, callHostUserIds } from "../../global";
+import { db } from "$/lib/server/db";
+import { livestream } from "$/lib/server/db/schema";
+import { and, eq } from "drizzle-orm";
 
-export const PUT: RequestHandler = async ({request}) => {
-    const {callId, hostId, sessionId} = await request.json();
+export const PUT: RequestHandler = async ({request, locals: {user}}) => {
+    if (user === null) return error(401, "Not logged in");
 
-    if (callHostUserIds.get(callId) !== hostId) return error(403);
+    const {callId, sessionId} = await request.json();
 
-    callHostSessionIds.set(callId, sessionId);
+    const livestreamMatches = and(
+        eq(livestream.callId, callId),
+        eq(livestream.hostSessionId, user.id),
+    );
+
+    const calls = await db.select({})
+        .from(livestream)
+        .where(livestreamMatches)
+        .limit(1);
+    if (calls.length === 0) return error(400, "Call not found");
+
+    
+    await db.update(livestream)
+        .set({hostSessionId: sessionId})
+        .where(livestreamMatches);
 
     return new Response(JSON.stringify({}));
 };

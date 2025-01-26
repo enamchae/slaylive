@@ -1,9 +1,14 @@
+import type { User } from "@supabase/supabase-js";
+
+export type UserData = {
+    supabaseUser: User,
+    streamioAuth: {
+        id: string,
+        name: string,
+        token: string,
+    },
+};
+
 export const store = $state({
-    userId: <string | null>null,
-    userName: <string | null>null,
-    userToken: <string | null>null,
-    accessToken: <string | null>null,
+    user: <UserData | null>null,
 });
-
-
-export const authHeader = () => `Bearer ${store.accessToken}`;

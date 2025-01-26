@@ -1,41 +1,56 @@
 <script lang="ts">
-import Button from "$stories/Button.svelte";
-import { onMount } from "svelte";
-import {SocialLogin} from "@capgo/capacitor-social-login";
 import { goto } from "$app/navigation";
-import {PUBLIC_GOOGLE_CLIENT_ID} from "$env/static/public";
-    import { store } from "./store.svelte";
+import {type User} from "@supabase/supabase-js";
 
-// const {data} = $props();
-// const {supabase} = $derived(data);
+import { store } from "./store.svelte";
+import LoginButton from "$stories/LoginButton.svelte";
+import {fetchApi} from "$routes/util";
 
-onMount(() => {
-    SocialLogin.initialize({
-        google: {
-            webClientId: PUBLIC_GOOGLE_CLIENT_ID,
+const {data} = $props();
+const {supabase} = $derived(data);
+
+
+let joinCallId = $state("");
+
+const updateLoginState = async (user: User) => {
+    const response = await fetchApi("user/login", {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json",
         },
     });
-});
 
-const login = async () => {
-    const response = await SocialLogin.login({
-        provider: "google",
-        options: {},
-    });
-    
-    store.accessToken = response.result.accessToken;
-
-    goto("/control");
+    store.user = {
+        supabaseUser: user,
+        streamioAuth: {
+            id: response.userId,
+            name: response.userName,
+            token: response.userToken,
+        },
+    };
 };
 </script>
 
-<div>
-    <!-- <Button
-        label="Login with Google"
-        onClick={() => supabase.auth.signInWithOAuth({provider: "google"})}
-    /> -->
-    <Button
-        label="Login with Google"
-        onClick={() => login()}
-    />
-</div>
+<LoginButton
+    {supabase}
+    onLogin={updateLoginState}
+/>
+
+<button
+    onclick={() => goto("/backstage")}
+    disabled={store.user === null}
+>
+    Start a call
+</button>
+
+<button
+    onclick={() => goto(`/watch?call_id=${encodeURIComponent(joinCallId)}`)}
+    disabled={store.user === null}
+>
+    Join call
+</button>
+
+<input
+    type="text"
+    bind:value={joinCallId}
+/>

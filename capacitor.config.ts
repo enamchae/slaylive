@@ -8,7 +8,7 @@ const config: CapacitorConfig = {
   webDir: 'build/static',
   server: {
     // url: process.env.LOCAL_VITE_URL,
-    // cleartext: true,
+    cleartext: true,
     androidScheme: "http",
   },
   android: {

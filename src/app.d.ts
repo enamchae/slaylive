@@ -1,5 +1,7 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
+import { type SupabaseClient, type User, type Session } from "@supabase/supabase-js";
+
 declare global {
 	namespace App {
 		// interface Error {}
