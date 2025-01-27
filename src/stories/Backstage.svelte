@@ -1,11 +1,11 @@
 <script lang="ts">
-import {onMount} from "svelte";
 import { StreamVideoClient, type Call, type User, type StreamVideoParticipant } from "@stream-io/video-client";
 
-import { PUBLIC_STREAM_API_KEY, PUBLIC_API_URL } from "$env/static/public";
+import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
 import ParticipantVideo from "./ParticipantVideo.svelte";
+import { apiFetchAuthorized } from "$routes/util";
 
-const {
+let {
     userToken,
     userId,
     userName,
@@ -16,11 +16,11 @@ const {
 } = $props();
 
 // set up the user object
-const user: User = {
+let user: User = $derived({
     id: userId,
     name: userName,
     image: `https://getstream.io/random_svg/?id=${userId}&name=${userName}`,
-};
+});
 
 let nParticipants = $state(0);
 let started = $state(false);
@@ -30,24 +30,17 @@ let callId = $state<string | null>(null);
 let localParticipant = $state<StreamVideoParticipant | null>(null);
 
 (async () => {
-    const callResponse = await fetch(new URL("livestream/start", PUBLIC_API_URL), {
+    ({callId} = await apiFetchAuthorized("livestream/start", {
         method: "post",
-        body: JSON.stringify({
-            userId,
-        }),
+        body: JSON.stringify({}),
         headers: {
             "Content-Type": "application/json",
         },
-    });
-    if (!callResponse.ok) {
-        alert(callResponse.statusText)
-        return;
-    }
+    }));
 
-    
-    ({callId} = await callResponse.json());
+    if (callId === null) return;
 
-    if (!callId) return;
+    console.log(user);
 
     const client = new StreamVideoClient({ apiKey: PUBLIC_STREAM_API_KEY, token: userToken, user });
     call = client.call('livestream', callId);
@@ -70,8 +63,8 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
 
         localParticipant = participant;
 
-        fetch(new URL("livestream/set-host-session", PUBLIC_API_URL).href, {
-            method: "put",
+        apiFetchAuthorized("livestream/set-host-session", {
+            method: "patch",
             body: JSON.stringify({
                 callId,
                 sessionId: participant.sessionId,

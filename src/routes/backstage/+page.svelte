@@ -4,10 +4,10 @@ import Backstage from "$stories/Backstage.svelte";
 import {store} from "$routes/store.svelte";
 </script>
 
-{#if store.userId !== null && store.userToken !== null && store.userName !== null}
+{#if store.user !== null}
     <Backstage
-        userToken={store.userToken}
-        userId={store.userId}
-        userName={store.userName}
+        userToken={store.user.streamioAuth.token}
+        userId={store.user.streamioAuth.id}
+        userName={store.user.streamioAuth.name}
     />
 {/if}

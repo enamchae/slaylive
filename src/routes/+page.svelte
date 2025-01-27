@@ -4,7 +4,7 @@ import {type User} from "@supabase/supabase-js";
 
 import { store } from "./store.svelte";
 import LoginButton from "$stories/LoginButton.svelte";
-import {fetchApi} from "$routes/util";
+import {apiFetch} from "$routes/util";
 
 const {data} = $props();
 const {supabase} = $derived(data);
@@ -12,16 +12,18 @@ const {supabase} = $derived(data);
 
 let joinCallId = $state("");
 
-const updateLoginState = async (user: User) => {
-    const response = await fetchApi("user/login", {
+const updateLoginState = async (user: User, accessToken: string) => {
+    const response = await apiFetch("user/login", {
         method: "post",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`,
         },
     });
 
     store.user = {
         supabaseUser: user,
+        supabaseAccessToken: accessToken,
         streamioAuth: {
             id: response.userId,
             name: response.userName,

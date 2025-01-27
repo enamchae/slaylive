@@ -3,6 +3,7 @@ import type { LayoutLoad } from './$types'
 
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public'
 
+export const ssr = false;
 export const prerender = true;
 
 export const load: LayoutLoad = async ({ data, depends, fetch }) => {

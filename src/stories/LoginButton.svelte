@@ -21,7 +21,7 @@ const {
     onLogin,
 }: {
     supabase: SupabaseClient,
-    onLogin: (user: User) => void,
+    onLogin: (user: User, accessToken: string) => void,
 } = $props();
 
 const login = async () => {
@@ -34,12 +34,12 @@ const login = async () => {
         provider: "google",
         token: response.result.idToken,
     });
+    if (data.error !== null) return;
 
     const userResponse = await supabase.auth.getUser();
-
     if (userResponse.error !== null) return;
 
-    onLogin(userResponse.data.user);
+    onLogin(userResponse.data.user, data.data.session.access_token);
 };
 </script>
 

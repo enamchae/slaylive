@@ -1,13 +1,12 @@
 import { error, type RequestHandler } from "@sveltejs/kit";
+import { eq } from "drizzle-orm";
 
 import { client } from "$api/global";
 import { db } from "$/lib/server/db";
 import { livestream } from "$/lib/server/db/schema";
-import { eq } from "drizzle-orm";
+import { requiresLoggedInUser } from "$api/middleware";
 
-export const POST: RequestHandler = async ({ locals: {user} }) => {
-    if (user === null) return error(401, "Not logged in");
-
+export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => {
     const calls = await db.select({})
         .from(livestream)
         .where(eq(livestream.hostUserId, user.id))
@@ -30,14 +29,14 @@ export const POST: RequestHandler = async ({ locals: {user} }) => {
             },
         }),
     
-        db.insert(livestream).values({callId, hostUserId: user.id}),        
+        db.insert(livestream).values({callId, hostUserId: user.id}),
     ]);
 
 
     return new Response(JSON.stringify({
         callId,
     }));
-};
+});
 
 const generateCallId = async () => {
     let callId: string;

@@ -2,10 +2,9 @@ import type { UserRequest } from "@stream-io/node-sdk";
 import { error, type RequestHandler } from "@sveltejs/kit";
 
 import {client} from "$api/global"
+import { requiresLoggedInUser } from "$api/middleware";
 
-export const POST: RequestHandler = async ({locals: {user}}) => {
-    if (user === null) return error(401, "Not logged in");
-
+export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => {
     const userName = user.id;
 
     const streamUser: UserRequest = {
@@ -23,4 +22,4 @@ export const POST: RequestHandler = async ({locals: {user}}) => {
         userName,
         userToken,
     }));
-};
+});

@@ -16,19 +16,17 @@ let {
     userName: string,
 } = $props();
 
-let video = $state<HTMLVideoElement | null>(null);
 
 // set up the user object
-const user: User = {
+let user: User = $derived({
     id: userId,
     name: userName,
     image: `https://getstream.io/random_svg/?id=${userId}&name=${userName}`,
-};
+});
 
 let nParticipants = $state(0);
 
 let call = $state<Call | null>(null);
-let hostUserId = $state<string | null>(null);
 let hostSessionId = $state<string | null>(null);
 
 
@@ -46,7 +44,7 @@ let participants = $state<StreamVideoParticipant[]>([]);
 
     await call.join();
 
-    ({hostUserId, hostSessionId} = await (await fetch(new URL(`/api/livestream/get-host?call_id=${callId}`, PUBLIC_API_URL).href)).json());
+    ({hostSessionId} = await (await fetch(new URL(`/api/livestream/get-host?call_id=${callId}`, PUBLIC_API_URL).href)).json());
 
 
     // Render the number of users who joined

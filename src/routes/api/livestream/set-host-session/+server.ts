@@ -3,10 +3,9 @@ import { error, type RequestHandler } from "@sveltejs/kit";
 import { db } from "$/lib/server/db";
 import { livestream } from "$/lib/server/db/schema";
 import { and, eq } from "drizzle-orm";
+import { requiresLoggedInUser } from "$api/middleware";
 
-export const PUT: RequestHandler = async ({request, locals: {user}}) => {
-    if (user === null) return error(401, "Not logged in");
-
+export const PATCH: RequestHandler = requiresLoggedInUser(async ({request}, user) => {
     const {callId, sessionId} = await request.json();
 
     const livestreamMatches = and(
@@ -26,4 +25,4 @@ export const PUT: RequestHandler = async ({request, locals: {user}}) => {
         .where(livestreamMatches);
 
     return new Response(JSON.stringify({}));
-};
+});

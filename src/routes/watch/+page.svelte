@@ -9,11 +9,11 @@ onMount(() => {
 });
 </script>
 
-{#if callId !== null && store.userId !== null && store.userToken !== null && store.userName !== null}
+{#if callId !== null && store.user !== null}
     <Watch
         {callId}
-        userToken={store.userToken}
-        userId={store.userId}
-        userName={store.userName}
+        userToken={store.user.streamioAuth.token}
+        userId={store.user.streamioAuth.id}
+        userName={store.user.streamioAuth.name}
     />
 {/if}
