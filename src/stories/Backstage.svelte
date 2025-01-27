@@ -64,7 +64,7 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
         localParticipant = participant;
 
         apiFetchAuthorized("livestream/set-host-session", {
-            method: "patch",
+            method: "PATCH",
             body: JSON.stringify({
                 callId,
                 sessionId: participant.sessionId,

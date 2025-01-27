@@ -10,7 +10,7 @@ export const PATCH: RequestHandler = requiresLoggedInUser(async ({request}, user
 
     const livestreamMatches = and(
         eq(livestream.callId, callId),
-        eq(livestream.hostSessionId, user.id),
+        eq(livestream.hostUserId, user.id),
     );
 
     const calls = await db.select({})
