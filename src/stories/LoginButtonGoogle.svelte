@@ -11,10 +11,12 @@ if (browser) {
 </script>
 
 <script lang="ts">
-import Button from "$stories/Button.svelte";
+import ButtonRaised from "$/stories/ButtonRaised.svelte";
 import {SocialLogin} from "@capgo/capacitor-social-login";
 import {PUBLIC_GOOGLE_CLIENT_ID} from "$env/static/public";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
+
+import googleLogo from "$/public/google.svg";
 
 const {
     supabase,
@@ -43,7 +45,9 @@ const login = async () => {
 };
 </script>
 
-<Button
+<ButtonRaised
     label="Login with Google"
     onClick={() => login()}
-/>
+>
+    <img src={googleLogo} />
+</ButtonRaised>

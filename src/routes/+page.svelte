@@ -3,8 +3,8 @@ import { goto } from "$app/navigation";
 import {type User} from "@supabase/supabase-js";
 
 import { store } from "./store.svelte";
-import LoginButton from "$stories/LoginButton.svelte";
 import {apiFetch} from "$routes/util";
+import LoginCta from "$/stories/LoginCta.svelte";
 
 const {data} = $props();
 const {supabase} = $derived(data);
@@ -34,7 +34,7 @@ const updateLoginState = async (user: User, accessToken: string) => {
 </script>
 
 {#if store.user === null}
-    <LoginButton
+    <LoginCta
         {supabase}
         onLogin={updateLoginState}
     />
