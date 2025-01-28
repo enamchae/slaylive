@@ -5,6 +5,7 @@ import {type User} from "@supabase/supabase-js";
 import { store } from "./store.svelte";
 import {apiFetch} from "$routes/util";
 import LoginCta from "$/stories/LoginCta.svelte";
+    import NowLive from "$/stories/NowLive.svelte";
 
 const {data} = $props();
 const {supabase} = $derived(data);
@@ -39,6 +40,8 @@ const updateLoginState = async (user: User, accessToken: string) => {
         onLogin={updateLoginState}
     />
 {/if}
+
+<NowLive />
 
 <button
     onclick={() => goto("/backstage")}

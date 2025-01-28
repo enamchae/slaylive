@@ -1,4 +1,6 @@
-<script>
+<script lang="ts">
+import { type Snippet } from "svelte";
+  
   /**
    * @typedef {Object} Props
    * @property {boolean} [primary] Is this the principal call to action on the page?
@@ -6,6 +8,7 @@
    * @property {'small' | 'medium' | 'large'} [size] How large should the button be?
    * @property {string} label Button contents
    * @property {() => void} [onClick] The onclick event handler
+   * @property {Snippet} [children]
    */
 
   /** @type {Props} */

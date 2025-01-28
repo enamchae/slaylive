@@ -9,7 +9,12 @@ import { requiresLoggedInUser } from "$api/middleware";
 export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => {
     const calls = await db.select({})
         .from(livestream)
-        .where(and(eq(livestream.hostUserId, user.id), livestream.active))
+        .where(
+            and(
+                eq(livestream.hostUserId, user.id),
+                eq(livestream.active, true)
+            )
+        )
         .limit(1);
     if (calls.length !== 0) {
         return error(400, "Host already has an ongoing stream");
@@ -24,7 +29,7 @@ export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => 
             data: {
                 created_by_id: user.id,
                 members: [
-                    {user_id:  user.id, role: "call-member"},
+                    {user_id:  user.id, role: "user"},
                 ],
             },
         }),
