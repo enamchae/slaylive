@@ -31,7 +31,7 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
 
 (async () => {
     ({callId} = await apiFetchAuthorized("livestream/start", {
-        method: "post",
+        method: "POST",
         body: JSON.stringify({}),
         headers: {
             "Content-Type": "application/json",

@@ -1,5 +1,5 @@
 import { error, type RequestHandler } from "@sveltejs/kit";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 import { client } from "$api/global";
 import { db } from "$/lib/server/db";
@@ -9,7 +9,7 @@ import { requiresLoggedInUser } from "$api/middleware";
 export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => {
     const calls = await db.select({})
         .from(livestream)
-        .where(eq(livestream.hostUserId, user.id))
+        .where(and(eq(livestream.hostUserId, user.id), livestream.active))
         .limit(1);
     if (calls.length !== 0) {
         return error(400, "Host already has an ongoing stream");
@@ -18,13 +18,13 @@ export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => 
     const callId = await generateCallId();
 
     const call = client.video.call("livestream", callId);
-    
+
     await Promise.all([
         call.create({
             data: {
                 created_by_id: user.id,
                 members: [
-                    {user_id:  user.id, role: "admin"},
+                    {user_id:  user.id, role: "call-member"},
                 ],
             },
         }),

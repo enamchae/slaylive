@@ -14,7 +14,7 @@ let joinCallId = $state("");
 
 const updateLoginState = async (user: User, accessToken: string) => {
     const response = await apiFetch("user/login", {
-        method: "post",
+        method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${accessToken}`,
@@ -33,10 +33,12 @@ const updateLoginState = async (user: User, accessToken: string) => {
 };
 </script>
 
-<LoginButton
-    {supabase}
-    onLogin={updateLoginState}
-/>
+{#if store.user === null}
+    <LoginButton
+        {supabase}
+        onLogin={updateLoginState}
+    />
+{/if}
 
 <button
     onclick={() => goto("/backstage")}
