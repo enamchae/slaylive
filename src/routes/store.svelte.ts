@@ -8,6 +8,7 @@ export type UserData = Readonly<{
         name: string,
         token: string,
     }>,
+    canSell: boolean,
 }>;
 
 export const store = $state({

@@ -30,6 +30,7 @@ const updateLoginState = async (user: User, accessToken: string) => {
             name: response.userName,
             token: response.userToken,
         },
+        canSell: response.canSell,
     };
 };
 </script>

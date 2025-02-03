@@ -1,9 +1,28 @@
+<script lang="ts">
+import { goto } from "$app/navigation";
+
+import {store} from "$routes/store.svelte";
+
+</script>
+
 <tabs-rack>
-    <div>Feed</div>
+    <div>
+        <button onclick={() => goto("/feed")}>Feed</button>
+    </div>
 
-    <div>Live now</div>
+    <div>
+        <button onclick={() => goto("/")}>Live now</button>
+    </div>
 
-    <div>Profile</div>
+    <div>
+        <button onclick={() => goto("/buyer")}>Buyer profile</button>
+    </div>
+
+    {#if store.user !== null && store.user.canSell}
+        <div>
+            <button onclick={() => goto("/seller/dashboard")}>Seller profile</button>
+        </div>
+    {/if}
 </tabs-rack>
 
 <style lang="scss">

@@ -9,6 +9,7 @@ export const product = pgTable("product", {
 	id: uuid("id").primaryKey(),
 	sellerUserId: uuid("sellerUserId").notNull().references(() => user.id),
 	title: text("title").notNull(),
+	description: text("description").notNull(),
 });
 
 export const livestream = pgTable("livestream", {

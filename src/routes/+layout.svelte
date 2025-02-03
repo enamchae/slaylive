@@ -6,6 +6,8 @@ import Tabs from "$stories/Tabs.svelte";
 import "$stories/index.scss";
 
 let { children } = $props();
+
+
 </script>
 
 <ParaglideJS {i18n}>
