@@ -13,11 +13,7 @@ import {store} from "$routes/store.svelte";
     <div>
         <button onclick={() => goto("/")}>Live now</button>
     </div>
-
-    <div>
-        <button onclick={() => goto("/buyer")}>Buyer profile</button>
-    </div>
-
+    
     {#if store.user !== null && store.user.canSell}
         <div>
             <button onclick={() => goto("/seller/dashboard")}>Seller profile</button>
@@ -29,5 +25,16 @@ import {store} from "$routes/store.svelte";
 tabs-rack {
     display: flex;
     justify-content: space-evenly;
+    padding: 1rem;
+
+    background: #fff;
+
+    > * {
+        flex-basis: 0;
+        flex-grow: 1;
+        
+        display: flex;
+        justify-content: center;
+    }
 }
 </style>

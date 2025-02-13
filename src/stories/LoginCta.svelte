@@ -28,6 +28,8 @@ login-cta {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem;
+    padding: 1rem 0 2.5rem 0;
+
+    background: linear-gradient(#fff calc(100% - 2rem), #0000);
 }
 </style>
