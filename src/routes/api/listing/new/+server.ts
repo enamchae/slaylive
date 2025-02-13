@@ -18,7 +18,6 @@ export const PUT: RequestHandler = requiresLoggedInUser(async ({request}, user) 
     if (userObjs.length === 0) return error(500, "User not found");
 
     const userObj = userObjs[0];
-
     if (!userObj.canSell) return error(403, "User is not a seller");
 
 

@@ -1,0 +1,36 @@
+<script lang="ts">
+import { goto } from "$app/navigation";
+import ListingDisplay from "./ListingDisplay.svelte";
+
+type Listing = {
+    id: string,
+    title: string,
+};
+
+const {
+    listings,
+    onClickListing,
+}: {
+    listings: Listing[],
+    onClickListing: (listing: Listing) => void,
+} = $props();
+</script>
+
+<listings-list>
+    {#each listings as listing (listing.id)}
+        <ListingDisplay
+            title={listing.title}
+            onClick={() => onClickListing(listing)}
+        />
+    {/each}
+</listings-list>
+
+
+<style lang="scss">
+listings-list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+</style>
