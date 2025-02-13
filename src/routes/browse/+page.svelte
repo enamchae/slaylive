@@ -5,9 +5,9 @@ import { apiFetch } from "$routes/util";
 </script>
 
 <browse-listings>
-    <h1>Browse listings</h1>
+    <h1>browse listings</h1>
     
-    {#await apiFetch(`listing/browse`)}
+    {#await apiFetch(`listing/list`)}
         <div>Loading listings...</div>
     {:then response}
         {@const listings = response.listings}

@@ -40,8 +40,6 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
 
     if (callId === null) return;
 
-    console.log(user);
-
     const client = new StreamVideoClient({ apiKey: PUBLIC_STREAM_API_KEY, token: userToken, user });
     call = client.call('livestream', callId);
 

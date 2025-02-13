@@ -7,14 +7,14 @@ import {store} from "$routes/store.svelte";
 
 <tabs-rack>
     <div>
-        <button onclick={() => goto("/browse")}>Browse</button>
+        <button onclick={() => goto("/")}>Now live</button>
     </div>
 
     <div>
-        <button onclick={() => goto("/")}>Live now</button>
+        <button onclick={() => goto("/browse")}>Browse</button>
     </div>
     
-    {#if store.user !== null && store.user.canSell}
+    {#if store.isSeller}
         <div>
             <button onclick={() => goto("/seller/dashboard")}>Seller profile</button>
         </div>

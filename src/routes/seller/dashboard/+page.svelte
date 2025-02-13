@@ -13,18 +13,18 @@ if (!store.isSeller) {
 
 {#if store.isSeller && store.user !== null}
     <seller-dashboard>
-        <h1>Seller dashboard</h1>
+        <h1>seller dashboard</h1>
 
         <seller-profile>
-            <h2>Profile</h2>
+            <h2>profile</h2>
         </seller-profile>
         
         <seller-stats>
-            <h2>Stats</h2>
+            <h2>stats</h2>
         </seller-stats>
         
         <seller-listings>
-            <h2>Listings</h2>
+            <h2>listings</h2>
 
             {#await apiFetch(`listing/by-seller?sellerUserId=${store.user.id}`)}
                 <div>Loading listings...</div>
@@ -48,8 +48,8 @@ if (!store.isSeller) {
 
 
         <seller-livestreams>
-            <h2>Llivestreams</h2>
-            <button onclick={() => goto("/livestream?new")}>Set up a new livestream</button>
+            <h2>livestreams</h2>
+            <button onclick={() => goto("/livestream/backstage?new")}>Set up a new livestream</button>
         </seller-livestreams>
     </seller-dashboard>
 {/if}

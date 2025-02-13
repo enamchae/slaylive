@@ -12,7 +12,7 @@ const joinCall = (callId: string) => {
 </script>
 
 <now-live>
-    <h1>Now live</h1>
+    <h1>now live</h1>
 
     {#await apiFetch("livestream/list")}
         <div>Loading ongoing livestreams</div>
