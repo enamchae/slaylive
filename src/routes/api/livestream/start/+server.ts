@@ -1,4 +1,4 @@
-import { error, type RequestHandler } from "@sveltejs/kit";
+import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { eq, and } from "drizzle-orm";
 
 import { client } from "$api/global";
@@ -38,9 +38,9 @@ export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => 
     ]);
 
 
-    return new Response(JSON.stringify({
+    return json({
         callId,
-    }));
+    });
 });
 
 const generateCallId = async () => {

@@ -7,7 +7,7 @@ import {store} from "$routes/store.svelte";
 
 <tabs-rack>
     <div>
-        <button onclick={() => goto("/feed")}>Feed</button>
+        <button onclick={() => goto("/listings")}>Browse</button>
     </div>
 
     <div>

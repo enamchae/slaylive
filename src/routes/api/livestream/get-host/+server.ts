@@ -1,6 +1,6 @@
 import { db } from "$/lib/server/db";
 import { livestream } from "$/lib/server/db/schema";
-import { error, type RequestHandler } from "@sveltejs/kit";
+import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 
 export const GET: RequestHandler = async ({ url }) => {
@@ -21,8 +21,8 @@ export const GET: RequestHandler = async ({ url }) => {
     const call = calls[0];
     if (call.hostSessionId === null) return error(400, "Livestream has not started yet");
 
-    return new Response(JSON.stringify({
+    return json({
         hostUserId: call.hostUserId,
         hostSessionId: call.hostSessionId,
-    }));
+    });
 };

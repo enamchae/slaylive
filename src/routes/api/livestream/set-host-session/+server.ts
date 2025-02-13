@@ -1,4 +1,4 @@
-import { error, type RequestHandler } from "@sveltejs/kit";
+import { error, type RequestHandler, json } from "@sveltejs/kit";
 
 import { db } from "$/lib/server/db";
 import { livestream } from "$/lib/server/db/schema";
@@ -24,5 +24,5 @@ export const PATCH: RequestHandler = requiresLoggedInUser(async ({request}, user
         .set({hostSessionId: sessionId})
         .where(livestreamMatches);
 
-    return new Response(JSON.stringify({}));
+    return json({});
 });

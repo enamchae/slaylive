@@ -8,9 +8,14 @@ export type UserData = Readonly<{
         name: string,
         token: string,
     }>,
+    id: string,
+    name: string,
     canSell: boolean,
 }>;
 
 export const store = $state({
     user: <UserData | null>null,
+    get isSeller() {
+        return this.user !== null && this.user.canSell;
+    },
 });

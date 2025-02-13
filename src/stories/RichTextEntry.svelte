@@ -11,9 +11,7 @@ let {
 
 let text = $state(initialText);
 
-$effect(() => {
-    onInput(text);
-});
+let entry = $state<HTMLUnknownElement | null>(null);
 </script>
 
 
@@ -23,8 +21,8 @@ $effect(() => {
     {/if}
     <rich-text-entry
         contenteditable
-        bind:textContent={text}
-    ></rich-text-entry>
+        oninput={() => entry !== null && onInput(entry.textContent ?? "")}
+    >{text}</rich-text-entry>
 </rich-text-entry-container>
 
 

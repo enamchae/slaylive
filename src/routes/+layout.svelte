@@ -31,8 +31,10 @@ const updateLoginState = async (user: User, accessToken: string) => {
         streamioAuth: {
             id: response.userId,
             name: response.userName,
-            token: response.userToken,
+            token: response.streamioUserToken,
         },
+		id: response.userId,
+		name: response.userName,
         canSell: response.canSell,
     };
 };
