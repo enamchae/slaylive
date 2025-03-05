@@ -1,7 +1,7 @@
 import {error, json, type RequestHandler} from "@sveltejs/kit";
 import {and, eq} from "drizzle-orm";
 
-import { listing, listing, user as userTable } from "$/lib/server/db/schema";
+import { listing, user as userTable } from "$/lib/server/db/schema";
 import { db } from "$/lib/server/db";
 import { requiresLoggedInUser } from "../../middleware";
 import { validate } from "$lib/validation";

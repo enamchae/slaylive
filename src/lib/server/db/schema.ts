@@ -19,15 +19,17 @@ export const listingImage = pgTable("listingImage", {
 });
 
 export const livestream = pgTable("livestream", {
-	callId: uuid("callId").primaryKey(),
+	id: uuid("id").primaryKey(),
 	hostUserId: uuid("hostUserId").notNull().references(() => user.id),
 	hostSessionId: uuid("hostSessionId"),
-	active: boolean("active").notNull().default(true),
+	active: boolean("active").notNull().default(false),
+	title: text("title").notNull().default(""),
+	description: text("description").notNull().default(""),
 });
 
 export const livestreamListingAssociation = pgTable("livestreamListingAssociation", {
-	listingId: uuid("listingId").references(() => listing.id),
-	livestreamId: uuid("livestream").references(() => livestream.callId),
+	listingId: uuid("listingId").notNull().references(() => listing.id),
+	livestreamId: uuid("livestream").notNull().references(() => livestream.id),
 }, table => [
 	primaryKey({columns: [table.listingId, table.livestreamId]}),
 ]);

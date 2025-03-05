@@ -10,9 +10,11 @@ type Listing = {
 const {
     listings,
     onClickListing,
+    selectedIds = new Set(),
 }: {
     listings: Listing[],
     onClickListing: (listing: Listing) => void,
+    selectedIds?: Set<string>,
 } = $props();
 </script>
 
@@ -21,6 +23,7 @@ const {
         <ListingDisplay
             title={listing.title}
             onClick={() => onClickListing(listing)}
+            selected={selectedIds.has(listing.id)}
         />
     {/each}
 </listings-list>

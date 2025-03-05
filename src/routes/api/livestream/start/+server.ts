@@ -34,7 +34,11 @@ export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => 
             },
         }),
     
-        db.insert(livestream).values({callId, hostUserId: user.id}),
+        db.insert(livestream)
+            .values({
+                callId,
+                hostUserId: user.id,
+            }),
     ]);
 
 

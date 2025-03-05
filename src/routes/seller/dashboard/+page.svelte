@@ -49,7 +49,24 @@ if (!store.isSeller) {
 
         <seller-livestreams>
             <h2>livestreams</h2>
-            <button onclick={() => goto("/livestream/backstage?new")}>Set up a new livestream</button>
+
+            {#await apiFetch(`livestream/by-seller?hostUserId=${store.user.id}`)}
+                <div>Loading listings...</div>
+            {:then response}
+                {@const livestreams = response.livestreams}
+
+                {#if livestreams.length > 0}
+                    {#each livestreams as livestream}
+                        <div onclick={() => goto(`/livestream?edit&id=${livestream.id}`)}>{livestream.id} {livestream.title}</div>
+                    {/each}
+                {:else}
+                    <div>No livestreams yet!</div>
+                {/if}
+            {:catch}
+                <div>Failed to load livestreams</div>
+            {/await}
+
+            <button onclick={() => goto("/livestream?new")}>Set up a new livestream</button>
         </seller-livestreams>
     </seller-dashboard>
 {/if}
