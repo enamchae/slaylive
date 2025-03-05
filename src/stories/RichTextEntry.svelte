@@ -10,13 +10,29 @@ let {
 } = $props();
 
 let text = $state(initialText);
+
+let editing = $state(false);
+let lastText = $state(initialText);
+
 $effect(() => {
     if (entry !== null && entry !== document.activeElement) return;
 
     text = initialText;
 });
 
+$effect(() => {
+    if (editing) return;
+    lastText = text;
+});
+
 let entry = $state<HTMLUnknownElement | null>(null);
+
+const updateText = () => {
+    if (entry === null) return;
+
+    text = entry.textContent ?? "";
+    onInput(text);
+};
 </script>
 
 
@@ -26,9 +42,11 @@ let entry = $state<HTMLUnknownElement | null>(null);
     {/if}
     <rich-text-entry
         contenteditable
-        oninput={() => entry !== null && onInput(entry.textContent ?? "")}
+        oninput={() => updateText()}
+        onfocus={() => editing = true}
+        onblur={() => editing = false}
         bind:this={entry}
-    >{text}</rich-text-entry>
+    >{lastText}</rich-text-entry>
 </rich-text-entry-container>
 
 
