@@ -10,6 +10,11 @@ let {
 } = $props();
 
 let text = $state(initialText);
+$effect(() => {
+    if (entry !== null && entry !== document.activeElement) return;
+
+    text = initialText;
+});
 
 let entry = $state<HTMLUnknownElement | null>(null);
 </script>
@@ -22,6 +27,7 @@ let entry = $state<HTMLUnknownElement | null>(null);
     <rich-text-entry
         contenteditable
         oninput={() => entry !== null && onInput(entry.textContent ?? "")}
+        bind:this={entry}
     >{text}</rich-text-entry>
 </rich-text-entry-container>
 
