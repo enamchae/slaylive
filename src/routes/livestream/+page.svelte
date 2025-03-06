@@ -16,7 +16,7 @@ if (!store.isSeller) {
 const searchParams = new URLSearchParams(location.search);
 
 let editing = $state((searchParams.has("new") || searchParams.has("edit")) && (store.user?.canSell ?? false));
-const livestreamId = searchParams.get("id");
+let livestreamId = $state(searchParams.get("id"));
 
 const livestreamPromise = livestreamId === null
     ? Promise.resolve({title: "", description: ""})
@@ -61,7 +61,7 @@ const saveLivestream = async () => {
             },
         });
     } else {
-        await apiFetchAuthorized("livestream/new", {
+        ({livestreamId} = await apiFetchAuthorized("livestream/new", {
             method: "PUT",
             body: JSON.stringify({
                 livestreamTitle: livestream.title,
@@ -71,7 +71,7 @@ const saveLivestream = async () => {
             headers: {
                 "Content-Type": "application/json",
             },
-        });
+        }));
     }
 
     editing = false;
@@ -149,14 +149,17 @@ const toggleListing = (listingId: string) => {
                     {/await}
                 </livestream-listings>
 
+                <button
+                    onclick={() => callStarted = true}
+                    disabled={livestreamId === null}
+                >Start</button>
 
-                <button onclick={() => callStarted = true}>Start</button>
-
-                {#if callStarted}
+                {#if callStarted && livestreamId !== null}
                     <Backstage
                         userToken={store.user.streamioAuth.token}
                         userId={store.user.streamioAuth.id}
                         userName={store.user.streamioAuth.name}
+                        {livestreamId}
                     />
                 {/if}
             </livestream-dashboard>

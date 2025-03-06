@@ -6,10 +6,10 @@ import { and, eq } from "drizzle-orm";
 import { requiresLoggedInUser } from "$api/middleware";
 
 export const PATCH: RequestHandler = requiresLoggedInUser(async ({request}, user) => {
-    const {callId, sessionId} = await request.json();
+    const {livestreamId, sessionId} = await request.json();
 
     const livestreamMatches = and(
-        eq(livestream.callId, callId),
+        eq(livestream.id, livestreamId),
         eq(livestream.hostUserId, user.id),
     );
 

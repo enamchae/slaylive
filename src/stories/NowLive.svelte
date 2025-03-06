@@ -17,10 +17,10 @@ const joinCall = (callId: string) => {
     {#await apiFetch("livestream/list")}
         <div>Loading ongoing livestreams</div>
     {:then livestreams}
-        {#each livestreams as livestream (livestream.callId)}
+        {#each livestreams as livestream (livestream.id)}
             <div>
                 <ButtonRaised
-                    onClick={() => joinCall(livestream.callId)}
+                    onClick={() => joinCall(livestream.id)}
                     backgroundColor="#fff"
                 >
                     abc

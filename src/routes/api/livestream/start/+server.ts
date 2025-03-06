@@ -20,9 +20,9 @@ export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => 
         return error(400, "Host already has an ongoing stream");
     }
 
-    const callId = await generateCallId();
+    const {livestreamId} = await event.request.json();
 
-    const call = client.video.call("livestream", callId);
+    const call = client.video.call("livestream", livestreamId);
 
     await Promise.all([
         call.create({
@@ -34,30 +34,11 @@ export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => 
             },
         }),
     
-        db.insert(livestream)
-            .values({
-                callId,
-                hostUserId: user.id,
-            }),
+        db.update(livestream)
+            .set({active: true})
+            .where(eq(livestream.id, livestreamId)),
     ]);
 
 
-    return json({
-        callId,
-    });
+    return json({});
 });
-
-const generateCallId = async () => {
-    let callId: string;
-    while (true) {
-        callId = crypto.randomUUID();
-
-        const calls = await db.select({})
-            .from(livestream)
-            .where(eq(livestream.callId, callId))
-            .limit(1);
-        if (calls.length === 0) break;
-    }
-
-    return callId;
-};

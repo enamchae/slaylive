@@ -9,10 +9,12 @@ let {
     userToken,
     userId,
     userName,
+    livestreamId,
 }: {
     userToken: string,
     userId: string,
     userName: string,
+    livestreamId: string,
 } = $props();
 
 // set up the user object
@@ -26,22 +28,21 @@ let nParticipants = $state(0);
 let started = $state(false);
 
 let call = $state<Call | null>(null);
-let callId = $state<string | null>(null);
 let localParticipant = $state<StreamVideoParticipant | null>(null);
 
 (async () => {
-    ({callId} = await apiFetchAuthorized("livestream/start", {
+    await apiFetchAuthorized("livestream/start", {
         method: "POST",
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+            livestreamId,
+        }),
         headers: {
             "Content-Type": "application/json",
         },
-    }));
-
-    if (callId === null) return;
+    });
 
     const client = new StreamVideoClient({ apiKey: PUBLIC_STREAM_API_KEY, token: userToken, user });
-    call = client.call('livestream', callId);
+    call = client.call('livestream', livestreamId);
 
     await call.join();
     
@@ -64,7 +65,7 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
         apiFetchAuthorized("livestream/set-host-session", {
             method: "PATCH",
             body: JSON.stringify({
-                callId,
+                livestreamId,
                 sessionId: participant.sessionId,
             }),
             headers: {
@@ -86,7 +87,7 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
 </script>
 
 <backstage-container>
-    <div>Call id: {callId}</div>
+    <div>Livestream id: {livestreamId}</div>
     <div>Live: {nParticipants}</div>
     {#if call !== null}
         {#if localParticipant !== null}
