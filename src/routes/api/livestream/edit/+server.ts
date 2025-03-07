@@ -1,7 +1,7 @@
 import {error, json, type RequestHandler} from "@sveltejs/kit";
 import {and, eq} from "drizzle-orm";
 
-import { listing, livestream, livestreamListingAssociation, user as userTable } from "$/lib/server/db/schema";
+import { listingTable, livestreamTable, livestreamListingAssociationTable, userTable as userTable } from "$/lib/server/db/schema";
 import { db } from "$/lib/server/db";
 import { requiresLoggedInUser } from "../../middleware";
 import { validate } from "$lib/validation";
@@ -25,9 +25,9 @@ export const PATCH: RequestHandler = requiresLoggedInUser(async ({request}, user
     const userObj = userObjs[0];
     if (!userObj.canSell) return error(403, "User is not a seller");
 
-    const livestreamObjs = await db.select({hostUserId: livestream.hostUserId})
-        .from(livestream)
-        .where(eq(livestream.id, livestreamId))
+    const livestreamObjs = await db.select({hostUserId: livestreamTable.hostUserId})
+        .from(livestreamTable)
+        .where(eq(livestreamTable.id, livestreamId))
         .limit(1);
     if (livestreamObjs.length === 0) return error(404, "Livestream not found");
     
@@ -39,17 +39,17 @@ export const PATCH: RequestHandler = requiresLoggedInUser(async ({request}, user
     if (!validationResult.ok) {
         return error(400, JSON.stringify({errors: validationResult.errors}));
     }
-    await db.update(livestream)
+    await db.update(livestreamTable)
         .set({
             title: livestreamTitle,
             description: livestreamDescription,
         })
-        .where(eq(livestream.id, livestreamId));
+        .where(eq(livestreamTable.id, livestreamId));
 
-    await db.delete(livestreamListingAssociation)
-        .where(eq(livestreamListingAssociation.livestreamId, livestreamId));
+    await db.delete(livestreamListingAssociationTable)
+        .where(eq(livestreamListingAssociationTable.livestreamId, livestreamId));
     
-    await db.insert(livestreamListingAssociation)
+    await db.insert(livestreamListingAssociationTable)
         .values(livestreamListingIds.map(listingId => ({
             listingId,
             livestreamId,

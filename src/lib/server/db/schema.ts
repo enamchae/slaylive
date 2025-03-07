@@ -1,35 +1,35 @@
 import { pgTable, serial, text, integer, uuid, date, boolean, primaryKey } from 'drizzle-orm/pg-core';
 
-export const user = pgTable("user", {
+export const userTable = pgTable("user", {
 	id: uuid("id").primaryKey(),
 	canSell: boolean("canSell").notNull().default(false),
 });
 
-export const listing = pgTable("listing", {
+export const listingTable = pgTable("listing", {
 	id: uuid("id").primaryKey(),
-	sellerUserId: uuid("sellerUserId").notNull().references(() => user.id),
+	sellerUserId: uuid("sellerUserId").notNull().references(() => userTable.id),
 	title: text("title").notNull(),
 	description: text("description").notNull(),
 	onDisplay: boolean("onDisplay").notNull().default(false),
 });
 
-export const listingImage = pgTable("listingImage", {
+export const listingImageTable = pgTable("listingImage", {
 	id: uuid("id").primaryKey(),
-	listingId: uuid("listingId").notNull().references(() => listing.id),
+	listingId: uuid("listingId").notNull().references(() => listingTable.id),
 });
 
-export const livestream = pgTable("livestream", {
+export const livestreamTable = pgTable("livestream", {
 	id: uuid("id").primaryKey(),
-	hostUserId: uuid("hostUserId").notNull().references(() => user.id),
+	hostUserId: uuid("hostUserId").notNull().references(() => userTable.id),
 	hostSessionId: uuid("hostSessionId"),
 	active: boolean("active").notNull().default(false),
 	title: text("title").notNull().default(""),
 	description: text("description").notNull().default(""),
 });
 
-export const livestreamListingAssociation = pgTable("livestreamListingAssociation", {
-	listingId: uuid("listingId").notNull().references(() => listing.id),
-	livestreamId: uuid("livestream").notNull().references(() => livestream.id),
+export const livestreamListingAssociationTable = pgTable("livestreamListingAssociation", {
+	listingId: uuid("listingId").notNull().references(() => listingTable.id),
+	livestreamId: uuid("livestream").notNull().references(() => livestreamTable.id),
 }, table => [
 	primaryKey({columns: [table.listingId, table.livestreamId]}),
 ]);

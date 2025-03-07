@@ -60,7 +60,6 @@ let participants = $state<StreamVideoParticipant[]>([]);
 </script>
 
 <watch-container>
-    <div>Call id: {callId}</div>
     <div>Live: {nParticipants}</div>
     {#if call !== null && hostSessionId !== null}
         <ParticipantVideo
@@ -74,6 +73,8 @@ let participants = $state<StreamVideoParticipant[]>([]);
 watch-container {
     display: flex;
     flex-direction: column;
+
+    height: 100vh;
 }
 
 video {

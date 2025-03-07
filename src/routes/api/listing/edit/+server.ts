@@ -1,7 +1,7 @@
 import {error, json, type RequestHandler} from "@sveltejs/kit";
 import {and, eq} from "drizzle-orm";
 
-import { listing, user as userTable } from "$/lib/server/db/schema";
+import { listingTable, userTable as userTable } from "$/lib/server/db/schema";
 import { db } from "$/lib/server/db";
 import { requiresLoggedInUser } from "../../middleware";
 import { validate } from "$lib/validation";
@@ -20,9 +20,9 @@ export const PATCH: RequestHandler = requiresLoggedInUser(async ({request}, user
     const userObj = userObjs[0];
     if (!userObj.canSell) return error(403, "User is not a seller");
 
-    const listingObjs = await db.select({sellerUserId: listing.sellerUserId})
-        .from(listing)
-        .where(eq(listing.id, listingId))
+    const listingObjs = await db.select({sellerUserId: listingTable.sellerUserId})
+        .from(listingTable)
+        .where(eq(listingTable.id, listingId))
         .limit(1);
     if (listingObjs.length === 0) return error(404, "Listing not found");
     
@@ -34,14 +34,14 @@ export const PATCH: RequestHandler = requiresLoggedInUser(async ({request}, user
     if (!validationResult.ok) {
         return error(400, JSON.stringify({errors: validationResult.errors}));
     }
-    await db.update(listing)
+    await db.update(listingTable)
         .set({
             sellerUserId: user.id,
             title: listingTitle,
             description: listingDescription,
             onDisplay: listingOnDisplay,
         })
-        .where(eq(listing.id, listingId));
+        .where(eq(listingTable.id, listingId));
 
     return json({});
 });

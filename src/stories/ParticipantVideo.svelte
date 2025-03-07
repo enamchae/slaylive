@@ -25,3 +25,10 @@ onDestroy(() => {
 </script>
 
 <video bind:this={video}></video>
+
+<style lang="scss">
+video {
+    width: 100%;
+    height: 100%;
+}
+</style>

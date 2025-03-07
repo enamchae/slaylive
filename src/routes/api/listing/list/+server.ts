@@ -1,16 +1,16 @@
 import { db } from "$/lib/server/db";
-import { listing } from "$/lib/server/db/schema";
+import { listingTable } from "$/lib/server/db/schema";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 
 export const GET: RequestHandler = async () => {
     const listings = await db.select({
-        id: listing.id,
-        title: listing.title,
-        description: listing.description,
-        sellerUserId: listing.sellerUserId,
+        id: listingTable.id,
+        title: listingTable.title,
+        description: listingTable.description,
+        sellerUserId: listingTable.sellerUserId,
     })
-        .from(listing);
+        .from(listingTable);
 
     return json({
         listings,

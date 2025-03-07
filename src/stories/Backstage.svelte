@@ -31,15 +31,6 @@ let call = $state<Call | null>(null);
 let localParticipant = $state<StreamVideoParticipant | null>(null);
 
 (async () => {
-    await apiFetchAuthorized("livestream/start", {
-        method: "POST",
-        body: JSON.stringify({
-            livestreamId,
-        }),
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
 
     const client = new StreamVideoClient({ apiKey: PUBLIC_STREAM_API_KEY, token: userToken, user });
     call = client.call('livestream', livestreamId);

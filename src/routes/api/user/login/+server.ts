@@ -4,7 +4,7 @@ import { error, json, type RequestHandler } from "@sveltejs/kit";
 import {client} from "$api/global"
 import { requiresLoggedInUser } from "$api/middleware";
 import { db } from "$/lib/server/db";
-import {user as userDb} from "$lib/server/db/schema";
+import {userTable as userDb} from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 
 export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => {

@@ -1,5 +1,5 @@
 import { db } from "$/lib/server/db";
-import { listing } from "$/lib/server/db/schema";
+import { listingTable } from "$/lib/server/db/schema";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 
@@ -8,13 +8,13 @@ export const GET: RequestHandler = async ({ url }) => {
     if (listingId === null) return error(400, "Missing listing id");
 
     const listings = await db.select({
-        title: listing.title,
-        description: listing.description,
-        onDisplay: listing.onDisplay,
-        sellerUserId: listing.sellerUserId,
+        title: listingTable.title,
+        description: listingTable.description,
+        onDisplay: listingTable.onDisplay,
+        sellerUserId: listingTable.sellerUserId,
     })
-        .from(listing)
-        .where(eq(listing.id, listingId))
+        .from(listingTable)
+        .where(eq(listingTable.id, listingId))
         .limit(1);
 
     if (listings.length === 0) return error(404, "No listing found");

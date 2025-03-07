@@ -7,35 +7,31 @@ import { livestreamTable } from "$/lib/server/db/schema";
 import { requiresLoggedInUser } from "$api/middleware";
 
 export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => {
-    const calls = await db.select({})
+    const {livestreamId} = await event.request.json();
+
+    const livestreams = await db.select()
         .from(livestreamTable)
-        .where(
-            and(
-                eq(livestreamTable.hostUserId, user.id),
-                eq(livestreamTable.active, true)
-            )
-        )
+        .where(eq(livestreamTable.id, livestreamId))
         .limit(1);
-    if (calls.length !== 0) {
-        return error(400, "Host already has an ongoing stream");
+    if (livestreams.length === 0) {
+        return error(400, "No livestream with the given id");
     }
 
-    const {livestreamId} = await event.request.json();
+    const livestream = livestreams[0];
+    if (livestream.hostUserId !== user.id) {
+        return error(403, "User is not the host of the livestream");
+    }
+    if (!livestream.active) {
+        return error(400, "Livestream is not active");
+    }
 
     const call = client.video.call("livestream", livestreamId);
 
     await Promise.all([
-        call.create({
-            data: {
-                created_by_id: user.id,
-                members: [
-                    {user_id:  user.id, role: "user"},
-                ],
-            },
-        }),
+        call.end(),
     
         db.update(livestreamTable)
-            .set({active: true})
+            .set({active: false})
             .where(eq(livestreamTable.id, livestreamId)),
     ]);
 

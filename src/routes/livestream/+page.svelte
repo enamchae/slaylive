@@ -25,6 +25,7 @@ const livestreamPromise = livestreamId === null
 let livestream = $state<{
     title: string,
     description: string,
+    active: boolean,
 } | null>(null);
 
 let selectedListingIds = $state(new SvelteSet<string>());
@@ -34,10 +35,9 @@ let selectedListingIds = $state(new SvelteSet<string>());
     livestream = {
         title: response.title,
         description: response.description,
+        active: response.active,
     };
 })();
-
-let callStarted = $state(false);
 
 const saveLivestream = async () => {
     if (livestream === null) return;
@@ -83,6 +83,38 @@ const toggleListing = (listingId: string) => {
     } else {
         selectedListingIds.add(listingId);
     }
+};
+
+const startLivestream = async () => {
+    if (livestream === null) return;
+
+    await apiFetchAuthorized("livestream/start", {
+        method: "POST",
+        body: JSON.stringify({
+            livestreamId,
+        }),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    livestream.active = true;
+};
+
+const stopLivestream = async () => {
+    if (livestream === null) return;
+
+    await apiFetchAuthorized("livestream/stop", {
+        method: "POST",
+        body: JSON.stringify({
+            livestreamId,
+        }),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+    
+    livestream.active = false;
 };
 </script>
 
@@ -150,11 +182,16 @@ const toggleListing = (listingId: string) => {
                 </livestream-listings>
 
                 <button
-                    onclick={() => callStarted = true}
-                    disabled={livestreamId === null}
+                    onclick={() => startLivestream()}
+                    disabled={livestreamId === null || livestream.active}
                 >Start</button>
 
-                {#if callStarted && livestreamId !== null}
+                <button
+                    onclick={() => stopLivestream()}
+                    disabled={!livestream.active}
+                >Stop</button>
+
+                {#if livestream.active && livestreamId !== null}
                     <Backstage
                         userToken={store.user.streamioAuth.token}
                         userId={store.user.streamioAuth.id}

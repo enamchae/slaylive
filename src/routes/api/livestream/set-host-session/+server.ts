@@ -1,7 +1,7 @@
 import { error, type RequestHandler, json } from "@sveltejs/kit";
 
 import { db } from "$/lib/server/db";
-import { livestream } from "$/lib/server/db/schema";
+import { livestreamTable } from "$/lib/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { requiresLoggedInUser } from "$api/middleware";
 
@@ -9,18 +9,18 @@ export const PATCH: RequestHandler = requiresLoggedInUser(async ({request}, user
     const {livestreamId, sessionId} = await request.json();
 
     const livestreamMatches = and(
-        eq(livestream.id, livestreamId),
-        eq(livestream.hostUserId, user.id),
+        eq(livestreamTable.id, livestreamId),
+        eq(livestreamTable.hostUserId, user.id),
     );
 
     const calls = await db.select({})
-        .from(livestream)
+        .from(livestreamTable)
         .where(livestreamMatches)
         .limit(1);
     if (calls.length === 0) return error(400, "Call not found");
 
     
-    await db.update(livestream)
+    await db.update(livestreamTable)
         .set({hostSessionId: sessionId})
         .where(livestreamMatches);
 

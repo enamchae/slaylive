@@ -1,7 +1,7 @@
 import {error, json, type RequestHandler} from "@sveltejs/kit";
 import {eq} from "drizzle-orm";
 
-import { listing, user as userTable } from "$/lib/server/db/schema";
+import { listingTable, userTable as userTable } from "$/lib/server/db/schema";
 import { db } from "$/lib/server/db";
 import { requiresLoggedInUser } from "../../middleware";
 import { validate } from "$lib/validation";
@@ -28,7 +28,7 @@ export const PUT: RequestHandler = requiresLoggedInUser(async ({request}, user) 
 
 
     const listingId = await generateListingId();
-    await db.insert(listing)
+    await db.insert(listingTable)
         .values({
             id: listingId,
             sellerUserId: user.id,
@@ -46,8 +46,8 @@ const generateListingId = async () => {
         productId = crypto.randomUUID();
 
         const calls = await db.select({})
-            .from(listing)
-            .where(eq(listing.id, productId))
+            .from(listingTable)
+            .where(eq(listingTable.id, productId))
             .limit(1);
         if (calls.length === 0) break;
     }
