@@ -13,7 +13,7 @@ export const GET: RequestHandler = async ({ url }) => {
         hostSessionId: livestreamTable.hostSessionId,
     })
         .from(livestreamTable)
-        .where(eq(livestreamTable.callId, callId))
+        .where(eq(livestreamTable.id, callId))
         .limit(1);
 
     if (calls.length === 0) return error(404, "No livestream with the given id");

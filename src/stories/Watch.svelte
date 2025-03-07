@@ -3,6 +3,7 @@ import { StreamVideoClient, type Call, type User, type StreamVideoParticipant } 
 
 import { PUBLIC_STREAM_API_KEY, PUBLIC_API_URL } from "$env/static/public";
 import ParticipantVideo from "./ParticipantVideo.svelte";
+    import { onDestroy } from "svelte";
 
 let {
     callId,
@@ -28,6 +29,8 @@ let nParticipants = $state(0);
 
 let call = $state<Call | null>(null);
 let hostSessionId = $state<string | null>(null);
+
+let callOngoing = $state(true);
 
 
 // $effect(() => {
@@ -55,29 +58,56 @@ let participants = $state<StreamVideoParticipant[]>([]);
     call.state.participants$.subscribe(items => {
         participants = items;
     });
+
+    call.state.endedAt$.subscribe(date => {
+        if (date === undefined) return;
+        callOngoing = false;
+    });
 })();
 
+onDestroy(() => {
+    call?.leave();
+});
 </script>
 
 <watch-container>
-    <div>Live: {nParticipants}</div>
-    {#if call !== null && hostSessionId !== null}
-        <ParticipantVideo
-            {call}
-            sessionId={hostSessionId}
-        />
+    {#if callOngoing}
+        {#if call !== null && hostSessionId !== null}
+            <video-backdrop>
+                <ParticipantVideo
+                    {call}
+                    sessionId={hostSessionId}
+                    isBackdrop
+                />
+            </video-backdrop>
+
+            <div>
+                <ParticipantVideo
+                    {call}
+                    sessionId={hostSessionId}
+                    hasShadow
+                />
+            </div>
+        {/if}
+    {:else}
+        Call over! Thanks for watching!
     {/if}
 </watch-container>
 
 <style lang="scss">
 watch-container {
-    display: flex;
-    flex-direction: column;
-
+    display: grid;
+    place-items: center;
     height: 100vh;
+    background: #1a1d1c;
+    color: #fff;
+
+    > * {
+        grid-area: 1/1;
+    }
 }
 
-video {
-    object-fit: contain;
+video-backdrop {
+    height: 100%;
 }
 </style>

@@ -7,7 +7,7 @@ import {store} from "$routes/store.svelte";
 
 <tabs-rack>
     <div>
-        <button onclick={() => goto("/")}>Now live</button>
+        <button onclick={() => goto("/now-live")}>Now live</button>
     </div>
 
     <div>

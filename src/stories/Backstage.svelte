@@ -4,6 +4,7 @@ import { StreamVideoClient, type Call, type User, type StreamVideoParticipant } 
 import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
 import ParticipantVideo from "./ParticipantVideo.svelte";
 import { apiFetchAuthorized } from "$routes/util";
+    import { onDestroy } from "svelte";
 
 let {
     userToken,
@@ -75,6 +76,10 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
     });
     
 })();
+
+onDestroy(() => {
+    call?.leave();
+});
 </script>
 
 <backstage-container>

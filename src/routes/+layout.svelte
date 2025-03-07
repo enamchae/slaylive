@@ -1,59 +1,14 @@
 <script lang="ts">
 import { i18n } from '$lib/i18n';
 import { ParaglideJS } from '@inlang/paraglide-sveltekit';
-import Tabs from "$stories/Tabs.svelte";
-import { goto } from "$app/navigation";
-import {type User} from "@supabase/supabase-js";
-
-import { store } from "./store.svelte";
-import {apiFetch} from "$routes/util";
-import LoginCta from "$/stories/LoginCta.svelte";
-
 import "$stories/index.scss";
 
-let { children, data } = $props();
-
-const {supabase} = $derived(data);
-
-
-const updateLoginState = async (user: User, accessToken: string) => {
-    const response = await apiFetch("user/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${accessToken}`,
-        },
-    });
-
-    store.user = {
-        supabaseUser: user,
-        supabaseAccessToken: accessToken,
-        streamioAuth: {
-            id: response.userId,
-            name: response.userName,
-            token: response.streamioUserToken,
-        },
-		id: response.userId,
-		name: response.userName,
-        canSell: response.canSell,
-    };
-};
+let { children } = $props();
 </script>
 
 <ParaglideJS {i18n}>
 	<content-container>
-		{#if store.user === null}
-			<LoginCta
-				{supabase}
-				onLogin={updateLoginState}
-			/>
-		{/if}
-
-		<main>
-			{@render children()}
-		</main>
-		
-		<Tabs />
+		{@render children()}
 	</content-container>
 </ParaglideJS>
 
@@ -81,7 +36,7 @@ content-container {
     width: 100vw;
     height: 100vh;
 
-	background: linear-gradient(#e2fae6, rgb(251, 253, 225));
+	background: linear-gradient(#e2fae6, #fbfde1);
 
 	> main {
 		flex-grow: 1;

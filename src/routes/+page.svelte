@@ -1,27 +1,66 @@
 <script lang="ts">
-    import NowLive from "$/stories/NowLive.svelte";
+import { onMount } from "svelte";
+import { goto } from "$app/navigation";
+import {type User} from "@supabase/supabase-js";
 
+import LoginButtonGoogle from "$stories/LoginButtonGoogle.svelte";
+import { store } from "./store.svelte";
+import {apiFetch} from "$routes/util";
 
-let joinCallId = $state("");
+let { data } = $props();
+
+const {supabase} = $derived(data);
+
+onMount(() => {
+    if (store.user === null) return;
+    goto("/");
+});
+
+const updateLoginState = async (user: User, accessToken: string) => {
+    const response = await apiFetch("user/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`,
+        },
+    });
+
+    store.user = {
+        supabaseUser: user,
+        supabaseAccessToken: accessToken,
+        streamioAuth: {
+            id: response.userId,
+            name: response.userName,
+            token: response.streamioUserToken,
+        },
+		id: response.userId,
+		name: response.userName,
+        canSell: response.canSell,
+    };
+
+    goto("/now-live");
+};
 </script>
 
-<NowLive />
-<!-- 
-<button
-    onclick={() => goto("/backstage")}
-    disabled={store.user === null}
->
-    Start a call
-</button>
 
-<button
-    onclick={() => goto(`/watch?call_id=${encodeURIComponent(joinCallId)}`)}
-    disabled={store.user === null}
->
-    Join call
-</button>
+<main>
+    <div>Sign in and start browsing for free</div>
 
-<input
-    type="text"
-    bind:value={joinCallId}
-/> -->
+    <button-rack>
+        <LoginButtonGoogle
+            {supabase}
+            onLogin={updateLoginState}
+        />
+    </button-rack>
+</main>
+
+<style lang="scss">
+main {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0 2.5rem 0;
+}
+</style>
