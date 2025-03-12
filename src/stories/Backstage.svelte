@@ -5,8 +5,9 @@ import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
 import ParticipantVideo from "./ParticipantVideo.svelte";
 import { apiFetchAuthorized } from "$routes/util";
     import { onDestroy } from "svelte";
-    import type { CallEvent, ChatMessage } from "./CallEvent";
+    import type { CallEvent, LivestreamChatMessage } from "./CallEvent";
     import Chat from "./Chat.svelte";
+    import Reactions from "./Reactions.svelte";
 
 let {
     userToken,
@@ -33,7 +34,7 @@ let started = $state(false);
 let call = $state<Call | null>(null);
 let localParticipant = $state<StreamVideoParticipant | null>(null);
 
-let chatHistory = $state<ChatMessage[]>([]);
+let chatHistory = $state<LivestreamChatMessage[]>([]);
 
 (async () => {
 
@@ -124,6 +125,10 @@ onDestroy(() => {
         <Chat
             {userId}
             {userName}
+            {call}
+        />
+        
+        <Reactions
             {call}
         />
     {/if}

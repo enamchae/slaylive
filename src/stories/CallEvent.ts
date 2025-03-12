@@ -1,4 +1,4 @@
-export type ChatMessage = {
+export type LivestreamChatMessage = {
     user: {
         id: string,
         name: string,
@@ -6,9 +6,14 @@ export type ChatMessage = {
     text: string,
 };
 
-export type CallEvent<EventType extends "chat" | "react"=any> = {
+export type LivestreamReaction = {
+    emoji: string,
+};
+
+export type CallEvent<EventType extends "chat" | "react"="chat" | "react"> = {
     type: EventType,
     data:
-        EventType extends "chat" ? ChatMessage :
+        EventType extends "chat" ? LivestreamChatMessage :
+        EventType extends "react" ? LivestreamReaction :
         never,
 };

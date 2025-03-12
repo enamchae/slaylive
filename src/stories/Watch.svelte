@@ -7,8 +7,9 @@ import { PUBLIC_STREAM_API_KEY, PUBLIC_API_URL } from "$env/static/public";
 import ParticipantVideo from "./ParticipantVideo.svelte";
 import SymbolButton from "./SymbolButton.svelte";
 import RichTextEntry from "./RichTextEntry.svelte";
-import type { CallEvent, ChatMessage } from "./CallEvent";
+import type { CallEvent, LivestreamChatMessage } from "./CallEvent";
     import Chat from "./Chat.svelte";
+    import Reactions from "./Reactions.svelte";
 
 let {
     callId,
@@ -108,6 +109,14 @@ onDestroy(() => {
             </SymbolButton>
         </watch-exit>
 
+        <watch-reactions>
+            {#if call !== null}
+                <Reactions
+                    {call}
+                />
+            {/if}
+        </watch-reactions>
+
         <watch-chat>
             {#if call !== null}
                 <Chat
@@ -149,6 +158,11 @@ watch-overlays {
 
     > watch-exit {
         grid-area: 1/1;
+    }
+
+    > watch-reactions {
+        grid-area: 2/1;
+        align-self: flex-end;
     }
 
     > watch-chat {
