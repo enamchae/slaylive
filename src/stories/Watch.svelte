@@ -8,6 +8,7 @@ import ParticipantVideo from "./ParticipantVideo.svelte";
 import SymbolButton from "./SymbolButton.svelte";
 import RichTextEntry from "./RichTextEntry.svelte";
 import type { CallEvent, ChatMessage } from "./CallEvent";
+    import Chat from "./Chat.svelte";
 
 let {
     callId,
@@ -36,8 +37,6 @@ let hostSessionId = $state<string | null>(null);
 
 let callOngoing = $state(true);
 
-let chatText = $state("");
-let chatHistory = $state<ChatMessage[]>([]);
 
 
 // $effect(() => {
@@ -70,41 +69,11 @@ let participants = $state<StreamVideoParticipant[]>([]);
         if (date === undefined) return;
         callOngoing = false;
     });
-
-    call.on("custom", customEvent => {
-        const event = customEvent.custom as CallEvent;
-
-        switch (event.type) {
-            case "chat":
-                chatHistory.push(event.data);
-                break;
-            case "react":
-                
-        }
-    });
 })();
 
 onDestroy(() => {
     call?.leave();
 });
-
-
-const sendChat = async () => {
-    if (call === null) return;
-
-    await call.sendCustomEvent({
-        type: "chat",
-        data: {
-            user: {
-                id: userId,
-                name: userName,
-            },
-            text: chatText,
-        },
-    });
-
-    chatText = "";
-};
 </script>
 
 <watch-container>
@@ -140,19 +109,13 @@ const sendChat = async () => {
         </watch-exit>
 
         <watch-chat>
-            <RichTextEntry
-                initialText={chatText}
-                onInput={text => {
-                    chatText = text;
-                }}
-                placeholder="Write something…"
-            />
-            
-            <SymbolButton
-                onClick={sendChat}
-            >
-                Send
-            </SymbolButton>
+            {#if call !== null}
+                <Chat
+                    {userId}
+                    {userName}
+                    {call}
+                />
+            {/if}
         </watch-chat>
     </watch-overlays>
 </watch-container>

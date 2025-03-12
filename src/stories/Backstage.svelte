@@ -6,6 +6,7 @@ import ParticipantVideo from "./ParticipantVideo.svelte";
 import { apiFetchAuthorized } from "$routes/util";
     import { onDestroy } from "svelte";
     import type { CallEvent, ChatMessage } from "./CallEvent";
+    import Chat from "./Chat.svelte";
 
 let {
     userToken,
@@ -119,6 +120,12 @@ onDestroy(() => {
             onclick={() => call?.stopLive()}
             disabled={!started}
         >Stop live</button>
+
+        <Chat
+            {userId}
+            {userName}
+            {call}
+        />
     {/if}
 </backstage-container>
 
