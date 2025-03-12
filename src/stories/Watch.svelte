@@ -1,9 +1,13 @@
 <script lang="ts">
-import { StreamVideoClient, type Call, type User, type StreamVideoParticipant } from "@stream-io/video-client";
+import { StreamVideoClient, type Call, type User, type StreamVideoParticipant, type EventTypes } from "@stream-io/video-client";
+import { onDestroy } from "svelte";
+import {goto} from "$app/navigation";
 
 import { PUBLIC_STREAM_API_KEY, PUBLIC_API_URL } from "$env/static/public";
 import ParticipantVideo from "./ParticipantVideo.svelte";
-    import { onDestroy } from "svelte";
+import SymbolButton from "./SymbolButton.svelte";
+import RichTextEntry from "./RichTextEntry.svelte";
+import type { CallEvent, ChatMessage } from "./CallEvent";
 
 let {
     callId,
@@ -31,6 +35,9 @@ let call = $state<Call | null>(null);
 let hostSessionId = $state<string | null>(null);
 
 let callOngoing = $state(true);
+
+let chatText = $state("");
+let chatHistory = $state<ChatMessage[]>([]);
 
 
 // $effect(() => {
@@ -63,11 +70,41 @@ let participants = $state<StreamVideoParticipant[]>([]);
         if (date === undefined) return;
         callOngoing = false;
     });
+
+    call.on("custom", customEvent => {
+        const event = customEvent.custom as CallEvent;
+
+        switch (event.type) {
+            case "chat":
+                chatHistory.push(event.data);
+                break;
+            case "react":
+                
+        }
+    });
 })();
 
 onDestroy(() => {
     call?.leave();
 });
+
+
+const sendChat = async () => {
+    if (call === null) return;
+
+    await call.sendCustomEvent({
+        type: "chat",
+        data: {
+            user: {
+                id: userId,
+                name: userName,
+            },
+            text: chatText,
+        },
+    });
+
+    chatText = "";
+};
 </script>
 
 <watch-container>
@@ -81,17 +118,43 @@ onDestroy(() => {
                 />
             </video-backdrop>
 
-            <div>
+            <video-main>
                 <ParticipantVideo
                     {call}
                     sessionId={hostSessionId}
                     hasShadow
                 />
-            </div>
+            </video-main>
         {/if}
     {:else}
         Call over! Thanks for watching!
     {/if}
+
+    <watch-overlays>
+        <watch-exit>
+            <SymbolButton
+                onClick={() => goto("/now-live")}
+            >
+                &lt;
+            </SymbolButton>
+        </watch-exit>
+
+        <watch-chat>
+            <RichTextEntry
+                initialText={chatText}
+                onInput={text => {
+                    chatText = text;
+                }}
+                placeholder="Write something…"
+            />
+            
+            <SymbolButton
+                onClick={sendChat}
+            >
+                Send
+            </SymbolButton>
+        </watch-chat>
+    </watch-overlays>
 </watch-container>
 
 <style lang="scss">
@@ -104,10 +167,29 @@ watch-container {
 
     > * {
         grid-area: 1/1;
+        position: absolute;
     }
 }
 
 video-backdrop {
     height: 100%;
 }
+
+watch-overlays {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+
+    > watch-exit {
+        grid-area: 1/1;
+    }
+
+    > watch-chat {
+        grid-area: 2/2;
+        align-self: flex-end;
+    }
+}
+
 </style>

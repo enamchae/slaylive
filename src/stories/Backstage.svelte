@@ -5,6 +5,7 @@ import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
 import ParticipantVideo from "./ParticipantVideo.svelte";
 import { apiFetchAuthorized } from "$routes/util";
     import { onDestroy } from "svelte";
+    import type { CallEvent, ChatMessage } from "./CallEvent";
 
 let {
     userToken,
@@ -30,6 +31,8 @@ let started = $state(false);
 
 let call = $state<Call | null>(null);
 let localParticipant = $state<StreamVideoParticipant | null>(null);
+
+let chatHistory = $state<ChatMessage[]>([]);
 
 (async () => {
 
@@ -74,7 +77,22 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
     call.state.backstage$.subscribe((backstage) => {
         started = !backstage;
     });
+
     
+
+    call.on("custom", customEvent => {
+        const event = customEvent.custom as CallEvent;
+
+        switch (event.type) {
+            case "chat":
+                chatHistory.push(event.data);
+                break;
+            case "react":
+                
+        }
+    });
+    
+
 })();
 
 onDestroy(() => {

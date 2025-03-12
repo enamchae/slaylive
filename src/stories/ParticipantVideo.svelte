@@ -45,10 +45,6 @@ video {
         filter: brightness(.5) blur(32px);
     }
 
-    &:not(.backdrop) {
-        filter: blur(0);
-    }
-
     &.shadow {
         box-shadow: 0 0 128px #000;
     }
