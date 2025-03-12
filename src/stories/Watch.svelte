@@ -124,9 +124,11 @@ onDestroy(() => {
 watch-container {
     display: grid;
     place-items: center;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background: #1a1d1c;
     color: #fff;
+    position: absolute;
 
     > * {
         grid-area: 1/1;

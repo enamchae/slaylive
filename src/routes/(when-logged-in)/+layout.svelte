@@ -23,5 +23,7 @@ onMount(() => {
 <style lang="scss">
 main {
     flex-grow: 1;
+    overflow-y: auto;
+    position: relative;
 }
 </style>

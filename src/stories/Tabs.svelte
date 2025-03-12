@@ -29,6 +29,9 @@ tabs-rack {
 
     background: #fff;
 
+    z-index: 1;
+
+
     > * {
         flex-basis: 0;
         flex-grow: 1;
