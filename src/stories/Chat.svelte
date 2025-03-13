@@ -2,7 +2,7 @@
 import type { Call, CustomVideoEvent } from "@stream-io/video-client";
     import RichTextEntry from "./RichTextEntry.svelte";
     import SymbolButton from "./SymbolButton.svelte";
-    import type { CallEvent, LivestreamChatMessage } from "./CallEvent";
+    import { type LivestreamEvent, type LivestreamChatMessage, LivestreamEventType } from "./CallEvent";
     import { onDestroy, onMount } from "svelte";
 
 let {
@@ -20,8 +20,8 @@ let chatHistory = $state<LivestreamChatMessage[]>([]);
 
 
 const onCustomEvent = (customEvent: CustomVideoEvent) => {
-    const event = customEvent.custom as CallEvent;
-    if (event.type !== "chat") return;
+    if (customEvent.custom.type !== LivestreamEventType.Chat) return;
+    const event = customEvent.custom as LivestreamEvent<LivestreamEventType.Chat>;
 
     chatHistory.push(event.data);
 };
@@ -37,7 +37,7 @@ onDestroy(() => {
 
 const sendChat = async () => {
     await call.sendCustomEvent({
-        type: "chat",
+        type: LivestreamEventType.Chat,
         data: {
             user: {
                 id: userId,
@@ -45,7 +45,7 @@ const sendChat = async () => {
             },
             text: chatText,
         },
-    });
+    } as LivestreamEvent);
 
     chatText = "";
 };

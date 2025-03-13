@@ -7,18 +7,18 @@ const authHeader = () => {
     return `Bearer ${store.user.supabaseAccessToken}`;
 };
 
-const handleResponse = async (response: Response) => {
+const handleResponse = async <T>(response: Response) => {
     if (!response.ok) {
         throw new Error(`${response.url} | ${response.status} ${response.statusText} | ${(await response.json()).message}`);
     }
-    return await response.json();
+    return (await response.json()) as T;
 };
 
 const apiUrl = (path: URL | string) => new URL(path, PUBLIC_API_URL);
 
-export const apiFetch = async (path: URL | string, options?: RequestInit) => await handleResponse(await fetch(apiUrl(path), options));
-export const apiFetchAuthorized = async (path: URL | string, options?: RequestInit) => {
+export const apiFetch = async <T>(path: URL | string, options?: RequestInit) => await handleResponse<T>(await fetch(apiUrl(path), options));
+export const apiFetchAuthorized = async <T>(path: URL | string, options?: RequestInit) => {
     const request = new Request(apiUrl(path), options);
     request.headers.set("Authorization", authHeader());
-    return await handleResponse(await fetch(request));
+    return await handleResponse<T>(await fetch(request));
 };

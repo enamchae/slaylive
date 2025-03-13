@@ -5,7 +5,7 @@ import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
 import ParticipantVideo from "./ParticipantVideo.svelte";
 import { apiFetchAuthorized } from "$routes/util";
     import { onDestroy } from "svelte";
-    import type { CallEvent, LivestreamChatMessage } from "./CallEvent";
+    import { type LivestreamEvent, type LivestreamChatMessage, LivestreamEventType } from "./CallEvent";
     import Chat from "./Chat.svelte";
     import Reactions from "./Reactions.svelte";
 
@@ -14,11 +14,16 @@ let {
     userId,
     userName,
     livestreamId,
+    listings,
 }: {
     userToken: string,
     userId: string,
     userName: string,
     livestreamId: string,
+    listings: {
+        id: string,
+
+    }[],
 } = $props();
 
 // set up the user object
@@ -33,8 +38,6 @@ let started = $state(false);
 
 let call = $state<Call | null>(null);
 let localParticipant = $state<StreamVideoParticipant | null>(null);
-
-let chatHistory = $state<LivestreamChatMessage[]>([]);
 
 (async () => {
 
@@ -79,27 +82,36 @@ let chatHistory = $state<LivestreamChatMessage[]>([]);
     call.state.backstage$.subscribe((backstage) => {
         started = !backstage;
     });
-
-    
-
-    call.on("custom", customEvent => {
-        const event = customEvent.custom as CallEvent;
-
-        switch (event.type) {
-            case "chat":
-                chatHistory.push(event.data);
-                break;
-            case "react":
-                
-        }
-    });
-    
-
 })();
 
 onDestroy(() => {
     call?.leave();
 });
+
+
+const updateListingState = async (
+    listing: {
+        id: string,
+        name: string,
+        desc: string,
+        imageUrls: string[],
+    },
+) => {
+    if (call === null) return;
+
+    await call.sendCustomEvent({
+        type: LivestreamEventType.UpdateListing,
+        data: {
+            listing: {
+                id: listing.id,
+                price: 125,
+                name: listing.name,
+                desc: listing.desc,
+                images: listing.imageUrls,
+            },
+        },
+    } satisfies LivestreamEvent<LivestreamEventType.UpdateListing>);
+};
 </script>
 
 <backstage-container>
@@ -131,6 +143,13 @@ onDestroy(() => {
         <Reactions
             {call}
         />
+
+        <div>
+            {#each listings as listing (listing.id)}
+                <div>{listing.title}</div>
+            {/each}
+        </div>
+
     {/if}
 </backstage-container>
 

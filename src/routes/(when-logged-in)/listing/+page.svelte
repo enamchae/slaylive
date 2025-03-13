@@ -7,7 +7,7 @@ import SubtleExclamation from "$/stories/SubtleExclamation.svelte";
 import { goto } from "$app/navigation";
 import {apiFetch, apiFetchAuthorized} from "$routes/util";
 import { onDestroy } from "svelte";
-    import { store } from "../store.svelte";
+    import { store } from "$routes/store.svelte";
 
 
 const searchParams = new URLSearchParams(location.search);

@@ -8,6 +8,8 @@
     "build": "npm run build:static && npm run build:node",
     "build:static": "cross-env BUILD_TYPE=static vite build",
     "build:node": "cross-env BUILD_TYPE=node vite build",
+    "build:android": "cross-env CAP_HOST=static npm run build:static && npm run android",
+    "dev:android": "cross-env CAP_HOST=server npm run dev && npm run android",
     "preview": "vite preview",
     "android": "cap run android",
     "android:open": "cap open android",

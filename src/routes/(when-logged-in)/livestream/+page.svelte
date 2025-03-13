@@ -18,8 +18,12 @@ const searchParams = new URLSearchParams(location.search);
 let editing = $state((searchParams.has("new") || searchParams.has("edit")) && (store.user?.canSell ?? false));
 let livestreamId = $state(searchParams.get("id"));
 
-const livestreamPromise = livestreamId === null
-    ? Promise.resolve({title: "", description: ""})
+const livestreamPromise: Promise<{
+    title: string,
+    description: string,
+    active: boolean,
+}> = livestreamId === null
+    ? Promise.resolve({title: "", description: "", active: false})
     : apiFetchAuthorized(`livestream/details?livestreamId=${livestreamId}`);
 
 let livestream = $state<{
@@ -28,6 +32,16 @@ let livestream = $state<{
     active: boolean,
 } | null>(null);
 
+
+const listingsPromise: Promise<{
+    listings: {
+        id: string,
+        title: string,
+        description: string,
+    }[],
+}> = store.user === null
+    ? Promise.resolve({listings: []})
+    : apiFetch(`listing/by-seller?sellerUserId=${store.user.id}`);
 let selectedListingIds = $state(new SvelteSet<string>());
 
 (async () => {
@@ -61,7 +75,7 @@ const saveLivestream = async () => {
             },
         });
     } else {
-        ({livestreamId} = await apiFetchAuthorized("livestream/new", {
+        ({livestreamId} = await apiFetchAuthorized<{livestreamId: string}>("livestream/new", {
             method: "PUT",
             body: JSON.stringify({
                 livestreamTitle: livestream.title,
@@ -162,7 +176,7 @@ const stopLivestream = async () => {
                 <livestream-listings>
                     <h2>attached listings</h2>
 
-                    {#await apiFetch(`listing/by-seller?sellerUserId=${store.user.id}`)}
+                    {#await listingsPromise}
                         <div>Loading listings...</div>
                     {:then response}
                         {@const listings = response.listings}
@@ -191,14 +205,23 @@ const stopLivestream = async () => {
                     disabled={!livestream.active}
                 >Stop</button>
 
-                {#if livestream.active && livestreamId !== null}
-                    <Backstage
-                        userToken={store.user.streamioAuth.token}
-                        userId={store.user.streamioAuth.id}
-                        userName={store.user.streamioAuth.name}
-                        {livestreamId}
-                    />
-                {/if}
+                {#await listingsPromise}
+                    <div>Loading listings...</div>
+                {:then response}
+                    {@const listings = response.listings}
+
+                    {#if livestream.active && livestreamId !== null}
+                        <Backstage
+                            userToken={store.user.streamioAuth.token}
+                            userId={store.user.streamioAuth.id}
+                            userName={store.user.streamioAuth.name}
+                            {livestreamId}
+                            listings={listings.filter(listing => selectedListingIds.has(listing.id))}
+                        />
+                    {/if}
+                {:catch}
+                    <div>Failed to load listings</div>
+                {/await}
             </livestream-dashboard>
         {/if}
     {:catch}

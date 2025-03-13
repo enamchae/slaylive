@@ -12,7 +12,6 @@ export const GET: RequestHandler = async ({ url }) => {
         id: listingTable.id,
         title: listingTable.title,
         description: listingTable.description,
-        sellerUserId: listingTable.sellerUserId,
     })
         .from(listingTable)
         .where(eq(listingTable.sellerUserId, sellerUserId));

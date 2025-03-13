@@ -10,10 +10,27 @@ export type LivestreamReaction = {
     emoji: string,
 };
 
-export type CallEvent<EventType extends "chat" | "react"="chat" | "react"> = {
+export type LivestreamUpdateListing = {
+    listing: {
+        id: string,
+        price: number,
+        name: string,
+        desc: string,
+        images: string[],
+    },
+};
+
+export enum LivestreamEventType {
+    Chat = "chat",
+    React = "react",
+    UpdateListing = "update listing",
+}
+
+export type LivestreamEvent<EventType extends LivestreamEventType=LivestreamEventType> = {
     type: EventType,
     data:
-        EventType extends "chat" ? LivestreamChatMessage :
-        EventType extends "react" ? LivestreamReaction :
+        EventType extends LivestreamEventType.Chat ? LivestreamChatMessage :
+        EventType extends LivestreamEventType.React ? LivestreamReaction :
+        EventType extends LivestreamEventType.UpdateListing ? LivestreamUpdateListing :
         never,
 };
