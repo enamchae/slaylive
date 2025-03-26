@@ -7,12 +7,12 @@ const config: CapacitorConfig = {
     appName: 'stream-ecommerce',
     webDir: 'build/static',
     server: process.env.CAP_HOST === "server"
-      ? {
-          url: process.env.LOCAL_VITE_URL,
-          cleartext: true,
-          androidScheme: "http",
-      }
-      : {},
+        ? {
+            url: process.env.LOCAL_VITE_URL,
+            cleartext: true,
+            androidScheme: "http",
+        }
+        : {},
     android: {
         allowMixedContent: true,
     },

@@ -44,7 +44,7 @@ const updateLoginState = async (user: User, accessToken: string) => {
 
 
 <main>
-    <div>Sign in and start browsing for free</div>
+    <div>Sign in and start watching</div>
 
     <button-rack>
         <LoginButtonGoogle

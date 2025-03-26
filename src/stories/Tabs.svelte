@@ -28,6 +28,7 @@ tabs-rack {
     padding: 1rem;
 
     background: #fff;
+    color: #000;
 
     z-index: 1;
 
@@ -40,4 +41,5 @@ tabs-rack {
         justify-content: center;
     }
 }
+
 </style>

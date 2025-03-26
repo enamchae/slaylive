@@ -36,7 +36,9 @@ content-container {
     width: 100vw;
     height: 100vh;
 
-	background: linear-gradient(#e2fae6, #fbfde1);
+	background: linear-gradient(#A47764, #D19C97);
+	color: #fff;
+	font-size: 1.25rem;
 
 	> main {
 		flex-grow: 1;
