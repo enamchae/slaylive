@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   native-run:
-    hash: n5kynex4y6tuks3g75pzbrpugu
+    hash: 2c9968c194dd6489b37e834dda876fd148379d15727f5107b559700036731837
     path: patches/native-run.patch
 
 importers:
@@ -36,10 +36,10 @@ importers:
         version: 1.14.0
       '@supabase/ssr':
         specifier: ^0.5.2
-        version: 0.5.2(@supabase/supabase-js@2.47.16)
+        version: 0.5.2(@supabase/supabase-js@2.49.4)
       '@supabase/supabase-js':
-        specifier: ^2.47.16
-        version: 2.47.16
+        specifier: ^2.49.4
+        version: 2.49.4
       drizzle-orm:
         specifier: ^0.33.0
         version: 0.33.0(@types/react@19.0.5)(postgres@3.4.5)(react@18.3.1)
@@ -1429,8 +1429,8 @@ packages:
   '@stream-io/video-client@1.14.0':
     resolution: {integrity: sha512-UQgJKffa78hnWAq0EeyPH4M4G9BsSkLwu+Dt/4R3cm/bdGMXeIvKwl7xDIn53HfcSXy0C6E1ErplOwoMxjmNQQ==}
 
-  '@supabase/auth-js@2.67.3':
-    resolution: {integrity: sha512-NJDaW8yXs49xMvWVOkSIr8j46jf+tYHV0wHhrwOaLLMZSFO4g6kKAf+MfzQ2RaD06OCUkUHIzctLAxjTgEVpzw==}
+  '@supabase/auth-js@2.69.1':
+    resolution: {integrity: sha512-FILtt5WjCNzmReeRLq5wRs3iShwmnWgBvxHfqapC/VoljJl+W8hDAyFmf1NVw3zH+ZjZ05AKxiKxVeb0HNWRMQ==}
 
   '@supabase/functions-js@2.4.4':
     resolution: {integrity: sha512-WL2p6r4AXNGwop7iwvul2BvOtuJ1YQy8EbOd0dhG1oN1q8el/BIRSFCFnWAMM/vJJlHWLi4ad22sKbKr9mvjoA==}
@@ -1439,8 +1439,8 @@ packages:
     resolution: {integrity: sha512-1ibVeYUacxWYi9i0cf5efil6adJ9WRyZBLivgjs+AUpewx1F3xPi7gLgaASI2SmIQxPoCEjAsLAzKPgMJVgOUQ==}
     engines: {node: 4.x || >=6.0.0}
 
-  '@supabase/postgrest-js@1.17.11':
-    resolution: {integrity: sha512-AOqqgQEhLVqzOMmA8Q0bxQFMfbozbjjQ1Tt4kprkstIKdRl4yZRaMdoVxFkCpU8ivmAe2xNfAVkNK+l16a9P0A==}
+  '@supabase/postgrest-js@1.19.4':
+    resolution: {integrity: sha512-O4soKqKtZIW3olqmbXXbKugUtByD2jPa8kL2m2c1oozAO11uCcGrRhkZL0kVxjBLrXHE0mdSkFsMj7jDSfyNpw==}
 
   '@supabase/realtime-js@2.11.2':
     resolution: {integrity: sha512-u/XeuL2Y0QEhXSoIPZZwR6wMXgB+RQbJzG9VErA3VghVt7uRfSVsjeqd7m5GhX3JR6dM/WRmLbVR8URpDWG4+w==}
@@ -1453,8 +1453,8 @@ packages:
   '@supabase/storage-js@2.7.1':
     resolution: {integrity: sha512-asYHcyDR1fKqrMpytAS1zjyEfvxuOIp1CIXX7ji4lHHcJKqyk+sLl/Vxgm4sN6u8zvuUtae9e4kDxQP2qrwWBA==}
 
-  '@supabase/supabase-js@2.47.16':
-    resolution: {integrity: sha512-FnoV0miLnYUL8ZTS94tSIyn+ogCwh5DB5f1fj1n4wHGNAqJSKFb8OQzLVlRFAH7cB9TKQ5eon3/n2lXUWY7GfA==}
+  '@supabase/supabase-js@2.49.4':
+    resolution: {integrity: sha512-jUF0uRUmS8BKt37t01qaZ88H9yV1mbGYnqLeuFWLcdV+x1P4fl0yP9DGtaEhFPZcwSom7u16GkLEH9QJZOqOkw==}
 
   '@sveltejs/adapter-node@5.2.12':
     resolution: {integrity: sha512-0bp4Yb3jKIEcZWVcJC/L1xXp9zzJS4hDwfb4VITAkfT4OVdkspSHsx7YhqJDbb2hgLl6R9Vs7VQR+fqIVOxPUQ==}
@@ -3429,7 +3429,7 @@ snapshots:
       debug: 4.4.0
       env-paths: 2.2.1
       kleur: 4.1.5
-      native-run: 2.0.1(patch_hash=n5kynex4y6tuks3g75pzbrpugu)
+      native-run: 2.0.1(patch_hash=2c9968c194dd6489b37e834dda876fd148379d15727f5107b559700036731837)
       open: 8.4.2
       plist: 3.1.0
       prompts: 2.4.2
@@ -4669,7 +4669,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@supabase/auth-js@2.67.3':
+  '@supabase/auth-js@2.69.1':
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
@@ -4681,7 +4681,7 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
-  '@supabase/postgrest-js@1.17.11':
+  '@supabase/postgrest-js@1.19.4':
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
@@ -4695,9 +4695,9 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@supabase/ssr@0.5.2(@supabase/supabase-js@2.47.16)':
+  '@supabase/ssr@0.5.2(@supabase/supabase-js@2.49.4)':
     dependencies:
-      '@supabase/supabase-js': 2.47.16
+      '@supabase/supabase-js': 2.49.4
       '@types/cookie': 0.6.0
       cookie: 0.7.2
 
@@ -4705,12 +4705,12 @@ snapshots:
     dependencies:
       '@supabase/node-fetch': 2.6.15
 
-  '@supabase/supabase-js@2.47.16':
+  '@supabase/supabase-js@2.49.4':
     dependencies:
-      '@supabase/auth-js': 2.67.3
+      '@supabase/auth-js': 2.69.1
       '@supabase/functions-js': 2.4.4
       '@supabase/node-fetch': 2.6.15
-      '@supabase/postgrest-js': 1.17.11
+      '@supabase/postgrest-js': 1.19.4
       '@supabase/realtime-js': 2.11.2
       '@supabase/storage-js': 2.7.1
     transitivePeerDependencies:
@@ -5879,7 +5879,7 @@ snapshots:
 
   nanoid@3.3.8: {}
 
-  native-run@2.0.1(patch_hash=n5kynex4y6tuks3g75pzbrpugu):
+  native-run@2.0.1(patch_hash=2c9968c194dd6489b37e834dda876fd148379d15727f5107b559700036731837):
     dependencies:
       '@ionic/utils-fs': 3.1.7
       '@ionic/utils-terminal': 2.3.5

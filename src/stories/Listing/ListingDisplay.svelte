@@ -25,7 +25,7 @@ listing-display {
     width: 10rem;
     aspect-ratio: 1/1;
 
-    background: #b8ceb8;
+    background: #56453F;
 
     &.selected {
         border: 2px solid #615f04;

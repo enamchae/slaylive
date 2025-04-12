@@ -5,5 +5,6 @@ export const load: LayoutServerLoad = async ({ locals: { safeGetSession }, cooki
     return {
         session,
         cookies: cookies.getAll(),
+        BUILD_TYPE: process.env.BUILD_TYPE,
     };
 }

@@ -211,8 +211,7 @@ main-photo {
     display: grid;
     place-items: center;
 
-    background: #b8ceb8;
-    color: #203a20;
+    background: #56453F;
 
     img {
         width: 100%;

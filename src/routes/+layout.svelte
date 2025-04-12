@@ -1,9 +1,12 @@
 <script lang="ts">
 import { i18n } from '$lib/i18n';
 import { ParaglideJS } from '@inlang/paraglide-sveltekit';
+import {store} from "./store.svelte";
 import "$stories/index.scss";
 
-let { children } = $props();
+let { children, data } = $props();
+
+store.buildType.resolve(data.BUILD_TYPE);
 </script>
 
 <ParaglideJS {i18n}>

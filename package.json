@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
+    "dev": "cross-env BUILD_TYPE=node vite dev",
     "build": "npm run build:static && npm run build:node",
     "build:static": "cross-env BUILD_TYPE=static vite build",
     "build:node": "cross-env BUILD_TYPE=node vite build",
@@ -62,7 +62,7 @@
     "@stream-io/node-sdk": "^0.4.9",
     "@stream-io/video-client": "^1.14.0",
     "@supabase/ssr": "^0.5.2",
-    "@supabase/supabase-js": "^2.47.16",
+    "@supabase/supabase-js": "^2.49.4",
     "drizzle-orm": "^0.33.0",
     "postgres": "^3.4.4",
     "ws": "^8.18.0"
