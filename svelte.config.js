@@ -20,7 +20,6 @@ const adapter = () => {
 		case "vercel":
 			return adapterVercel({
 				runtime: "nodejs20.x",
-				out: "./build/vercel",
 			});
 	}
 };
