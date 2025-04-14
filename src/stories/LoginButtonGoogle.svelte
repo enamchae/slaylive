@@ -2,15 +2,15 @@
 import {SocialLogin} from "@capgo/capacitor-social-login";
 import {PUBLIC_GOOGLE_CLIENT_ID} from "$env/static/public";
 
-(async () => {
-    // if (await store.buildType === "static") {
-    SocialLogin.initialize({
-        google: {
-            webClientId: PUBLIC_GOOGLE_CLIENT_ID,
-        },
-    });
-    // }
-})();
+// (async () => {
+//     if (await store.buildType === "static") {
+SocialLogin.initialize({
+    google: {
+        webClientId: PUBLIC_GOOGLE_CLIENT_ID,
+    },
+});
+//     }
+// })();
 </script>
 
 <script lang="ts">
