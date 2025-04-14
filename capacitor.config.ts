@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 import * as dotenv from "dotenv";
 dotenv.config({
-  path: `.env.${process.env.MODE}`,
+  path: `.env.${process.env.NODE_ENV}`,
 });
 
 const config: CapacitorConfig = {
