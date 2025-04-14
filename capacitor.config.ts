@@ -1,6 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 import * as dotenv from "dotenv";
-dotenv.config();
+dotenv.config({
+  path: `.env.${process.env.MODE}`,
+});
 
 const config: CapacitorConfig = {
     appId: 'com.example.streamecommerce',
