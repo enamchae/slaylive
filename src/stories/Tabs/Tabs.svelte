@@ -31,12 +31,12 @@ import profileIcon from "$stories/assets/profile.svg";
     />
     
     <Tab
-        onClick={() => goto("/seller/dashboard")}
+        onClick={() => goto("/profile")}
         label="profile"
         icon={profileIcon}
         accent="#A2C2FF7f"
         shadowAccent="#268BFF3f"
-        selected={page.url.pathname === "/seller/dashboard"}
+        selected={page.url.pathname === "/profile"}
     />
 </tabs-rack>
 

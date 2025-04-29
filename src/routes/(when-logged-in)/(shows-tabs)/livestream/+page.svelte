@@ -8,6 +8,7 @@ import { apiFetch, apiFetchAuthorized } from "$/routes/util";
 import SubtleExclamation from "$/stories/SubtleExclamation.svelte";
 import ListingDisplayList from "$/stories/Listing/ListingDisplayList.svelte";
     import { SvelteSet } from "svelte/reactivity";
+    import Button from "$/stories/Button.svelte";
 
 if (!store.isSeller) {
     goto("/");
@@ -141,23 +142,23 @@ const stopLivestream = async () => {
             <livestream-dashboard>
                 <div>
                     <SubtleExclamation>You're editing this livestream!</SubtleExclamation>
-                    <div>
-                        <button onclick={saveLivestream}>Save</button>
-                    </div>
+                    <Button
+                        onClick={saveLivestream}
+                        strong
+                    >Save</Button>
                 </div>
 
                 
-                <h1>livestream</h1>
-
                 <livestream-title>
                     {#if editing}
                         <RichTextEntry
                             initialText={livestream.title}
                             onInput={text => livestream !== null && (livestream.title = text)}
                             placeholder="stream title"
+                            isTitle={true}
                         />
                     {:else}
-                        <div>{livestream.title}</div>
+                        <h1>{livestream.title}</h1>
                     {/if}
                 </livestream-title>
 

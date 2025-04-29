@@ -1,5 +1,6 @@
 <script lang="ts">
 import { apiFetch } from "$/routes/util";
+    import Button from "$/stories/Button.svelte";
 import ListingDisplayList from "$/stories/Listing/ListingDisplayList.svelte";
 import { goto } from "$app/navigation";
 import {store} from "$routes/store.svelte";
@@ -12,8 +13,8 @@ if (!store.isSeller) {
 
 
 {#if store.isSeller && store.user !== null}
+    <h1>profile</h1>
     <seller-dashboard>
-        <h1>seller dashboard</h1>
 
         <seller-profile>
             <h2>profile</h2>
@@ -43,7 +44,7 @@ if (!store.isSeller) {
                 <div>Failed to load listings</div>
             {/await}
 
-            <button onclick={() => goto("/listing?new")}>Create a new listing</button>
+            <Button onClick={() => goto("/listing?new")}>Create a new listing</Button>
         </seller-listings>
 
 
@@ -66,7 +67,7 @@ if (!store.isSeller) {
                 <div>Failed to load livestreams</div>
             {/await}
 
-            <button onclick={() => goto("/livestream?new")}>Set up a new livestream</button>
+            <Button onClick={() => goto("/livestream?new")}>Set up a new livestream</Button>
         </seller-livestreams>
     </seller-dashboard>
 {/if}

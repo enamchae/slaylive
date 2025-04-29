@@ -9,11 +9,21 @@ onMount(() => {
 });
 </script>
 
-{#if callId !== null && store.user !== null}
-    <Watch
-        {callId}
-        userToken={store.user.streamioAuth.token}
-        userId={store.user.streamioAuth.id}
-        userName={store.user.streamioAuth.name}
-    />
-{/if}
+<main>
+    {#if callId !== null && store.user !== null}
+        <Watch
+            {callId}
+            userToken={store.user.streamioAuth.token}
+            userId={store.user.streamioAuth.id}
+            userName={store.user.streamioAuth.name}
+        />
+    {/if}
+</main>
+
+<style lang="scss">
+main {
+    flex-grow: 1;
+    overflow-y: auto;
+    position: relative;
+}
+</style>

@@ -12,10 +12,6 @@ const {
 
 <style lang="scss">
 subtle-exclamation {
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    letter-spacing: 0.25ch;
-
-    color: #000000af;
+    letter-spacing: 10%;
 }
 </style>

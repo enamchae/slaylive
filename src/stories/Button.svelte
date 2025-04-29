@@ -4,14 +4,19 @@
 const {
     onClick,
     children,
+    strong = false,
 } = $props<{
     onClick: () => void,
     children: Snippet,
+    strong?: boolean,
 }>();
 </script>
 
 
-<button onclick={onClick}>
+<button
+    onclick={onClick}
+    class:strong={strong}
+>
     {@render children()}
 </button>
 
@@ -30,7 +35,8 @@ button {
     text-shadow: 0 2px 0.5rem #0000;
 
     transition: background 0.2s ease,
-        text-shadow 0.2s ease;
+        text-shadow 0.2s ease,
+        filter 0.2s ease;
 
 
     &:hover {
@@ -41,6 +47,19 @@ button {
 
     &:active {
         filter: brightness(0.75);
+    }
+
+    &.strong {
+        background: linear-gradient(315deg, #A910B1, #ED7811);
+        box-shadow: 0 .25rem 2rem #DF1A527f;
+
+        &:hover {
+            filter: brightness(1.25);
+        }
+
+        &:active {
+            filter: brightness(0.75);
+        }
     }
 }
 </style>

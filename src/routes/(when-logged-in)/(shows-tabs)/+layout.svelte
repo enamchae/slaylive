@@ -8,12 +8,23 @@ let { children } = $props();
 
 onMount(() => {
     if (store.user !== null) return;
-    setTimeout(() => {
-        goto("/");
-    });
+    goto("/");
 });
 </script>
 
-{#if store.user !== null}
-    {@render children()}
-{/if}
+<main>
+    {#if store.user !== null}
+        {@render children()}
+    {/if}
+</main>
+
+<Tabs />
+
+<style lang="scss">
+main {
+    position: relative;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 2rem 4rem 0;
+}
+</style>

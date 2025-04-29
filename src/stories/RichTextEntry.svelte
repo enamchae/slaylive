@@ -3,10 +3,12 @@ let {
     initialText,
     onInput,
     placeholder,
+    isTitle = false,
 }: {
     initialText: string,
     onInput: (value: string) => void,
-    placeholder: string
+    placeholder: string,
+    isTitle?: boolean,
 } = $props();
 
 let text = $state(initialText);
@@ -38,7 +40,10 @@ const updateText = () => {
 
 <rich-text-entry-container>
     {#if text.length === 0}
-        <rich-text-placeholder>{placeholder}</rich-text-placeholder>
+        <rich-text-placeholder
+            class:heading={isTitle}
+            class:heading-1={isTitle}
+        >{placeholder}</rich-text-placeholder>
     {/if}
     <rich-text-entry
         contenteditable
@@ -46,6 +51,8 @@ const updateText = () => {
         onfocus={() => editing = true}
         onblur={() => editing = false}
         bind:this={entry}
+        class:heading={isTitle}
+        class:heading-1={isTitle}
     >{lastText}</rich-text-entry>
 </rich-text-entry-container>
 

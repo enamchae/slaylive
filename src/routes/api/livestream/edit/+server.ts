@@ -49,11 +49,13 @@ export const PATCH: RequestHandler = requiresLoggedInUser(async ({request}, user
     await db.delete(livestreamListingAssociationTable)
         .where(eq(livestreamListingAssociationTable.livestreamId, livestreamId));
     
-    await db.insert(livestreamListingAssociationTable)
-        .values(livestreamListingIds.map(listingId => ({
-            listingId,
-            livestreamId,
-        })));
+    if (livestreamListingIds.length > 0) {
+        await db.insert(livestreamListingAssociationTable)
+            .values(livestreamListingIds.map(listingId => ({
+                listingId,
+                livestreamId,
+            })));
+    }
 
 
     return json({});

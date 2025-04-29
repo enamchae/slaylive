@@ -4,8 +4,8 @@ import { goto } from "$app/navigation";
 import { apiFetch } from "$routes/util";
 </script>
 
+<h1>browse</h1>
 <browse-listings>
-    <h1>browse listings</h1>
     
     {#await apiFetch(`listing/list`)}
         <div>Loading listings...</div>

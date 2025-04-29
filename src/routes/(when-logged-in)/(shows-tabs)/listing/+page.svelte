@@ -210,8 +210,9 @@ main-photo {
     aspect-ratio: 1/1;
     display: grid;
     place-items: center;
+    max-width: 20rem;
 
-    background: #56453F;
+    background: #5009097f;
 
     img {
         width: 100%;
