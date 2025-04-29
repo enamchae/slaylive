@@ -1,5 +1,5 @@
 <script lang="ts">
-import Tabs from "$stories/Tabs.svelte";
+import Tabs from "$/stories/Tabs/Tabs.svelte";
 import { store } from "$routes/store.svelte";
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
@@ -25,5 +25,7 @@ main {
     flex-grow: 1;
     overflow-y: auto;
     position: relative;
+
+    padding-top: 2rem;
 }
 </style>

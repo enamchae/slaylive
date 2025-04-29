@@ -26,8 +26,8 @@ store.buildType.resolve(data.BUILD_TYPE);
 		crossorigin=""
 	/>
 	<link
-		href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap"
 		rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Shanti&display=swap"
 	/>
 </svelte:head>
 
@@ -39,7 +39,7 @@ content-container {
     width: 100vw;
     height: 100vh;
 
-	background: linear-gradient(#A47764, #D19C97);
+	background: linear-gradient(#664334, #712F3F);
 	color: #fff;
 	font-size: 1.25rem;
 

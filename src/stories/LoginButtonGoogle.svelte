@@ -19,6 +19,7 @@ import type { SupabaseClient, User } from "@supabase/supabase-js";
 
 import googleLogo from "$/public/google.svg";
 import { store } from "$/routes/store.svelte";
+    import Button from "./Button.svelte";
 
 const {
     supabase,
@@ -66,8 +67,25 @@ const login = async () => {
 };
 </script>
 
-<ButtonRaised
+<Button
     onClick={() => login()}
 >
-    <img src={googleLogo} />
-</ButtonRaised>
+    <div>
+        <span>Sign in with Google</span>
+        <img src={googleLogo} alt="Google icon" />
+    </div>
+</Button>
+
+<style lang="scss">
+div {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    > img {
+        background: #ffffffaf;
+        padding: 0.5rem;
+        border-radius: 50%;
+    }
+}
+</style>
