@@ -9,6 +9,8 @@ import SubtleExclamation from "$/stories/SubtleExclamation.svelte";
 import ListingDisplayList from "$/stories/Listing/ListingDisplayList.svelte";
     import { SvelteSet } from "svelte/reactivity";
     import Button from "$/stories/Button.svelte";
+    import ListingDisplay from "$/stories/Listing/ListingDisplay.svelte";
+    import { flip } from "svelte/animate";
 
 if (!store.isSeller) {
     goto("/");
@@ -155,7 +157,7 @@ const stopLivestream = async () => {
                             initialText={livestream.title}
                             onInput={text => livestream !== null && (livestream.title = text)}
                             placeholder="stream title"
-                            isTitle={true}
+                            classes="heading heading-1"
                         />
                     {:else}
                         <h1>{livestream.title}</h1>
@@ -183,11 +185,36 @@ const stopLivestream = async () => {
                         {@const listings = response.listings}
         
                         {#if listings.length > 0}
-                            <ListingDisplayList
-                                {listings}
-                                onClickListing={listing => editing && toggleListing(listing.id)}
-                                selectedIds={selectedListingIds}
-                            />
+                            {#each listings as listing (listing.id)}
+                                {@const listingSelected = selectedListingIds.has(listing.id)}
+
+                                <listing-row
+                                    class:selected={listingSelected}
+                                    animate:flip={{duration: 200}}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        oninput={() => editing && toggleListing(listing.id)}
+                                        checked={listingSelected}
+                                    />
+
+                                    <ListingDisplay
+                                        title={listing.title}
+                                        onClick={() => editing && toggleListing(listing.id)}
+                                    />
+
+                                    <listing-settings>
+                                        <h3>{listing.title}</h3>
+
+                                        {#if listingSelected}
+                                            $<input
+                                                type="number"
+                                                class="heading heading-3"
+                                            />
+                                        {/if}
+                                    </listing-settings>
+                                </listing-row>
+                            {/each}
                         {:else}
                             <div>No listings yet!</div>
                         {/if}
@@ -248,5 +275,16 @@ livestream-dashboard {
 livestream-title {
     font-size: 1.75rem;
     font-weight: 100;
+}
+
+listing-row {
+    display: flex;
+    gap: 1rem;
+
+    --row-unselected-height: 4rem;
+    height: auto;
+    &:not(.selected) {
+        height: var(--row-unselected-height);
+    }
 }
 </style>

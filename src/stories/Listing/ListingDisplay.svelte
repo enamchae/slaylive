@@ -2,18 +2,15 @@
 const {
     title,
     onClick,
-    selected,
 }: {
     title: string,
     onClick: () => void,
-    selected: boolean,
 } = $props();
 </script>
 
 <listing-display
     onclick={onClick}
     tabindex="-1"
-    class:selected={selected}
 >
     {title}
 </listing-display>
@@ -25,10 +22,6 @@ listing-display {
     width: 10rem;
     aspect-ratio: 1/1;
 
-    background: #56453F;
-
-    &.selected {
-        border: 2px solid #615f04;
-    }
+    background: #5009097f;
 }
 </style>

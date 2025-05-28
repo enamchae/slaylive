@@ -135,7 +135,7 @@ watch-container {
     place-items: center;
     width: 100%;
     height: 100%;
-    background: #1a1d1c;
+    background: #251c22;
     color: #fff;
     position: absolute;
 

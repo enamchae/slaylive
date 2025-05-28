@@ -4,6 +4,7 @@ import type { Call, CustomVideoEvent } from "@stream-io/video-client";
     import SymbolButton from "./SymbolButton.svelte";
     import { type LivestreamEvent, type LivestreamChatMessage, LivestreamEventType } from "./CallEvent";
     import { onDestroy, onMount } from "svelte";
+    import Button from "./Button.svelte";
 
 let {
     call,
@@ -69,11 +70,11 @@ const sendChat = async () => {
             placeholder="Write something…"
         />
         
-        <SymbolButton
+        <Button
             onClick={sendChat}
         >
             Send
-        </SymbolButton>
+        </Button>
     </chat-entry>
 </livestream-chat>
 
