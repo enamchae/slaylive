@@ -11,6 +11,8 @@ import ListingDisplayList from "$/stories/Listing/ListingDisplayList.svelte";
     import Button from "$/stories/Button.svelte";
     import ListingDisplay from "$/stories/Listing/ListingDisplay.svelte";
     import { flip } from "svelte/animate";
+    import ListingRow from "./ListingRow.svelte";
+    import type { Listing } from "./Listing";
 
 if (!store.isSeller) {
     goto("/");
@@ -37,11 +39,7 @@ let livestream = $state<{
 
 
 const listingsPromise: Promise<{
-    listings: {
-        id: string,
-        title: string,
-        description: string,
-    }[],
+    listings: Listing[],
 }> = store.user === null
     ? Promise.resolve({listings: []})
     : apiFetch(`listing/by-seller?sellerUserId=${store.user.id}`);
@@ -186,34 +184,12 @@ const stopLivestream = async () => {
         
                         {#if listings.length > 0}
                             {#each listings as listing (listing.id)}
-                                {@const listingSelected = selectedListingIds.has(listing.id)}
-
-                                <listing-row
-                                    class:selected={listingSelected}
-                                    animate:flip={{duration: 200}}
-                                >
-                                    <input
-                                        type="checkbox"
-                                        oninput={() => editing && toggleListing(listing.id)}
-                                        checked={listingSelected}
-                                    />
-
-                                    <ListingDisplay
-                                        title={listing.title}
-                                        onClick={() => editing && toggleListing(listing.id)}
-                                    />
-
-                                    <listing-settings>
-                                        <h3>{listing.title}</h3>
-
-                                        {#if listingSelected}
-                                            $<input
-                                                type="number"
-                                                class="heading heading-3"
-                                            />
-                                        {/if}
-                                    </listing-settings>
-                                </listing-row>
+                                <ListingRow
+                                    {listing}
+                                    selected={selectedListingIds.has(listing.id)}
+                                    {editing}
+                                    onToggle={() => toggleListing(listing.id)}
+                                />
                             {/each}
                         {:else}
                             <div>No listings yet!</div>
@@ -275,16 +251,5 @@ livestream-dashboard {
 livestream-title {
     font-size: 1.75rem;
     font-weight: 100;
-}
-
-listing-row {
-    display: flex;
-    gap: 1rem;
-
-    --row-unselected-height: 4rem;
-    height: auto;
-    &:not(.selected) {
-        height: var(--row-unselected-height);
-    }
 }
 </style>

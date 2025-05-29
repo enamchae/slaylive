@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer, uuid, date, boolean, primaryKey } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, integer, uuid, date, boolean, primaryKey, decimal } from 'drizzle-orm/pg-core';
 
 export const userTable = pgTable("user", {
 	id: uuid("id").primaryKey(),
@@ -30,6 +30,7 @@ export const livestreamTable = pgTable("livestream", {
 export const livestreamListingAssociationTable = pgTable("livestreamListingAssociation", {
 	listingId: uuid("listingId").notNull().references(() => listingTable.id),
 	livestreamId: uuid("livestream").notNull().references(() => livestreamTable.id),
+	price: decimal("price").notNull(),
 }, table => [
 	primaryKey({columns: [table.listingId, table.livestreamId]}),
 ]);

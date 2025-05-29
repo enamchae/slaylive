@@ -5,6 +5,7 @@ import { PUBLIC_API_URL } from "$env/static/public";
 import ButtonRaised from "./ButtonRaised.svelte";
 import { apiFetch } from "$/routes/util";
     import { goto } from "$app/navigation";
+    import Button from "./Button.svelte";
 
 const joinCall = (callId: string) => {
     goto(`/watch?call_id=${encodeURIComponent(callId)}`);
@@ -17,12 +18,11 @@ const joinCall = (callId: string) => {
     {:then livestreams}
         {#each livestreams as livestream (livestream.id)}
             <div>
-                <ButtonRaised
+                <Button
                     onClick={() => joinCall(livestream.id)}
-                    backgroundColor="#fff"
                 >
-                    abc
-                </ButtonRaised>
+                    {livestream.title}
+                </Button>
             </div>
         {/each}
     {:catch error}
