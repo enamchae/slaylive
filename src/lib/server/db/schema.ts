@@ -30,7 +30,7 @@ export const livestreamTable = pgTable("livestream", {
 export const livestreamListingAssociationTable = pgTable("livestreamListingAssociation", {
 	listingId: uuid("listingId").notNull().references(() => listingTable.id),
 	livestreamId: uuid("livestream").notNull().references(() => livestreamTable.id),
-	price: decimal("price").notNull(),
+	price: decimal("price").notNull().default("0"),
 }, table => [
 	primaryKey({columns: [table.listingId, table.livestreamId]}),
 ]);
