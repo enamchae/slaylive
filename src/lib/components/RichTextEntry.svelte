@@ -1,11 +1,15 @@
 <script lang="ts">
 let {
+    label,
     initialText,
+    active = true,
     onInput,
     placeholder,
     classes = "",
 }: {
+    label: string,
     initialText: string,
+    active?: boolean,
     onInput: (value: string) => void,
     placeholder: string,
     classes?: string,
@@ -38,7 +42,10 @@ const updateText = () => {
 </script>
 
 
-<rich-text-entry-container class={classes}>
+<rich-text-entry-container
+    class:active
+    class={classes}
+>
     {#if text.length === 0}
         <rich-text-placeholder>{placeholder}</rich-text-placeholder>
     {/if}
@@ -57,13 +64,17 @@ rich-text-entry-container {
     display: flex;
     flex-direction: column;
     align-items: stretch;
+
+    &.active {
+        outline: 1px dashed #afafaf;
+        outline-offset: 0.25rem;
+    }
 }
 
 rich-text-entry {
     display: block;
     word-wrap: break-word;
     min-height: 1em;
-    outline-offset: 0.5rem;
 }
 
 rich-text-placeholder {

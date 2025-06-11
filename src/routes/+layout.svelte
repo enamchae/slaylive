@@ -1,8 +1,10 @@
 <script lang="ts">
+    import { onDestroy } from "svelte";
 import {store} from "./store.svelte";
 import "@/index.scss";
 
 let { children, data } = $props();
+
 
 store.buildType.resolve(data.BUILD_TYPE);
 </script>

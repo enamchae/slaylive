@@ -189,6 +189,7 @@ const stopLivestream = async () => {
                                     selected={selectedListingIds.has(listing.id)}
                                     {editing}
                                     onToggle={() => toggleListing(listing.id)}
+                                    onSetPrice={console.log}
                                 />
                             {/each}
                         {:else}
@@ -241,10 +242,6 @@ livestream-dashboard {
 
     > * {
         margin: 0 1rem;
-    }
-
-    :is(livestream-title, livestream-description) {
-        border: 1px dashed #afafaf;
     }
 }
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import RichTextEntry from "@/RichTextEntry.svelte";
     import Button from "@/Button.svelte";
 import ListingDisplay from "@/Listing/ListingDisplay.svelte";
 
@@ -7,11 +8,13 @@ const {
     selected,
     editing,
     onToggle,
+    onSetPrice,
 }: {
     listing: any,
     selected: boolean,
     editing: boolean,
     onToggle: () => void,
+    onSetPrice: (price: number) => void,
 } = $props();
 
 </script>
@@ -35,9 +38,15 @@ const {
         <h3>{listing.title}</h3>
 
         {#if selected}
-            $<input
-                type="number"
-                class="heading heading-3"
+            $<RichTextEntry
+                initialText="0.00"
+                onInput={text => {
+                    const price = parseFloat(text);
+                    if (isNaN(price)) return;
+                    
+                    onSetPrice(price);
+                }}
+                placeholder="stream description"
             />
         {/if}
     </listing-settings>
@@ -51,11 +60,5 @@ const {
 listing-row {
     display: flex;
     gap: 1rem;
-
-    --row-unselected-height: 4rem;
-    height: auto;
-    &:not(.selected) {
-        height: var(--row-unselected-height);
-    }
 }
 </style>
