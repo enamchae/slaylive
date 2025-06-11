@@ -2,9 +2,13 @@
     box-sizing: border-box;
 }
 
+:root {
+    --font-body: Shanti, sans-serif;
+}
+
 body {
     margin: 0;
-    font-family: Shanti, sans-serif;
+    font-family: var(--font-body);
     font-weight: 400;
 }
 

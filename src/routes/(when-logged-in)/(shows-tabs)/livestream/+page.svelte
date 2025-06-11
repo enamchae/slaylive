@@ -11,6 +11,7 @@ import { SvelteSet } from "svelte/reactivity";
     import ListingRow from "./ListingRow.svelte";
     import { getListingsBySeller } from "$api/listing/by-seller/endpoint";
     import { getLivestreamDetails } from "$/routes/api/livestream/details/endpoint";
+    import EditingBanner from "$/lib/components/EditingBanner.svelte";
 
 if (!store.isSeller) {
     goto("/");
@@ -18,36 +19,47 @@ if (!store.isSeller) {
 
 const searchParams = new URLSearchParams(location.search);
 
-let editing = $state((searchParams.has("new") || searchParams.has("edit")) && (store.user?.canSell ?? false));
+let canEdit = $state((searchParams.has("new") || searchParams.has("edit")) && (store.user?.canSell ?? false));
 let livestreamId = $state(searchParams.get("id"));
 
+let changesMade = $state(false);
+
 const livestreamPromise = livestreamId === null
-    ? Promise.resolve({title: "", description: "", active: false})
+    ? Promise.resolve({title: "", description: "", active: false, listings: []})
     : getLivestreamDetails({ livestreamId });
 
-let livestream = $state<{
+let livestreamData = $state<{
     title: string,
     description: string,
     active: boolean,
+    listings: {
+        id: string,
+    }[],
+} | null>(null);
+
+let lastSavedLivestreamData = $state<{
+    title: string,
+    description: string,
+    active: boolean,
+    listings: {
+        id: string,
+    }[],
 } | null>(null);
 
 
-const listingsPromise = store.user === null
-        ? Promise.resolve({listings: []})
-        : getListingsBySeller({sellerUserId: store.user.id});
-let selectedListingIds = $state(new SvelteSet<string>());
-
 (async () => {
     const response = await livestreamPromise;
-    livestream = {
+    livestreamData = {
         title: response.title,
         description: response.description,
         active: response.active,
+        listings: response.listings,
     };
+    lastSavedLivestreamData = {...livestreamData};
 })();
 
-const saveLivestream = async () => {
-    if (livestream === null) return;
+const saveLivestreamData = async () => {
+    if (livestreamData === null) return;
 
     // const validationResult = validate.listing({title: listing.title, description: listing.description});
     // if (!validationResult.ok) {
@@ -59,8 +71,8 @@ const saveLivestream = async () => {
             method: "PATCH",
             body: JSON.stringify({
                 livestreamId,
-                livestreamTitle: livestream.title,
-                livestreamDescription: livestream.description,
+                livestreamTitle: livestreamData.title,
+                livestreamDescription: livestreamData.description,
                 livestreamListingIds: [...selectedListingIds],
             }),
             headers: {
@@ -71,8 +83,8 @@ const saveLivestream = async () => {
         ({livestreamId} = await apiFetchAuthenticated<{livestreamId: string}>("livestream/new", {
             method: "PUT",
             body: JSON.stringify({
-                livestreamTitle: livestream.title,
-                livestreamDescription: livestream.description,
+                livestreamTitle: livestreamData.title,
+                livestreamDescription: livestreamData.description,
                 livestreamListingIds: [...selectedListingIds],
             }),
             headers: {
@@ -81,19 +93,12 @@ const saveLivestream = async () => {
         }));
     }
 
-    editing = false;
-};
-
-const toggleListing = (listingId: string) => {
-    if (selectedListingIds.has(listingId)) {
-        selectedListingIds.delete(listingId);
-    } else {
-        selectedListingIds.add(listingId);
-    }
+    lastSavedLivestreamData = livestreamData;
+    changesMade = false;
 };
 
 const startLivestream = async () => {
-    if (livestream === null) return;
+    if (livestreamData === null) return;
 
     await apiFetchAuthenticated("livestream/start", {
         method: "POST",
@@ -105,11 +110,11 @@ const startLivestream = async () => {
         },
     });
 
-    livestream.active = true;
+    livestreamData.active = true;
 };
 
 const stopLivestream = async () => {
-    if (livestream === null) return;
+    if (livestreamData === null) return;
 
     await apiFetchAuthenticated("livestream/stop", {
         method: "POST",
@@ -121,7 +126,30 @@ const stopLivestream = async () => {
         },
     });
     
-    livestream.active = false;
+    livestreamData.active = false;
+};
+
+
+const setLivestreamText = (text: string) => {
+    if (!canEdit || livestreamData === null) return;
+
+    livestreamData.title = text;
+    changesMade = true;
+};
+
+const setLivestreamDescription = (text: string) => {
+    if (!canEdit || livestreamData === null) return;
+
+    livestreamData.description = text;
+    changesMade = true;
+};
+
+
+const discardChanges = () => {
+    if (!canEdit || livestreamData === null || lastSavedLivestreamData === null) return;
+
+    livestreamData = {...lastSavedLivestreamData};
+    changesMade = false;
 };
 </script>
 
@@ -130,46 +158,46 @@ const stopLivestream = async () => {
     {#await livestreamPromise}
         <div>Loading livestream...</div>
     {:then}
-        {#if livestream !== null}
+        {#if livestreamData !== null}
             <livestream-dashboard>
-                <div>
-                    <SubtleExclamation>You're editing this livestream!</SubtleExclamation>
-                    <Button
-                        onClick={saveLivestream}
-                        strong
-                    >Save</Button>
-                </div>
+                <EditingBanner
+                    {changesMade}
+                    onDiscard={discardChanges}
+                    onSave={saveLivestreamData}
+                >You're editing this livestream!</EditingBanner>
 
                 
                 <livestream-title>
-                    {#if editing}
+                    {#if canEdit}
                         <RichTextEntry
-                            initialText={livestream.title}
-                            onInput={text => livestream !== null && (livestream.title = text)}
+                            label="stream title"
+                            initialText={livestreamData.title}
+                            onInput={setLivestreamText}
                             placeholder="stream title"
                             classes="heading heading-1"
                         />
                     {:else}
-                        <h1>{livestream.title}</h1>
+                        <h1>{livestreamData.title}</h1>
                     {/if}
                 </livestream-title>
 
                 <livestream-description>
-                    {#if editing}
+                    {#if canEdit}
                         <RichTextEntry
-                            initialText={livestream.description}
-                            onInput={text => livestream !== null && (livestream.description = text)}
+                            label="stream description"
+                            initialText={livestreamData.description}
+                            onInput={setLivestreamDescription}
                             placeholder="stream description"
                         />
                     {:else}
-                        <div>{livestream.description}</div>
+                        <div>{livestreamData.description}</div>
                     {/if}
                 </livestream-description>
 
                 <livestream-listings>
                     <h2>attached listings</h2>
 
-                    {#await listingsPromise}
+                    <!-- {#await listingsPromise}
                         <div>Loading listings...</div>
                     {:then response}
                         {@const listings = response.listings}
@@ -179,7 +207,7 @@ const stopLivestream = async () => {
                                 <ListingRow
                                     {listing}
                                     selected={selectedListingIds.has(listing.id)}
-                                    {editing}
+                                    editing={canEdit}
                                     onToggle={() => toggleListing(listing.id)}
                                     onSetPrice={console.log}
                                 />
@@ -189,27 +217,27 @@ const stopLivestream = async () => {
                         {/if}
                     {:catch}
                         <div>Failed to load listings</div>
-                    {/await}
+                    {/await} -->
                 </livestream-listings>
 
                 <livestream-start-stop>
                     <Button
                         onClick={() => startLivestream()}
-                        disabled={livestreamId === null || livestream.active}
+                        disabled={livestreamId === null || livestreamData.active}
                     >Open room</Button>
 
                     <Button
                         onClick={() => stopLivestream()}
-                        disabled={!livestream.active}
+                        disabled={!livestreamData.active}
                     >Close room</Button>
                 </livestream-start-stop>
 
-                {#await listingsPromise}
+                <!-- {#await listingsPromise}
                     <div>Loading listings...</div>
                 {:then response}
                     {@const listings = response.listings}
 
-                    {#if livestream.active && livestreamId !== null}
+                    {#if livestreamData.active && livestreamId !== null}
                         <Backstage
                             userToken={store.user.streamioAuth.token}
                             userId={store.user.streamioAuth.id}
@@ -220,7 +248,7 @@ const stopLivestream = async () => {
                     {/if}
                 {:catch}
                     <div>Failed to load listings</div>
-                {/await}
+                {/await} -->
             </livestream-dashboard>
         {/if}
     {:catch}

@@ -29,9 +29,10 @@ button {
     padding: 0.75rem 2rem;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
 
     border: none;
-    background: #fff5;
+    background: #ffdbac55;
     color: inherit;
     border-radius: 2rem;
     box-shadow: 0 .25rem 2rem #FF5F2F3f;
@@ -44,7 +45,7 @@ button {
 
     &:hover {
         cursor: pointer;
-        background: #fff8;
+        background: #ffdbac88;
         text-shadow: 0 2px 0.5rem #631919;
     }
 
