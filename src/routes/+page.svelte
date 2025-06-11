@@ -11,6 +11,7 @@ let { data } = $props();
 
 const {supabase} = $derived(data);
 
+
 onMount(() => {
     if (store.user === null) return;
     goto("/");

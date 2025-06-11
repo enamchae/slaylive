@@ -4,6 +4,7 @@ import { apiFetch } from "$/routes/util";
 import ListingDisplayList from "@/Listing/ListingDisplayList.svelte";
 import { goto } from "$app/navigation";
 import {store} from "$routes/store.svelte";
+import { getListingsBySeller } from "$api/listing/by-seller/endpoint";
 
 if (!store.isSeller) {
     goto("/");
@@ -27,7 +28,7 @@ if (!store.isSeller) {
         <seller-listings>
             <h2>listings</h2>
 
-            {#await apiFetch(`listing/by-seller?sellerUserId=${store.user.id}`)}
+            {#await getListingsBySeller({sellerUserId: store.user.id})}
                 <div>Loading listings...</div>
             {:then response}
                 {@const listings = response.listings}
