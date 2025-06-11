@@ -2,12 +2,14 @@
 import { StreamVideoClient, type Call, type User, type StreamVideoParticipant } from "@stream-io/video-client";
 
 import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
-import ParticipantVideo from "./ParticipantVideo.svelte";
+import ParticipantVideo from "@/ParticipantVideo.svelte";
 import { apiFetchAuthenticated } from "$routes/util";
 import { onDestroy } from "svelte";
-    import { type LivestreamEvent, type LivestreamChatMessage, LivestreamEventType } from "./CallEvent";
-    import Chat from "./Chat.svelte";
-    import Reactions from "./Reactions.svelte";
+    import { type LivestreamEvent, LivestreamEventType } from "@/CallEvent";
+    import Chat from "@/Chat.svelte";
+    import Reactions from "@/Reactions.svelte";
+    import type { getListingsBySeller } from "$api/listing/by-seller/endpoint";
+    import Button from "$/lib/components/Button.svelte";
 
 let {
     userToken,
@@ -20,10 +22,7 @@ let {
     userId: string,
     userName: string,
     livestreamId: string,
-    listings: {
-        id: string,
-
-    }[],
+    listings: Awaited<ReturnType<typeof getListingsBySeller>>["listings"],
 } = $props();
 
 // set up the user object
@@ -125,14 +124,17 @@ const updateListingState = async (
             />
         {/if}
     
-        <button
-            onclick={() => call?.goLive()}
-            disabled={started}
-        >Go live</button>
-        <button
-            onclick={() => call?.stopLive()}
-            disabled={!started}
-        >Stop live</button>
+        <start-stop-broadcast>
+            <Button
+                onClick={() => call?.goLive()}
+                disabled={started}
+            >Start broadcast</Button>
+
+            <Button
+                onClick={() => call?.stopLive()}
+                disabled={!started}
+            >Stop broadcast</Button>
+        </start-stop-broadcast>
 
         <Chat
             {userId}
@@ -149,7 +151,6 @@ const updateListingState = async (
                 <div>{listing.title}</div>
             {/each}
         </div>
-
     {/if}
 </backstage-container>
 

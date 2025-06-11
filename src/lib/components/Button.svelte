@@ -4,18 +4,21 @@
 const {
     onClick,
     children,
+    disabled = false,
     strong = false,
 } = $props<{
     onClick: () => void,
     children: Snippet,
+    disabled?: boolean,
     strong?: boolean,
 }>();
 </script>
 
 
 <button
-    onclick={onClick}
-    class:strong={strong}
+    onclick={() => !disabled && onClick()}
+    class:disabled
+    class:strong
 >
     {@render children()}
 </button>
@@ -24,7 +27,7 @@ const {
 button {
     margin: 0;
     padding: 0.75rem 2rem;
-    display: flex;
+    display: inline-flex;
     align-items: center;
 
     border: none;
@@ -60,6 +63,11 @@ button {
         &:active {
             filter: brightness(0.75);
         }
+    }
+
+    &.disabled {
+        pointer-events: none;
+        opacity: 0.3333333;
     }
 }
 </style>

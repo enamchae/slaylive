@@ -1,5 +1,5 @@
 <script lang="ts">
-import Backstage from "@/Backstage.svelte";
+import Backstage from "./Backstage.svelte";
 
 import {store} from "$routes/store.svelte";
 import { goto } from "$app/navigation";
@@ -9,7 +9,6 @@ import SubtleExclamation from "@/SubtleExclamation.svelte";
 import { SvelteSet } from "svelte/reactivity";
     import Button from "@/Button.svelte";
     import ListingRow from "./ListingRow.svelte";
-    import type { Listing } from "./Listing";
     import { getListingsBySeller } from "$api/listing/by-seller/endpoint";
     import { getLivestreamDetails } from "$/routes/api/livestream/details/endpoint";
 
@@ -193,15 +192,17 @@ const stopLivestream = async () => {
                     {/await}
                 </livestream-listings>
 
-                <button
-                    onclick={() => startLivestream()}
-                    disabled={livestreamId === null || livestream.active}
-                >Start</button>
+                <livestream-start-stop>
+                    <Button
+                        onClick={() => startLivestream()}
+                        disabled={livestreamId === null || livestream.active}
+                    >Open room</Button>
 
-                <button
-                    onclick={() => stopLivestream()}
-                    disabled={!livestream.active}
-                >Stop</button>
+                    <Button
+                        onClick={() => stopLivestream()}
+                        disabled={!livestream.active}
+                    >Close room</Button>
+                </livestream-start-stop>
 
                 {#await listingsPromise}
                     <div>Loading listings...</div>
