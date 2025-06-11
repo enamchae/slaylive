@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Button from "$/stories/Button.svelte";
-import ListingDisplay from "$/stories/Listing/ListingDisplay.svelte";
+    import Button from "@/Button.svelte";
+import ListingDisplay from "@/Listing/ListingDisplay.svelte";
 
 const {
     listing,

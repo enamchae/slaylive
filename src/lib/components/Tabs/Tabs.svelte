@@ -4,9 +4,9 @@ import { goto } from "$app/navigation";
 import {store} from "$routes/store.svelte";
 import Tab from "./Tab.svelte";
 
-import nowLiveIcon from "$stories/assets/now-live.svg";
-import browseIcon from "$stories/assets/browse.svg";
-import profileIcon from "$stories/assets/profile.svg";
+import nowLiveIcon from "@/assets/now-live.svg";
+import browseIcon from "@/assets/browse.svg";
+import profileIcon from "@/assets/profile.svg";
     import { page } from "$app/state";
 
 </script>

@@ -1,5 +1,5 @@
 <script>
-import ListingDisplayList from "$/stories/Listing/ListingDisplayList.svelte";
+import ListingDisplayList from "@/Listing/ListingDisplayList.svelte";
 import { goto } from "$app/navigation";
 import { apiFetch } from "$routes/util";
 </script>

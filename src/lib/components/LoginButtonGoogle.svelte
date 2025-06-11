@@ -14,7 +14,7 @@ SocialLogin.initialize({
 </script>
 
 <script lang="ts">
-import ButtonRaised from "$/stories/ButtonRaised.svelte";
+import ButtonRaised from "@/ButtonRaised.svelte";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 
 import googleLogo from "$/public/google.svg";

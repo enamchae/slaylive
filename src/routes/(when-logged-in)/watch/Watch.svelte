@@ -4,12 +4,12 @@ import { onDestroy } from "svelte";
 import {goto} from "$app/navigation";
 
 import { PUBLIC_STREAM_API_KEY, PUBLIC_API_URL } from "$env/static/public";
-import ParticipantVideo from "./ParticipantVideo.svelte";
-import SymbolButton from "./SymbolButton.svelte";
-import RichTextEntry from "./RichTextEntry.svelte";
-import type { LivestreamEvent, LivestreamChatMessage } from "./CallEvent";
-    import Chat from "./Chat.svelte";
-    import Reactions from "./Reactions.svelte";
+import ParticipantVideo from "@/ParticipantVideo.svelte";
+import SymbolButton from "@/SymbolButton.svelte";
+import RichTextEntry from "@/RichTextEntry.svelte";
+import type { LivestreamEvent, LivestreamChatMessage } from "@/CallEvent";
+    import Chat from "@/Chat.svelte";
+    import Reactions from "@/Reactions.svelte";
 
 let {
     callId,

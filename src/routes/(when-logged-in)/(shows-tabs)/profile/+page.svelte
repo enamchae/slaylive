@@ -1,7 +1,7 @@
 <script lang="ts">
 import { apiFetch } from "$/routes/util";
-    import Button from "$/stories/Button.svelte";
-import ListingDisplayList from "$/stories/Listing/ListingDisplayList.svelte";
+    import Button from "@/Button.svelte";
+import ListingDisplayList from "@/Listing/ListingDisplayList.svelte";
 import { goto } from "$app/navigation";
 import {store} from "$routes/store.svelte";
 

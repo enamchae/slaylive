@@ -3,7 +3,7 @@ import { onMount } from "svelte";
 import { goto } from "$app/navigation";
 import {type User} from "@supabase/supabase-js";
 
-import LoginButtonGoogle from "$stories/LoginButtonGoogle.svelte";
+import LoginButtonGoogle from "@/LoginButtonGoogle.svelte";
 import { store } from "./store.svelte";
 import {apiFetch} from "$routes/util";
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 import {store} from "./store.svelte";
-import "$stories/index.scss";
+import "@/index.scss";
 
 let { children, data } = $props();
 

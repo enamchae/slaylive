@@ -1,9 +1,9 @@
 <script lang="ts">
 import { validate } from "$/lib/validation";
-import ListingPhotoAddButton from "$/stories/Listing/ListingPhotoAddButton.svelte";
-import ListingPhotoButton from "$/stories/Listing/ListingPhotoButton.svelte";
-import RichTextEntry from "$/stories/RichTextEntry.svelte";
-import SubtleExclamation from "$/stories/SubtleExclamation.svelte";
+import ListingPhotoAddButton from "@/Listing/ListingPhotoAddButton.svelte";
+import ListingPhotoButton from "@/Listing/ListingPhotoButton.svelte";
+import RichTextEntry from "@/RichTextEntry.svelte";
+import SubtleExclamation from "@/SubtleExclamation.svelte";
 import { goto } from "$app/navigation";
 import {apiFetch, apiFetchAuthorized} from "$routes/util";
 import { onDestroy } from "svelte";

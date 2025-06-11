@@ -1,15 +1,15 @@
 <script lang="ts">
-import Backstage from "$stories/Backstage.svelte";
+import Backstage from "@/Backstage.svelte";
 
 import {store} from "$routes/store.svelte";
 import { goto } from "$app/navigation";
-import RichTextEntry from "$/stories/RichTextEntry.svelte";
+import RichTextEntry from "@/RichTextEntry.svelte";
 import { apiFetch, apiFetchAuthorized } from "$/routes/util";
-import SubtleExclamation from "$/stories/SubtleExclamation.svelte";
-import ListingDisplayList from "$/stories/Listing/ListingDisplayList.svelte";
+import SubtleExclamation from "@/SubtleExclamation.svelte";
+import ListingDisplayList from "@/Listing/ListingDisplayList.svelte";
     import { SvelteSet } from "svelte/reactivity";
-    import Button from "$/stories/Button.svelte";
-    import ListingDisplay from "$/stories/Listing/ListingDisplay.svelte";
+    import Button from "@/Button.svelte";
+    import ListingDisplay from "@/Listing/ListingDisplay.svelte";
     import { flip } from "svelte/animate";
     import ListingRow from "./ListingRow.svelte";
     import type { Listing } from "./Listing";

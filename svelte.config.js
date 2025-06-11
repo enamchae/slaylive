@@ -37,7 +37,7 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			"$": "./src",
-			"$stories": "./src/stories",
+			"@": "./src/lib/components",
 			"$api": "./src/routes/api",
 			"$routes": "./src/routes",
 		},

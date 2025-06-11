@@ -1,5 +1,5 @@
 <script lang="ts">
-    import NowLive from "$/stories/NowLive.svelte";
+    import NowLive from "@/NowLive.svelte";
 
 
 let joinCallId = $state("");
