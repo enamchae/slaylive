@@ -1,6 +1,4 @@
 <script lang="ts">
-import { i18n } from '$lib/i18n';
-import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 import {store} from "./store.svelte";
 import "$stories/index.scss";
 
@@ -9,11 +7,9 @@ let { children, data } = $props();
 store.buildType.resolve(data.BUILD_TYPE);
 </script>
 
-<ParaglideJS {i18n}>
-	<content-container>
-		{@render children()}
-	</content-container>
-</ParaglideJS>
+<content-container>
+	{@render children()}
+</content-container>
 
 <svelte:head>
 	<link
