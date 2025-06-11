@@ -5,7 +5,7 @@ import { livestreamTable } from "$/lib/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { requiresLoggedInUser } from "$api/middleware";
 
-export const PATCH: RequestHandler = requiresLoggedInUser(async ({request}, user) => {
+export const PATCH: RequestHandler = requiresLoggedInUser(async (user, {request}) => {
     const {livestreamId, sessionId} = await request.json();
 
     const livestreamMatches = and(

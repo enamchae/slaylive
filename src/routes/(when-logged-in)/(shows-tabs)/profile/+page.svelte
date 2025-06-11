@@ -5,6 +5,7 @@ import ListingDisplayList from "@/Listing/ListingDisplayList.svelte";
 import { goto } from "$app/navigation";
 import {store} from "$routes/store.svelte";
 import { getListingsBySeller } from "$api/listing/by-seller/endpoint";
+    import { getLivestreamsBySeller } from "$/routes/api/livestream/by-seller/endpoint";
 
 if (!store.isSeller) {
     goto("/");
@@ -52,14 +53,16 @@ if (!store.isSeller) {
         <seller-livestreams>
             <h2>livestreams</h2>
 
-            {#await apiFetch(`livestream/by-seller?hostUserId=${store.user.id}`)}
+            {#await getLivestreamsBySeller({sellerUserId: store.user.id})}
                 <div>Loading listings...</div>
             {:then response}
                 {@const livestreams = response.livestreams}
 
                 {#if livestreams.length > 0}
                     {#each livestreams as livestream}
-                        <div onclick={() => goto(`/livestream?edit&id=${livestream.id}`)}>{livestream.id} {livestream.title}</div>
+                        <Button onClick={() => goto(`/livestream?edit&id=${livestream.id}`)}>
+                            {livestream.title}
+                        </Button>
                     {/each}
                 {:else}
                     <div>No livestreams yet!</div>

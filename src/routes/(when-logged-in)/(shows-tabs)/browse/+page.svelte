@@ -1,13 +1,13 @@
 <script>
 import ListingDisplayList from "@/Listing/ListingDisplayList.svelte";
 import { goto } from "$app/navigation";
-import { apiFetch } from "$routes/util";
+import { getListingList } from "$/routes/api/listing/list/endpoint";
 </script>
 
 <h1>browse</h1>
 <browse-listings>
     
-    {#await apiFetch(`listing/list`)}
+    {#await getListingList({})}
         <div>Loading listings...</div>
     {:then response}
         {@const listings = response.listings}

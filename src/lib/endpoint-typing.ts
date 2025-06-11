@@ -1,11 +1,14 @@
 import type { GetEndpoint } from "$/routes/api/middleware";
-import { apiFetch } from "$/routes/util";
+import { apiFetch, apiFetchAuthenticated } from "$/routes/util";
 
 export type PayloadOf<T> = T extends GetEndpoint<infer Payload, any> ? Payload : never;
 export type OutputOf<T> = T extends GetEndpoint<any, infer Output> ? Output : never;
 
-export const apiGetter = <T extends GetEndpoint>(urlString: string) => {
+
+export const apiGetter = <T extends GetEndpoint>(urlString: string, authenticated: boolean) => {
     const url = new URL(urlString, location.origin);
+
+    const doFetch = authenticated ? apiFetchAuthenticated : apiFetch; 
 
     return (
         payload: PayloadOf<T>,
@@ -16,6 +19,6 @@ export const apiGetter = <T extends GetEndpoint>(urlString: string) => {
             urlObj.searchParams.set(key, value);
         }
 
-        return apiFetch<OutputOf<T>>(urlObj, options);
+        return doFetch<OutputOf<T>>(urlObj, options);
     };
 };

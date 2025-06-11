@@ -7,7 +7,7 @@ import { db } from "$/lib/server/db";
 import {userTable as userDb} from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 
-export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => {
+export const POST: RequestHandler = requiresLoggedInUser(async (user, event) => {
     let members = await db.select({
         canSell: userDb.canSell,
     })

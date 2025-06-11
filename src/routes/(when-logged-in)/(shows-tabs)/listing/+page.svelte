@@ -5,9 +5,10 @@ import ListingPhotoButton from "@/Listing/ListingPhotoButton.svelte";
 import RichTextEntry from "@/RichTextEntry.svelte";
 import SubtleExclamation from "@/SubtleExclamation.svelte";
 import { goto } from "$app/navigation";
-import {apiFetch, apiFetchAuthorized} from "$routes/util";
+import {apiFetch, apiFetchAuthenticated} from "$routes/util";
 import { onDestroy } from "svelte";
     import { store } from "$routes/store.svelte";
+    import { getListingDetails } from "$/routes/api/listing/details/endpoint";
 
 
 const searchParams = new URLSearchParams(location.search);
@@ -17,7 +18,7 @@ const listingId = searchParams.get("id") ?? null;
 
 const listingPromise = listingId === null
     ? Promise.resolve({title: "", description: "", imageUrls: [], onDisplay: false})
-    : apiFetch(`listing/details?listingId=${listingId}`);
+    : getListingDetails({ listingId });
 
 let listing = $state<{
     title: string,
@@ -60,7 +61,7 @@ const saveListing = async () => {
     }
 
     if (listingId !== null) {
-        await apiFetchAuthorized("listing/edit", {
+        await apiFetchAuthenticated("listing/edit", {
             method: "PATCH",
             body: JSON.stringify({
                 listingId,
@@ -73,7 +74,7 @@ const saveListing = async () => {
             },
         });
     } else {
-        await apiFetchAuthorized("listing/new", {
+        await apiFetchAuthenticated("listing/new", {
             method: "PUT",
             body: JSON.stringify({
                 listingTitle: listing.title,

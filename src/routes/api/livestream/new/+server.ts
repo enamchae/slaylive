@@ -7,7 +7,7 @@ import { requiresLoggedInUser } from "../../middleware";
 import { validate } from "$lib/validation";
 import { client } from "../../global";
 
-export const PUT: RequestHandler = requiresLoggedInUser(async ({request}, user) => {
+export const PUT: RequestHandler = requiresLoggedInUser(async (user, {request}) => {
     const {livestreamTitle, livestreamDescription, livestreamListingIds}: {
         livestreamTitle: string,
         livestreamDescription: string,

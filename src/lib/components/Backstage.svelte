@@ -3,8 +3,8 @@ import { StreamVideoClient, type Call, type User, type StreamVideoParticipant } 
 
 import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
 import ParticipantVideo from "./ParticipantVideo.svelte";
-import { apiFetchAuthorized } from "$routes/util";
-    import { onDestroy } from "svelte";
+import { apiFetchAuthenticated } from "$routes/util";
+import { onDestroy } from "svelte";
     import { type LivestreamEvent, type LivestreamChatMessage, LivestreamEventType } from "./CallEvent";
     import Chat from "./Chat.svelte";
     import Reactions from "./Reactions.svelte";
@@ -62,7 +62,7 @@ let localParticipant = $state<StreamVideoParticipant | null>(null);
 
         localParticipant = participant;
 
-        apiFetchAuthorized("livestream/set-host-session", {
+        apiFetchAuthenticated("livestream/set-host-session", {
             method: "PATCH",
             body: JSON.stringify({
                 livestreamId,

@@ -1,11 +1,7 @@
 <script lang="ts">
-import {onMount} from "svelte";
-
-import { PUBLIC_API_URL } from "$env/static/public";
-import ButtonRaised from "./ButtonRaised.svelte";
-import { apiFetch } from "$/routes/util";
     import { goto } from "$app/navigation";
     import Button from "./Button.svelte";
+    import { getLivestreamList } from "$/routes/api/livestream/list/endpoint";
 
 const joinCall = (callId: string) => {
     goto(`/watch?call_id=${encodeURIComponent(callId)}`);
@@ -13,7 +9,7 @@ const joinCall = (callId: string) => {
 </script>
 
 <now-live>
-    {#await apiFetch("livestream/list")}
+    {#await getLivestreamList({})}
         <div>Loading ongoing livestreams</div>
     {:then livestreams}
         {#each livestreams as livestream (livestream.id)}

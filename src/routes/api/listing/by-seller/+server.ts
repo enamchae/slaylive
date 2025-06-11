@@ -1,6 +1,6 @@
 import { db } from "$/lib/server/db";
 import { listingTable } from "$/lib/server/db/schema";
-import { error, json, type RequestHandler } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import { GetEndpoint } from "$api/middleware";
 
@@ -14,19 +14,17 @@ const get = new GetEndpoint(
     },
 
     async payload => {
-        const sellerUserId = payload.sellerUserId;
-
         const listings = await db.select({
             id: listingTable.id,
             title: listingTable.title,
             description: listingTable.description,
         })
             .from(listingTable)
-            .where(eq(listingTable.sellerUserId, sellerUserId));
+            .where(eq(listingTable.sellerUserId, payload.sellerUserId));
 
         return {listings};
     },
 );
 
-export const GET = get.handler();
+export const GET = get.loggedInHandler();
 export type Endpoint = typeof get;

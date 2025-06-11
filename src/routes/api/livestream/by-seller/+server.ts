@@ -1,24 +1,32 @@
 import { db } from "$/lib/server/db";
-import { listingTable, livestreamTable } from "$/lib/server/db/schema";
-import { error, json, type RequestHandler } from "@sveltejs/kit";
+import { livestreamTable } from "$/lib/server/db/schema";
+import { error } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
+import { GetEndpoint } from "$api/middleware";
 
-export const GET: RequestHandler = async ({ url }) => {
-    const hostUserId = url.searchParams.get("hostUserId");
 
-    if (hostUserId === null) return error(400, "Missing host user id");
+const get = new GetEndpoint(
+    searchParams => {
+        const sellerUserId = searchParams.get("sellerUserId");
+        if (sellerUserId === null) return error(400, "Missing seller user id");
 
-    const livestreams = await db.select({
-        id: livestreamTable.id,
-        title: livestreamTable.title,
-        description: livestreamTable.description,
-        hostUserId: livestreamTable.hostUserId,
-        active: livestreamTable.active,
-    })
-        .from(livestreamTable)
-        .where(eq(livestreamTable.hostUserId, hostUserId));
+        return { sellerUserId };
+    },
 
-    return json({
-        livestreams,
-    });
-};
+    async payload => {
+        const livestreams = await db.select({
+            id: livestreamTable.id,
+            title: livestreamTable.title,
+            description: livestreamTable.description,
+            hostUserId: livestreamTable.hostUserId,
+            active: livestreamTable.active,
+        })
+            .from(livestreamTable)
+            .where(eq(livestreamTable.hostUserId, payload.sellerUserId));
+
+        return {livestreams};
+    },
+);
+
+export const GET = get.loggedInHandler();
+export type Endpoint = typeof get;

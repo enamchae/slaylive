@@ -6,7 +6,7 @@ import { db } from "$/lib/server/db";
 import { requiresLoggedInUser } from "../../middleware";
 import { validate } from "$lib/validation";
 
-export const PUT: RequestHandler = requiresLoggedInUser(async ({request}, user) => {
+export const PUT: RequestHandler = requiresLoggedInUser(async (user, {request}) => {
     const {listingTitle, listingDescription, listingOnDisplay} = await request.json();
 
 

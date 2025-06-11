@@ -1,4 +1,4 @@
 import { apiGetter } from "$/lib/endpoint-typing";
 import type { Endpoint } from "./+server";
 
-export const getListingsBySeller = apiGetter<Endpoint>("/api/listing/by-seller", true);
+export const getLivestreamDetails = apiGetter<Endpoint>("/api/livestream/details", true);

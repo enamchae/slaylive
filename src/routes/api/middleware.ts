@@ -1,8 +1,8 @@
 import type { User } from "@supabase/supabase-js";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 
-export const requiresLoggedInUser = (handle: (event: Parameters<RequestHandler>[0], user: User) => ReturnType<RequestHandler>): RequestHandler => 
-    async event => {
+export const requiresLoggedInUser = (handle: (user: User, ...args: Parameters<RequestHandler>) => ReturnType<RequestHandler>): RequestHandler => 
+    async (event, ...args) => {
         const {request, locals: {supabase}} = event;
 
         const authorization = request.headers.get("Authorization");
@@ -12,7 +12,7 @@ export const requiresLoggedInUser = (handle: (event: Parameters<RequestHandler>[
         const userResponse = await supabase.auth.getUser(token);
         if (userResponse.error !== null) return error(401, "No user found");
 
-        return handle(event, userResponse.data.user);
+        return handle(userResponse.data.user, event, ...args);
     };
 
 
@@ -36,5 +36,10 @@ export class GetEndpoint<Payload extends Record<string, string>=any, Output=any>
             
             return json(out);
         };
+    }
+
+    loggedInHandler(): RequestHandler {
+        const handler = this.handler();
+        return requiresLoggedInUser((user, ...args) => handler(...args));
     }
 }

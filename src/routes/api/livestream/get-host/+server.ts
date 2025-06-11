@@ -2,27 +2,37 @@ import { db } from "$/lib/server/db";
 import { livestreamTable } from "$/lib/server/db/schema";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
+import { GetEndpoint } from "../../middleware";
 
-export const GET: RequestHandler = async ({ url }) => {
-    const callId = url.searchParams.get("call_id");
 
-    if (callId === null) return error(400, "Missing call id");
+const get = new GetEndpoint(
+    searchParams => {
+        const call_id = searchParams.get("call_id");
+        if (call_id === null) return error(400, "Missing call id");
 
-    const calls = await db.select({
-        hostUserId: livestreamTable.hostUserId,
-        hostSessionId: livestreamTable.hostSessionId,
-    })
-        .from(livestreamTable)
-        .where(eq(livestreamTable.id, callId))
-        .limit(1);
+        return { call_id };
+    },
 
-    if (calls.length === 0) return error(404, "No livestream with the given id");
+    async payload => {
+        const calls = await db.select({
+            hostUserId: livestreamTable.hostUserId,
+            hostSessionId: livestreamTable.hostSessionId,
+        })
+            .from(livestreamTable)
+            .where(eq(livestreamTable.id, payload.call_id))
+            .limit(1);
 
-    const call = calls[0];
-    if (call.hostSessionId === null) return error(400, "Livestream has not started yet");
+        if (calls.length === 0) return error(404, "No livestream with the given id");
 
-    return json({
-        hostUserId: call.hostUserId,
-        hostSessionId: call.hostSessionId,
-    });
-};
+        const call = calls[0];
+        if (call.hostSessionId === null) return error(400, "Livestream has not started yet");
+
+        return {
+            hostUserId: call.hostUserId,
+            hostSessionId: call.hostSessionId,
+        };
+    },
+);
+
+export const GET = get.loggedInHandler();
+export type Endpoint = typeof get;

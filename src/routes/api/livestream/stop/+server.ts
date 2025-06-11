@@ -6,7 +6,7 @@ import { db } from "$/lib/server/db";
 import { livestreamTable } from "$/lib/server/db/schema";
 import { requiresLoggedInUser } from "$api/middleware";
 
-export const POST: RequestHandler = requiresLoggedInUser(async (event, user) => {
+export const POST: RequestHandler = requiresLoggedInUser(async (user, event) => {
     const {livestreamId} = await event.request.json();
 
     const livestreams = await db.select()

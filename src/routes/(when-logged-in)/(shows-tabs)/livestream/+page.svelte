@@ -4,15 +4,14 @@ import Backstage from "@/Backstage.svelte";
 import {store} from "$routes/store.svelte";
 import { goto } from "$app/navigation";
 import RichTextEntry from "@/RichTextEntry.svelte";
-import { apiFetch, apiFetchAuthorized } from "$/routes/util";
+import { apiFetchAuthenticated } from "$/routes/util";
 import SubtleExclamation from "@/SubtleExclamation.svelte";
-import ListingDisplayList from "@/Listing/ListingDisplayList.svelte";
-    import { SvelteSet } from "svelte/reactivity";
+import { SvelteSet } from "svelte/reactivity";
     import Button from "@/Button.svelte";
-    import ListingDisplay from "@/Listing/ListingDisplay.svelte";
-    import { flip } from "svelte/animate";
     import ListingRow from "./ListingRow.svelte";
     import type { Listing } from "./Listing";
+    import { getListingsBySeller } from "$api/listing/by-seller/endpoint";
+    import { getLivestreamDetails } from "$/routes/api/livestream/details/endpoint";
 
 if (!store.isSeller) {
     goto("/");
@@ -23,13 +22,9 @@ const searchParams = new URLSearchParams(location.search);
 let editing = $state((searchParams.has("new") || searchParams.has("edit")) && (store.user?.canSell ?? false));
 let livestreamId = $state(searchParams.get("id"));
 
-const livestreamPromise: Promise<{
-    title: string,
-    description: string,
-    active: boolean,
-}> = livestreamId === null
+const livestreamPromise = livestreamId === null
     ? Promise.resolve({title: "", description: "", active: false})
-    : apiFetchAuthorized(`livestream/details?livestreamId=${livestreamId}`);
+    : getLivestreamDetails({ livestreamId });
 
 let livestream = $state<{
     title: string,
@@ -38,11 +33,9 @@ let livestream = $state<{
 } | null>(null);
 
 
-const listingsPromise: Promise<{
-    listings: Listing[],
-}> = store.user === null
-    ? Promise.resolve({listings: []})
-    : apiFetch(`listing/by-seller?sellerUserId=${store.user.id}`);
+const listingsPromise = store.user === null
+        ? Promise.resolve({listings: []})
+        : getListingsBySeller({sellerUserId: store.user.id});
 let selectedListingIds = $state(new SvelteSet<string>());
 
 (async () => {
@@ -63,7 +56,7 @@ const saveLivestream = async () => {
     // }
 
     if (livestreamId !== null) {
-        await apiFetchAuthorized("livestream/edit", {
+        await apiFetchAuthenticated("livestream/edit", {
             method: "PATCH",
             body: JSON.stringify({
                 livestreamId,
@@ -76,7 +69,7 @@ const saveLivestream = async () => {
             },
         });
     } else {
-        ({livestreamId} = await apiFetchAuthorized<{livestreamId: string}>("livestream/new", {
+        ({livestreamId} = await apiFetchAuthenticated<{livestreamId: string}>("livestream/new", {
             method: "PUT",
             body: JSON.stringify({
                 livestreamTitle: livestream.title,
@@ -103,7 +96,7 @@ const toggleListing = (listingId: string) => {
 const startLivestream = async () => {
     if (livestream === null) return;
 
-    await apiFetchAuthorized("livestream/start", {
+    await apiFetchAuthenticated("livestream/start", {
         method: "POST",
         body: JSON.stringify({
             livestreamId,
@@ -119,7 +112,7 @@ const startLivestream = async () => {
 const stopLivestream = async () => {
     if (livestream === null) return;
 
-    await apiFetchAuthorized("livestream/stop", {
+    await apiFetchAuthenticated("livestream/stop", {
         method: "POST",
         body: JSON.stringify({
             livestreamId,

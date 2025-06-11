@@ -10,6 +10,7 @@ import RichTextEntry from "@/RichTextEntry.svelte";
 import type { LivestreamEvent, LivestreamChatMessage } from "@/CallEvent";
     import Chat from "@/Chat.svelte";
     import Reactions from "@/Reactions.svelte";
+    import { getLivestreamHost } from "$/routes/api/livestream/get-host/endpoint";
 
 let {
     callId,
@@ -54,7 +55,7 @@ let participants = $state<StreamVideoParticipant[]>([]);
 
     await call.join();
 
-    ({hostSessionId} = await (await fetch(new URL(`/api/livestream/get-host?call_id=${callId}`, PUBLIC_API_URL).href)).json());
+    ({hostSessionId} = await getLivestreamHost({call_id: callId}));
 
 
     // Render the number of users who joined
