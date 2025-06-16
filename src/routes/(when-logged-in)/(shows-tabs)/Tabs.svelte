@@ -43,11 +43,10 @@ import profileIcon from "@/assets/profile.svg";
 <style lang="scss">
 tabs-rack {
     display: flex;
-    justify-content: space-evenly;
-    padding: 1rem;
+    padding: 0.25rem;
 
     background: #FFD2B83f;
-    margin: 0 2rem 4rem;
+    margin: 0 1rem 2rem;
     border-radius: 0.75rem;
 
     z-index: 1;

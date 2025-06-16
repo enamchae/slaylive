@@ -33,7 +33,6 @@ nav-tab {
     display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 1.5rem;
     width: 8rem;
 
     cursor: pointer;
@@ -45,8 +44,9 @@ nav-tab {
     --shadow-accent: #0000;
 
     > img {
-        width: 3rem;
-        height: 3rem;
+        width: 2rem;
+        height: 2rem;
+        margin-bottom: -0.25rem;
     }
 }
 </style>
