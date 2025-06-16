@@ -5,55 +5,39 @@ import ListingDisplay from "@/Listing/ListingDisplay.svelte";
 
 const {
     listing,
-    selected,
     editing,
-    onToggle,
     onSetPrice,
 }: {
     listing: any,
-    selected: boolean,
     editing: boolean,
-    onToggle: () => void,
     onSetPrice: (price: number) => void,
 } = $props();
 
 </script>
 
 
-<listing-row
-    class:selected
->
-    <input
-        type="checkbox"
-        oninput={() => editing && onToggle()}
-        checked={selected}
-    />
-
+<listing-row>
     <ListingDisplay
         title={listing.title}
-        onClick={() => editing && onToggle()}
     />
 
     <listing-settings>
         <h3>{listing.title}</h3>
 
-        {#if selected}
-            $<RichTextEntry
-                initialText="0.00"
-                onInput={text => {
-                    const price = parseFloat(text);
-                    if (isNaN(price)) return;
-                    
-                    onSetPrice(price);
-                }}
-                placeholder="stream description"
-            />
-        {/if}
+        <RichTextEntry
+            label="price"
+            initialText="0.00"
+            onInput={text => {
+                const price = parseFloat(text);
+                if (isNaN(price)) return;
+                
+                onSetPrice(price);
+            }}
+            placeholder="0.00"
+        />
     </listing-settings>
 
-    {#if selected}
-        <Button>Start selling</Button>
-    {/if}
+    <Button>Start selling</Button>
 </listing-row>
 
 <style lang="scss">

@@ -11,6 +11,7 @@ import type { LivestreamEvent, LivestreamChatMessage } from "@/CallEvent";
     import Chat from "@/Chat.svelte";
     import Reactions from "@/Reactions.svelte";
     import { getLivestreamHost } from "$/routes/api/livestream/get-host/endpoint";
+    import Button from "$/lib/components/Button.svelte";
 
 let {
     callId,
@@ -103,11 +104,11 @@ onDestroy(() => {
 
     <watch-overlays>
         <watch-exit>
-            <SymbolButton
+            <Button
                 onClick={() => goto("/now-live")}
             >
                 &lt;
-            </SymbolButton>
+            </Button>
         </watch-exit>
 
         <watch-reactions>

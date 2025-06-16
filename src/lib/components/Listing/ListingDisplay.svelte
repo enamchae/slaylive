@@ -1,10 +1,10 @@
 <script lang="ts">
 const {
     title,
-    onClick,
+    onClick = () => {},
 }: {
     title: string,
-    onClick: () => void,
+    onClick?: () => void,
 } = $props();
 </script>
 

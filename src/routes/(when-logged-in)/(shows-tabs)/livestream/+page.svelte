@@ -156,7 +156,7 @@ const discardChanges = () => {
 
 {#if store.isSeller && store.user !== null}
     {#await livestreamPromise}
-        <div>Loading livestream...</div>
+        <div>Loading stream...</div>
     {:then}
         {#if livestreamData !== null}
             <livestream-dashboard>
@@ -164,7 +164,7 @@ const discardChanges = () => {
                     {changesMade}
                     onDiscard={discardChanges}
                     onSave={saveLivestreamData}
-                >You're editing this livestream!</EditingBanner>
+                >You're editing this stream!</EditingBanner>
 
                 
                 <livestream-title>
@@ -196,6 +196,22 @@ const discardChanges = () => {
 
                 <livestream-listings>
                     <h2>attached listings</h2>
+
+
+                    {#each livestreamData.listings as listing (listing.id)}
+                        <ListingRow
+                            {listing}
+                            editing={canEdit}
+                            onSetPrice={console.log}
+                        />
+                    {/each}
+
+                    <Button
+                        onClick={() => {}}
+                    >
+                        Edit listing selection
+                    </Button>
+
 
                     <!-- {#await listingsPromise}
                         <div>Loading listings...</div>
@@ -232,23 +248,14 @@ const discardChanges = () => {
                     >Close room</Button>
                 </livestream-start-stop>
 
-                <!-- {#await listingsPromise}
-                    <div>Loading listings...</div>
-                {:then response}
-                    {@const listings = response.listings}
-
-                    {#if livestreamData.active && livestreamId !== null}
-                        <Backstage
-                            userToken={store.user.streamioAuth.token}
-                            userId={store.user.streamioAuth.id}
-                            userName={store.user.streamioAuth.name}
-                            {livestreamId}
-                            listings={listings.filter(listing => selectedListingIds.has(listing.id))}
-                        />
-                    {/if}
-                {:catch}
-                    <div>Failed to load listings</div>
-                {/await} -->
+                {#if livestreamData.active && livestreamId !== null}
+                    <Backstage
+                        userToken={store.user.streamioAuth.token}
+                        userId={store.user.streamioAuth.id}
+                        userName={store.user.streamioAuth.name}
+                        {livestreamId}
+                    />
+                {/if}
             </livestream-dashboard>
         {/if}
     {:catch}

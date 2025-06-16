@@ -6,6 +6,7 @@ import { LivestreamEventType, type LivestreamEvent, type LivestreamReaction } fr
 import { onDestroy, onMount } from "svelte";
     import { SvelteSet } from "svelte/reactivity";
     import Reaction from "./Reaction.svelte";
+    import Button from "./Button.svelte";
 
 let {
     call,
@@ -38,7 +39,7 @@ onDestroy(() => {
 });
 
 
-const sendChat = async (emoji: string) => {
+const sendReaction = async (emoji: string) => {
     await call.sendCustomEvent({
         type: LivestreamEventType.React,
         data: {
@@ -58,10 +59,10 @@ const sendChat = async (emoji: string) => {
 </livestream-reactions-visualizer>
 
 <livestream-reactions-rack>
-    <button onclick={() => sendChat("🤣")}>🤣</button>
-    <button onclick={() => sendChat("🤩")}>🤩</button>
-    <button onclick={() => sendChat("😍")}>😍</button>
-    <button onclick={() => sendChat("❤️")}>❤️</button>
+    <Button onClick={() => sendReaction("🤣")}>🤣</Button>
+    <Button onClick={() => sendReaction("🤩")}>🤩</Button>
+    <Button onClick={() => sendReaction("😍")}>😍</Button>
+    <Button onClick={() => sendReaction("❤️")}>❤️</Button>
 </livestream-reactions-rack>
 
 <style lang="scss">

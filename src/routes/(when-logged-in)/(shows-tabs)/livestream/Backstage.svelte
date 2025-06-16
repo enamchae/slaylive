@@ -16,13 +16,11 @@ let {
     userId,
     userName,
     livestreamId,
-    listings,
 }: {
     userToken: string,
     userId: string,
     userName: string,
     livestreamId: string,
-    listings: Awaited<ReturnType<typeof getListingsBySeller>>["listings"],
 } = $props();
 
 // set up the user object
@@ -145,12 +143,6 @@ const updateListingState = async (
         <Reactions
             {call}
         />
-
-        <div>
-            {#each listings as listing (listing.id)}
-                <div>{listing.title}</div>
-            {/each}
-        </div>
     {/if}
 </backstage-container>
 

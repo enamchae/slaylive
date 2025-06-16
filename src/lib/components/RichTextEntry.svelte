@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { fade } from "svelte/transition";
+
 let {
     label,
     initialText,
@@ -52,7 +54,7 @@ const updateText = () => {
 
     <entry-editable-container>
         {#if text.length === 0}
-            <rich-text-placeholder>{placeholder}</rich-text-placeholder>
+            <rich-text-placeholder transition:fade={{duration: 125}}>{placeholder}</rich-text-placeholder>
         {/if}
 
         <rich-text-entry
@@ -95,7 +97,6 @@ rich-text-entry {
     display: block;
     word-wrap: break-word;
     min-height: 1em;
-    padding: 0.5rem 1.5rem;
 
     border-radius: 1.5rem;
 
@@ -111,5 +112,10 @@ rich-text-placeholder {
     opacity: 0.3;
     pointer-events: none;
     user-select: none;
+}
+
+rich-text-entry,
+rich-text-placeholder {
+    padding: 0.5rem 1.5rem;
 }
 </style>
