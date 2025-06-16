@@ -7,9 +7,9 @@ import { apiFetchAuthenticated } from "$routes/util";
 import { onDestroy } from "svelte";
     import { type LivestreamEvent, LivestreamEventType } from "@/stream/interaction/CallEvent";
     import Chat from "@/stream/interaction/Chat.svelte";
-    import Reactions from "@/Reactions.svelte";
     import type { getListingsBySeller } from "$api/listing/by-seller/endpoint";
     import Button from "@/Button.svelte";
+    import StreamViewerInteraction from "@/stream/interaction/StreamViewerInteraction.svelte";
 
 let {
     userToken,
@@ -134,13 +134,9 @@ const updateListingState = async (
             >Stop broadcast</Button>
         </start-stop-broadcast>
 
-        <Chat
+        <StreamViewerInteraction
             {userId}
             {userName}
-            {call}
-        />
-        
-        <Reactions
             {call}
         />
     {/if}

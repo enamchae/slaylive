@@ -2,7 +2,7 @@ import { db } from "$/lib/server/db";
 import { listingTable } from "$/lib/server/db/schema";
 import { error } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
-import { GetEndpoint } from "$api/middleware";
+import { GetEndpoint, requiresLoggedInUser } from "$api/middleware";
 
 
 const get = new GetEndpoint(
@@ -26,5 +26,5 @@ const get = new GetEndpoint(
     },
 );
 
-export const GET = get.loggedInHandler();
+export const GET = requiresLoggedInUser((user, event) => get.callHandler(null, event));
 export type Endpoint = typeof get;

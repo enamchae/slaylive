@@ -50,15 +50,6 @@ tabs-rack {
     border-radius: 0.75rem;
 
     z-index: 1;
-
-
-    > * {
-        flex-basis: 0;
-        flex-grow: 1;
-        
-        display: flex;
-        justify-content: center;
-    }
 }
 
 </style>

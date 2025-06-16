@@ -2,16 +2,16 @@ import type { GetEndpoint, PostEndpoint } from "$api/middleware";
 import { apiFetch, apiFetchAuthenticated, apiUrl } from "$/routes/util";
 
 export type PayloadOf<T> =
-    T extends GetEndpoint<infer Payload, any> ? Payload :
-    T extends PostEndpoint<infer Payload, any> ? Payload :
+    T extends GetEndpoint<any, infer Payload, any> ? Payload :
+    T extends PostEndpoint<any, infer Payload, any> ? Payload :
     never;
 export type OutputOf<T> =
-    T extends GetEndpoint<any, infer Output> ? Output :
-    T extends PostEndpoint<any, infer Output> ? Output :
+    T extends GetEndpoint<any, any, infer Output> ? Output :
+    T extends PostEndpoint<any, any, infer Output> ? Output :
     never;
 
 
-export const apiGetter = <T extends GetEndpoint>(urlString: string, authenticated: boolean) => {
+export const apiGetter = <T extends GetEndpoint<any>>(urlString: string, authenticated: boolean) => {
     const url = apiUrl(urlString);
 
     const doFetch = authenticated ? apiFetchAuthenticated : apiFetch; 
@@ -31,7 +31,7 @@ export const apiGetter = <T extends GetEndpoint>(urlString: string, authenticate
 
 
 
-export const apiPoster = <T extends PostEndpoint>(urlString: string, authenticated: boolean, method: string="POST") => {
+export const apiPoster = <T extends PostEndpoint<any>>(urlString: string, authenticated: boolean, method: string="POST") => {
     const url = apiUrl(urlString);
 
     const doFetch = authenticated ? apiFetchAuthenticated : apiFetch; 

@@ -1,17 +1,12 @@
 <script lang="ts">
-import { StreamVideoClient, type Call, type User, type StreamVideoParticipant, type EventTypes } from "@stream-io/video-client";
+import { StreamVideoClient, type Call, type User, type StreamVideoParticipant } from "@stream-io/video-client";
 import { onDestroy } from "svelte";
-import {goto} from "$app/navigation";
 
-import { PUBLIC_STREAM_API_KEY, PUBLIC_API_URL } from "$env/static/public";
+import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
 import ParticipantVideo from "@/stream/ParticipantVideo.svelte";
-import SymbolButton from "@/SymbolButton.svelte";
-import RichTextEntry from "@/RichTextEntry.svelte";
-import type { LivestreamEvent, LivestreamChatMessage } from "@/stream/interaction/CallEvent";
-    import Chat from "@/stream/interaction/Chat.svelte";
-    import Reactions from "@/stream/interaction/Reactions.svelte";
-    import { getLivestreamHost } from "$api/livestream/get-host/endpoint";
+import { getLivestreamHost } from "$api/livestream/get-host/endpoint";
     import Button from "@/Button.svelte";
+    import WatchMenu from "./WatchMenu.svelte";
 
 let {
     callId,
@@ -111,23 +106,14 @@ onDestroy(() => {
             </Button>
         </watch-exit>
 
-        <watch-reactions>
-            {#if call !== null}
-                <Reactions
-                    {call}
-                />
-            {/if}
-        </watch-reactions>
+        {#if call !== null}
+            <WatchMenu
+                {userId}
+                {userName}
+                {call}
+            />
+        {/if}
 
-        <watch-chat>
-            {#if call !== null}
-                <Chat
-                    {userId}
-                    {userName}
-                    {call}
-                />
-            {/if}
-        </watch-chat>
     </watch-overlays>
 </watch-container>
 
@@ -154,23 +140,9 @@ video-backdrop {
 watch-overlays {
     width: 100%;
     height: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-
-    > watch-exit {
-        grid-area: 1/1;
-    }
-
-    > watch-reactions {
-        grid-area: 2/1;
-        align-self: flex-end;
-    }
-
-    > watch-chat {
-        grid-area: 2/2;
-        align-self: flex-end;
-    }
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 </style>

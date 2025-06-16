@@ -2,14 +2,14 @@
     import { fade } from "svelte/transition";
 
 let {
-    label,
+    label = null,
     initialText,
     active = true,
     onInput,
     placeholder,
     classes = "",
 }: {
-    label: string,
+    label?: string,
     initialText: string,
     active?: boolean,
     onInput: (value: string) => void,
@@ -50,7 +50,9 @@ const updateText = () => {
 <entry-container
     class={classes}
 >
-    <entry-label>{label}</entry-label>
+    {#if label !== null}
+        <entry-label>{label}</entry-label>
+    {/if}
 
     <entry-editable-container>
         {#if text.length === 0}
@@ -116,6 +118,6 @@ rich-text-placeholder {
 
 rich-text-entry,
 rich-text-placeholder {
-    padding: 0.5rem 1.5rem;
+    padding: 0.25rem 0.5rem;
 }
 </style>

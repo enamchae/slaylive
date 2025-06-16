@@ -36,8 +36,6 @@ const {
             placeholder="0.00"
         />
     </listing-settings>
-
-    <Button>Start selling</Button>
 </listing-row>
 
 <style lang="scss">

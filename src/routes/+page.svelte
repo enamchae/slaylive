@@ -6,6 +6,7 @@ import {type User} from "@supabase/supabase-js";
 import LoginButtonGoogle from "@/LoginButtonGoogle.svelte";
 import { store } from "./store.svelte";
 import {apiFetch} from "$routes/util";
+    import { login } from "$api/user/login/endpoint";
 
 let { data } = $props();
 
@@ -18,14 +19,13 @@ onMount(() => {
 });
 
 const updateLoginState = async (user: User, accessToken: string) => {
-    const response = await apiFetch("user/login", {
-        method: "POST",
+    const response = await login({}, {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${accessToken}`,
         },
     });
-
+    
     store.user = {
         supabaseUser: user,
         supabaseAccessToken: accessToken,

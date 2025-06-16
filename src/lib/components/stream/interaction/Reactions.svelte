@@ -57,15 +57,17 @@ const sendReaction = async (emoji: string) => {
 </livestream-reactions-visualizer>
 
 <livestream-reactions-rack>
-    <Button onClick={() => sendReaction("🤣")}>🤣</Button>
-    <Button onClick={() => sendReaction("🤩")}>🤩</Button>
-    <Button onClick={() => sendReaction("😍")}>😍</Button>
-    <Button onClick={() => sendReaction("❤️")}>❤️</Button>
+    <button onclick={() => sendReaction("🤣")}>🤣</button>
+    <button onclick={() => sendReaction("🤩")}>🤩</button>
+    <button onclick={() => sendReaction("😍")}>😍</button>
+    <button onclick={() => sendReaction("❤️")}>❤️</button>
 </livestream-reactions-rack>
 
 <style lang="scss">
-chat-history {
+livestream-reactions-rack {
     display: flex;
-    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    font-size: 3rem;
 }
 </style>

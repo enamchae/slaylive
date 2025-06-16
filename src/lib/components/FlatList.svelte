@@ -20,7 +20,7 @@ const {
                 {label}
             </item-label>
 
-            >
+            &gt;
         </button>
 
         <item-separator></item-separator>

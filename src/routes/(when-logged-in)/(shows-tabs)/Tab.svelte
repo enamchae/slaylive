@@ -30,6 +30,9 @@ const {
 
 <style lang="scss">
 nav-tab {
+    flex-basis: 0;
+    flex-grow: 1;
+
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -1,6 +1,6 @@
 import { db } from "$/lib/server/db";
 import { listingTable } from "$/lib/server/db/schema";
-import { GetEndpoint } from "../../middleware";
+import { GetEndpoint, requiresLoggedInUser } from "../../middleware";
 
 
 const get = new GetEndpoint(
@@ -19,5 +19,5 @@ const get = new GetEndpoint(
     },
 );
 
-export const GET = get.loggedInHandler();
+export const GET = requiresLoggedInUser((user, event) => get.callHandler(null, event));
 export type Endpoint = typeof get;

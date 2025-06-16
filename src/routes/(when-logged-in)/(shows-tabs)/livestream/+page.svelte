@@ -252,7 +252,7 @@ const discardChanges = () => {
                     <Backstage
                         userToken={store.user.streamioAuth.token}
                         userId={store.user.streamioAuth.id}
-                        userName={store.user.streamioAuth.name}
+                        userName={store.user.name}
                         {livestreamId}
                     />
                 {/if}

@@ -9,6 +9,7 @@ import {apiFetch, apiFetchAuthenticated} from "$routes/util";
 import { onDestroy } from "svelte";
     import { store } from "$routes/store.svelte";
     import { getListingDetails } from "$api/listing/details/endpoint";
+    import TitledPage from "../TitledPage.svelte";
 
 
 const searchParams = new URLSearchParams(location.search);
@@ -91,100 +92,105 @@ const saveListing = async () => {
 };
 </script>
 
-<listing-display
-    class:editing={editing}
+<TitledPage
+    heading="listing"
+    hasBackButton
 >
-    {#await listingPromise}
-        <div>Loading listing details...</div>
-    {:then}
-        {#if listing !== null}
-            {#if editing}
-                <div>
-                    <SubtleExclamation>You're editing this listing!</SubtleExclamation>
+    <listing-display
+        class:editing={editing}
+    >
+        {#await listingPromise}
+            <div>Loading listing details...</div>
+        {:then}
+            {#if listing !== null}
+                {#if editing}
                     <div>
-                        <button onclick={saveListing}>Save</button>
+                        <SubtleExclamation>You're editing this listing!</SubtleExclamation>
+                        <div>
+                            <button onclick={saveListing}>Save</button>
+                        </div>
                     </div>
-                </div>
-            {/if}
+                {/if}
 
-            <listing-photos>
-                <main-photo>
-                    {#if listing.imageUrls.length >= 1}
-                        <img
-                            src={listing.imageUrls[listingImageSelectedIndex]}
-                            alt={`"${listing.title}" main image`}
+                <listing-photos>
+                    <main-photo>
+                        {#if listing.imageUrls.length >= 1}
+                            <img
+                                src={listing.imageUrls[listingImageSelectedIndex]}
+                                alt={`"${listing.title}" main image`}
+                            />
+                        {:else}
+                            <div>
+                                No images added yet!
+                            </div>
+                        {/if}
+                    </main-photo>
+                
+                    <photos-carousel>
+                        {#each listing.imageUrls as listingImageUrl, i (listingImageUrl)}
+                            <ListingPhotoButton
+                                imageUrl={listingImageUrl}
+                                onClick={() => {
+                                    listingImageSelectedIndex = i;
+                                }}
+                            />
+                        {/each}
+
+                        {#if editing}
+                            <ListingPhotoAddButton
+                                onSelectFiles={files => {
+                                    if (listing === null) return;
+                                    for (const file of files) {
+                                        const url = URL.createObjectURL(file);
+                                        listing.imageUrls.push(url);
+                                    }
+                                }}
+                            />
+                        {/if}
+                    </photos-carousel>
+                </listing-photos>
+                
+                <listing-title>
+                    {#if editing}
+                        <RichTextEntry
+                            initialText={listing.title}
+                            onInput={text => listing !== null && (listing.title = text)}
+                            placeholder="an eyecatching title"
                         />
                     {:else}
-                        <div>
-                            No images added yet!
-                        </div>
+                        <div>{listing.title}</div>
                     {/if}
-                </main-photo>
-            
-                <photos-carousel>
-                    {#each listing.imageUrls as listingImageUrl, i (listingImageUrl)}
-                        <ListingPhotoButton
-                            imageUrl={listingImageUrl}
-                            onClick={() => {
-                                listingImageSelectedIndex = i;
-                            }}
-                        />
-                    {/each}
-
+                </listing-title>
+                
+                <listing-description>
                     {#if editing}
-                        <ListingPhotoAddButton
-                            onSelectFiles={files => {
-                                if (listing === null) return;
-                                for (const file of files) {
-                                    const url = URL.createObjectURL(file);
-                                    listing.imageUrls.push(url);
-                                }
-                            }}
+                        <RichTextEntry
+                            initialText={listing.description}
+                            onInput={text => listing !== null && (listing.description = text)}
+                            placeholder="a detailed description"
                         />
+                    {:else}
+                        <div>{listing.description}</div>
                     {/if}
-                </photos-carousel>
-            </listing-photos>
-            
-            <listing-title>
-                {#if editing}
-                    <RichTextEntry
-                        initialText={listing.title}
-                        onInput={text => listing !== null && (listing.title = text)}
-                        placeholder="an eyecatching title"
-                    />
-                {:else}
-                    <div>{listing.title}</div>
-                {/if}
-            </listing-title>
-            
-            <listing-description>
-                {#if editing}
-                    <RichTextEntry
-                        initialText={listing.description}
-                        onInput={text => listing !== null && (listing.description = text)}
-                        placeholder="a detailed description"
-                    />
-                {:else}
-                    <div>{listing.description}</div>
-                {/if}
-            </listing-description>
+                </listing-description>
 
-            {#if editing}
-                <listing-display-toggle>
-                    <input
-                        id="listing-display-toggle"
-                        type="checkbox"
-                        bind:checked={listing.onDisplay}
-                    />
+                {#if editing}
+                    <listing-display-toggle>
+                        <input
+                            id="listing-display-toggle"
+                            type="checkbox"
+                            bind:checked={listing.onDisplay}
+                        />
 
-                    <label for="listing-display-toggle">On display</label>
-                </listing-display-toggle>
+                        <label for="listing-display-toggle">On display</label>
+                    </listing-display-toggle>
+                {/if}
             {/if}
-        {/if}
-    {:catch}
-        <div>Listing failed to load!</div>
-    {/await}
-</listing-display>
+        {:catch}
+            <div>Listing failed to load!</div>
+        {/await}
+    </listing-display>
+</TitledPage>
 
 <style lang="scss">
 listing-display {
@@ -194,10 +200,6 @@ listing-display {
 
     > :not(listing-photos) {
         margin: 0 1rem;
-    }
-
-    &.editing :is(listing-title, listing-description) {
-        border: 1px dashed #afafaf;
     }
 }
 

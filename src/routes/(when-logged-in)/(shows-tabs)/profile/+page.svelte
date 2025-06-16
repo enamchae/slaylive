@@ -32,7 +32,7 @@ if (!store.isSeller) {
                 },
                 {
                     label: "Streams",
-                    onClick: () => goto("/profile/livestreams"),
+                    onClick: () => goto("/profile/streams"),
                 },
             ]}
         />

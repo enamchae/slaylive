@@ -56,7 +56,7 @@ const sendChat = async () => {
     <chat-history>
         {#each chatHistory as message}
             <chat-message>
-                {message.user.name}: {message.text}
+                <b>{message.user.name}</b> {message.text}
             </chat-message>
         {/each}
     </chat-history>
@@ -79,8 +79,21 @@ const sendChat = async () => {
 </livestream-chat>
 
 <style lang="scss">
+livestream-chat {
+    display: flex;
+    flex-direction: column;
+}
+
 chat-history {
     display: flex;
     flex-direction: column;
+}
+
+chat-message {
+    text-indent: 0.5rem;
+
+    &::first-line {
+        text-indent: 0;
+    }
 }
 </style>

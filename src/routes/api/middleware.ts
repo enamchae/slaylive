@@ -18,58 +18,60 @@ export const requiresLoggedInUser = (handle: (user: User, ...args: Parameters<Re
 
 
 
-export class GetEndpoint<Payload extends Record<string, string>=any, Output=any> {
+export class GetEndpoint<T=null, Payload extends Record<string, string>=any, Output=any> {
     constructor(
         private readonly validatePayload: (searchParams: URLSearchParams, ...args: Parameters<RequestHandler>) => Awaited<ReturnType<RequestHandler>> | Payload,
-        private readonly handle: (payload: Payload, ...args: Parameters<RequestHandler>) => ReturnType<RequestHandler> | Promise<Output>,
+        private readonly handle: (
+            payload: Payload,
+            data: T,
+            ...args: Parameters<RequestHandler>
+        ) => ReturnType<RequestHandler> | Promise<Output>,
     ) {}
-    
-    handler(): RequestHandler {
-        return async (event, ...args) =>{
-            const payload = this.validatePayload(event.url.searchParams, event, ...args);
-            if (payload instanceof Response) {
-                return payload;
-            }
 
-            const out = await this.handle(payload, event, ...args);
-            if (out instanceof Response) {
-                return out;
-            }
-            
-            return json(out);
-        };
+    async callHandler(data: T, ...[event, ...args]: Parameters<RequestHandler>): Promise<Response> {
+        const payload = this.validatePayload(event.url.searchParams, event, ...args);
+        if (payload instanceof Response) {
+            return payload;
+        }
+
+        const out = await this.handle(payload, data, event, ...args);
+        if (out instanceof Response) {
+            return out;
+        }
+        
+        return json(out);
     }
-
-    loggedInHandler(): RequestHandler {
-        const handler = this.handler();
-        return requiresLoggedInUser((user, ...args) => handler(...args));
+    
+    handler(data: T): RequestHandler {
+        return (...args) => this.callHandler(data, ...args);
     }
 }
 
-export class PostEndpoint<Payload extends Record<string, string>=any, Output=any> {
+export class PostEndpoint<T=null, Payload extends Record<string, string>=any, Output=any> {
     constructor(
         private readonly validatePayload: (dirty: object, ...args: Parameters<RequestHandler>) => Awaited<ReturnType<RequestHandler>> | Payload,
-        private readonly handle: (payload: Payload, ...args: Parameters<RequestHandler>) => ReturnType<RequestHandler> | Promise<Output>,
+        private readonly handle: (
+            payload: Payload,
+            data: T,
+            ...args: Parameters<RequestHandler>
+        ) => ReturnType<RequestHandler> | Promise<Output>,
     ) {}
-    
-    handler(): RequestHandler {
-        return async (event, ...args) =>{
-            const payload = this.validatePayload(await event.request.json(), event, ...args);
-            if (payload instanceof Response) {
-                return payload;
-            }
 
-            const out = await this.handle(payload, event, ...args);
-            if (out instanceof Response) {
-                return out;
-            }
-            
-            return json(out);
-        };
+    async callHandler(data: T, ...[event, ...args]: Parameters<RequestHandler>): Promise<Response> {
+        const payload = this.validatePayload(await event.request.json(), event, ...args);
+        if (payload instanceof Response) {
+            return payload;
+        }
+
+        const out = await this.handle(payload, data, event, ...args);
+        if (out instanceof Response) {
+            return out;
+        }
+        
+        return json(out);
     }
-
-    loggedInHandler(): RequestHandler {
-        const handler = this.handler();
-        return requiresLoggedInUser((user, ...args) => handler(...args));
+    
+    handler(data: T): RequestHandler {
+        return (...args) => this.callHandler(data, ...args);
     }
 }
