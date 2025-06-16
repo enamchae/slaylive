@@ -1,7 +1,7 @@
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { eq, and } from "drizzle-orm";
 
-import { client } from "$api/global";
+import { streamio } from "$api/global";
 import { db } from "$/lib/server/db";
 import { livestreamTable } from "$/lib/server/db/schema";
 import { requiresLoggedInUser } from "$api/middleware";
@@ -22,7 +22,7 @@ export const POST: RequestHandler = requiresLoggedInUser(async (user, event) => 
 
     const {livestreamId} = await event.request.json();
 
-    const call = client.video.call("livestream", livestreamId);
+    const call = streamio.video.call("livestream", livestreamId);
 
     await Promise.all([
         call.create({

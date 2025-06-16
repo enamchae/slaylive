@@ -1,29 +1,32 @@
 import type { UserRequest } from "@stream-io/node-sdk";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 
-import {client} from "$api/global"
+import {streamio} from "$api/global"
 import { requiresLoggedInUser } from "$api/middleware";
 import { db } from "$/lib/server/db";
-import {userTable as userDb} from "$lib/server/db/schema";
+import {userTable} from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 
 export const POST: RequestHandler = requiresLoggedInUser(async (user, event) => {
     let members = await db.select({
-        canSell: userDb.canSell,
+        canSell: userTable.canSell,
     })
-        .from(userDb)
-        .where(eq(userDb.id, user.id))
+        .from(userTable)
+        .where(eq(userTable.id, user.id))
         .limit(1);
 
     if (members.length === 0) {
-        await db.insert(userDb)
-            .values({id: user.id});
+        await db.insert(userTable)
+            .values({
+                id: user.id,
+                name: "",
+            });
 
         members = await db.select({
-            canSell: userDb.canSell,
+            canSell: userTable.canSell,
         })
-            .from(userDb)
-            .where(eq(userDb.id, user.id))
+            .from(userTable)
+            .where(eq(userTable.id, user.id))
             .limit(1);
     }
 
@@ -35,9 +38,9 @@ export const POST: RequestHandler = requiresLoggedInUser(async (user, event) => 
         name: userName,
     }; 
 
-    await client.upsertUsers([streamioUser]);
+    await streamio.upsertUsers([streamioUser]);
 
-    const streamioUserToken = client.generateUserToken({user_id: user.id});
+    const streamioUserToken = streamio.generateUserToken({user_id: user.id});
 
     return json({
         userId: user.id,

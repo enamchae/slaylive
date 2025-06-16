@@ -5,7 +5,7 @@ import { listingTable, livestreamTable, livestreamListingAssociationTable, userT
 import { db } from "$/lib/server/db";
 import { requiresLoggedInUser } from "../../middleware";
 import { validate } from "$lib/validation";
-import { client } from "../../global";
+import { streamio } from "../../global";
 
 export const PUT: RequestHandler = requiresLoggedInUser(async (user, {request}) => {
     const {livestreamTitle, livestreamDescription, livestreamListingIds}: {
@@ -33,7 +33,7 @@ export const PUT: RequestHandler = requiresLoggedInUser(async (user, {request}) 
 
     const livestreamId = await generateLivestreamId();
     
-    const call = client.video.call("livestream", livestreamId);
+    const call = streamio.video.call("livestream", livestreamId);
 
     await Promise.all([
         call.create({

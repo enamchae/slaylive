@@ -1,36 +1,45 @@
-import { pgTable, serial, text, integer, uuid, date, boolean, primaryKey, decimal, type PgTableExtraConfig } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, integer, uuid, date, boolean, primaryKey, decimal, type PgTableExtraConfig, varchar } from 'drizzle-orm/pg-core';
 
 export const userTable = pgTable("user", {
-	id: uuid("id").primaryKey(),
-	canSell: boolean("canSell").notNull().default(false),
+	id: uuid().primaryKey(),
+	name: varchar({length: 64}).notNull(),
+	canSell: boolean().notNull().default(false),
 });
 
 export const listingTable = pgTable("listing", {
-	id: uuid("id").primaryKey(),
-	sellerUserId: uuid("sellerUserId").notNull().references(() => userTable.id),
-	title: text("title").notNull(),
-	description: text("description").notNull(),
-	onDisplay: boolean("onDisplay").notNull().default(false),
+	id: uuid().primaryKey(),
+	sellerUserId: uuid().notNull().references(() => userTable.id),
+	title: varchar("title", {length: 1024}).notNull(),
+	description: varchar("description", {length: 4096}).notNull(),
+	onDisplay: boolean().notNull().default(false),
 });
 
 export const listingImageTable = pgTable("listingImage", {
-	id: uuid("id").primaryKey(),
-	listingId: uuid("listingId").notNull().references(() => listingTable.id),
+	id: uuid().primaryKey(),
+	listingId: uuid().notNull().references(() => listingTable.id),
 });
 
 export const livestreamTable = pgTable("livestream", {
-	id: uuid("id").primaryKey(),
-	hostUserId: uuid("hostUserId").notNull().references(() => userTable.id),
-	hostSessionId: uuid("hostSessionId"),
-	active: boolean("active").notNull().default(false),
-	title: text("title").notNull().default(""),
-	description: text("description").notNull().default(""),
+	id: uuid().primaryKey(),
+	hostUserId: uuid().notNull().references(() => userTable.id),
+	hostSessionId: uuid(),
+	active: boolean().notNull().default(false),
+	title: varchar("title", {length: 1024}).notNull().default(""),
+	description: varchar("description", {length: 4096}).notNull().default(""),
 });
 
 export const livestreamListingAssociationTable = pgTable("livestreamListingAssociation", {
-	listingId: uuid("listingId").notNull().references(() => listingTable.id),
-	livestreamId: uuid("livestream").notNull().references(() => livestreamTable.id),
-	price: decimal("price").notNull().default("0"),
+	listingId: uuid().notNull().references(() => listingTable.id),
+	livestreamId: uuid().notNull().references(() => livestreamTable.id),
+	price: decimal().notNull().default("0"),
 }, table => [
 	primaryKey({columns: [table.listingId, table.livestreamId]}),
-] as unknown as PgTableExtraConfig);
+]);
+
+export const listingPurchaseTable = pgTable("listingPurchase", {
+	purchaseId: uuid().notNull().primaryKey(),
+	listingId: uuid().notNull().references(() => listingTable.id),
+	livestreamId: uuid().notNull().references(() => livestreamTable.id),
+	cost: decimal().notNull().default("0"),
+	buyerUserId: uuid().notNull().references(() => userTable.id),
+});
