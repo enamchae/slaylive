@@ -1,29 +1,33 @@
 <script>
-import ListingDisplayList from "@/Listing/ListingDisplayList.svelte";
+import ListingDisplayList from "@/listing/ListingDisplayList.svelte";
 import { goto } from "$app/navigation";
-import { getListingList } from "$/routes/api/listing/list/endpoint";
+import { getListingList } from "$api/listing/list/endpoint";
+    import TitledPage from "../TitledPage.svelte";
 </script>
 
-<h1>browse</h1>
-<browse-listings>
-    
-    {#await getListingList({})}
-        <div>Loading listings...</div>
-    {:then response}
-        {@const listings = response.listings}
-    
-        {#if listings.length > 0}
-            <ListingDisplayList
-                {listings}
-                onClickListing={listing => goto(`/listing?id=${listing.id}`)}
-            />
-        {:else}
-            <div>No listings yet!</div>
-        {/if}
-    {:catch}
-        <div>Failed to load listings</div>
-    {/await}
-</browse-listings>
+<TitledPage
+    heading="browse"
+>
+    <browse-listings>
+        
+        {#await getListingList({})}
+            <div>Loading listings...</div>
+        {:then response}
+            {@const listings = response.listings}
+        
+            {#if listings.length > 0}
+                <ListingDisplayList
+                    {listings}
+                    onClickListing={listing => goto(`/listing?id=${listing.id}`)}
+                />
+            {:else}
+                <div>No listings yet!</div>
+            {/if}
+        {:catch}
+            <div>Failed to load listings</div>
+        {/await}
+    </browse-listings>
+</TitledPage>
 
 <style lang="scss">
 browse-listings {

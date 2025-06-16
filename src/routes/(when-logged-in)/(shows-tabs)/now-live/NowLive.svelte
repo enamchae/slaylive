@@ -1,7 +1,7 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import Button from "./Button.svelte";
-    import { getLivestreamList } from "$/routes/api/livestream/list/endpoint";
+    import Button from "@/Button.svelte";
+    import { getLivestreamList } from "$api/livestream/list/endpoint";
 
 const joinCall = (callId: string) => {
     goto(`/watch?call_id=${encodeURIComponent(callId)}`);

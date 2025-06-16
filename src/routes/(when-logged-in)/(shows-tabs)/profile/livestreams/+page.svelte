@@ -1,0 +1,49 @@
+<script>
+    import Button from "@/Button.svelte";
+    import { goto } from "$app/navigation";
+    import { store } from "$routes/store.svelte";
+    import { getLivestreamsBySeller } from "$routes/api/livestream/by-seller/endpoint";
+    import TabbedPage from "../../TitledPage.svelte";
+    import Loading from "@/Loading.svelte";
+
+</script>
+
+{#if store.user}
+    <TabbedPage
+        heading="my streams"
+        hasBackButton
+    >
+        <seller-livestreams>
+            <Button
+                onClick={() => goto("/livestream?new")}
+                strong
+            >New stream</Button>
+
+            {#await getLivestreamsBySeller({sellerUserId: store.user.id})}
+                <Loading />
+            {:then response}
+                {@const livestreams = response.livestreams}
+
+                {#if livestreams.length > 0}
+                    {#each livestreams as livestream}
+                        <Button onClick={() => goto(`/livestream?edit&id=${livestream.id}`)}>
+                            {livestream.title}
+                        </Button>
+                    {/each}
+                {:else}
+                    <div>No livestreams yet!</div>
+                {/if}
+            {:catch}
+                <div>Failed to load livestreams</div>
+            {/await}
+        </seller-livestreams>
+    </TabbedPage>
+{/if}
+
+<style lang="scss">
+seller-livestreams {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+</style>

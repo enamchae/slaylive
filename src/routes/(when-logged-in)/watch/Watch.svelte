@@ -4,14 +4,14 @@ import { onDestroy } from "svelte";
 import {goto} from "$app/navigation";
 
 import { PUBLIC_STREAM_API_KEY, PUBLIC_API_URL } from "$env/static/public";
-import ParticipantVideo from "@/ParticipantVideo.svelte";
+import ParticipantVideo from "@/stream/ParticipantVideo.svelte";
 import SymbolButton from "@/SymbolButton.svelte";
 import RichTextEntry from "@/RichTextEntry.svelte";
-import type { LivestreamEvent, LivestreamChatMessage } from "@/CallEvent";
-    import Chat from "@/Chat.svelte";
-    import Reactions from "@/Reactions.svelte";
-    import { getLivestreamHost } from "$/routes/api/livestream/get-host/endpoint";
-    import Button from "$/lib/components/Button.svelte";
+import type { LivestreamEvent, LivestreamChatMessage } from "@/stream/interaction/CallEvent";
+    import Chat from "@/stream/interaction/Chat.svelte";
+    import Reactions from "@/stream/interaction/Reactions.svelte";
+    import { getLivestreamHost } from "$api/livestream/get-host/endpoint";
+    import Button from "@/Button.svelte";
 
 let {
     callId,
@@ -105,7 +105,7 @@ onDestroy(() => {
     <watch-overlays>
         <watch-exit>
             <Button
-                onClick={() => goto("/now-live")}
+                onClick={() => history.back()}
             >
                 &lt;
             </Button>

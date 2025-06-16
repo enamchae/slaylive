@@ -1,14 +1,14 @@
 <script lang="ts">
 import { validate } from "$/lib/validation";
-import ListingPhotoAddButton from "@/Listing/ListingPhotoAddButton.svelte";
-import ListingPhotoButton from "@/Listing/ListingPhotoButton.svelte";
+import ListingPhotoAddButton from "@/listing/ListingPhotoAddButton.svelte";
+import ListingPhotoButton from "@/listing/ListingPhotoButton.svelte";
 import RichTextEntry from "@/RichTextEntry.svelte";
 import SubtleExclamation from "@/SubtleExclamation.svelte";
 import { goto } from "$app/navigation";
 import {apiFetch, apiFetchAuthenticated} from "$routes/util";
 import { onDestroy } from "svelte";
     import { store } from "$routes/store.svelte";
-    import { getListingDetails } from "$/routes/api/listing/details/endpoint";
+    import { getListingDetails } from "$api/listing/details/endpoint";
 
 
 const searchParams = new URLSearchParams(location.search);

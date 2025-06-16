@@ -1,4 +1,4 @@
-import type { GetEndpoint, PostEndpoint } from "$/routes/api/middleware";
+import type { GetEndpoint, PostEndpoint } from "$api/middleware";
 import { apiFetch, apiFetchAuthenticated, apiUrl } from "$/routes/util";
 
 export type PayloadOf<T> =

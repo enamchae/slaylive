@@ -1,13 +1,14 @@
 <script lang="ts">
-    import NowLive from "@/NowLive.svelte";
-
-
-let joinCallId = $state("");
+    import TitledPage from "../TitledPage.svelte";
+    import NowLive from "./NowLive.svelte";
 </script>
 
-<h1>now live</h1>
+<TitledPage
+    heading="now live"
+>
+    <NowLive />
+</TitledPage>
 
-<NowLive />
 <!-- 
 <button
     onclick={() => goto("/backstage")}

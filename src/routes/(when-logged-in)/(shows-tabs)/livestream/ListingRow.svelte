@@ -1,7 +1,7 @@
 <script lang="ts">
     import RichTextEntry from "@/RichTextEntry.svelte";
     import Button from "@/Button.svelte";
-import ListingDisplay from "@/Listing/ListingDisplay.svelte";
+import ListingDisplay from "@/listing/ListingDisplay.svelte";
 
 const {
     listing,

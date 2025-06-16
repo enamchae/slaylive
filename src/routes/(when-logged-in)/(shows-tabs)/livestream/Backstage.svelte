@@ -2,14 +2,14 @@
 import { StreamVideoClient, type Call, type User, type StreamVideoParticipant } from "@stream-io/video-client";
 
 import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
-import ParticipantVideo from "@/ParticipantVideo.svelte";
+import ParticipantVideo from "@/stream/ParticipantVideo.svelte";
 import { apiFetchAuthenticated } from "$routes/util";
 import { onDestroy } from "svelte";
-    import { type LivestreamEvent, LivestreamEventType } from "@/CallEvent";
-    import Chat from "@/Chat.svelte";
+    import { type LivestreamEvent, LivestreamEventType } from "@/stream/interaction/CallEvent";
+    import Chat from "@/stream/interaction/Chat.svelte";
     import Reactions from "@/Reactions.svelte";
     import type { getListingsBySeller } from "$api/listing/by-seller/endpoint";
-    import Button from "$/lib/components/Button.svelte";
+    import Button from "@/Button.svelte";
 
 let {
     userToken,

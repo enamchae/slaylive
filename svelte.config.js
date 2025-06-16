@@ -36,10 +36,10 @@ const config = {
 		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 		adapter: adapter(),
 		alias: {
-			"$": "./src",
 			"@": "./src/lib/components",
 			"$api": "./src/routes/api",
 			"$routes": "./src/routes",
+			"$": "./src",
 		},
 
 		csrf: {

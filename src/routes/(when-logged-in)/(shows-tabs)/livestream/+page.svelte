@@ -10,8 +10,8 @@ import { SvelteSet } from "svelte/reactivity";
     import Button from "@/Button.svelte";
     import ListingRow from "./ListingRow.svelte";
     import { getListingsBySeller } from "$api/listing/by-seller/endpoint";
-    import { getLivestreamDetails } from "$/routes/api/livestream/details/endpoint";
-    import EditingBanner from "$/lib/components/EditingBanner.svelte";
+    import { getLivestreamDetails } from "$api/livestream/details/endpoint";
+    import EditingBanner from "@/EditingBanner.svelte";
 
 if (!store.isSeller) {
     goto("/");

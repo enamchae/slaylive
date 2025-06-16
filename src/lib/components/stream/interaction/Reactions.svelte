@@ -1,12 +1,10 @@
 <script lang="ts">
 import type { Call, CustomVideoEvent } from "@stream-io/video-client";
-import RichTextEntry from "./RichTextEntry.svelte";
-import SymbolButton from "./SymbolButton.svelte";
 import { LivestreamEventType, type LivestreamEvent, type LivestreamReaction } from "./CallEvent";
 import { onDestroy, onMount } from "svelte";
     import { SvelteSet } from "svelte/reactivity";
     import Reaction from "./Reaction.svelte";
-    import Button from "./Button.svelte";
+    import Button from "@/Button.svelte";
 
 let {
     call,
