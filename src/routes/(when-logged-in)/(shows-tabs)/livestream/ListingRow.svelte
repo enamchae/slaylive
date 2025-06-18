@@ -19,6 +19,7 @@ const {
 <listing-row>
     <ListingDisplay
         title={listing.title}
+        small
     />
 
     <listing-settings>

@@ -5,6 +5,7 @@
     import { getLivestreamsBySeller } from "$routes/api/livestream/by-seller/endpoint";
     import TabbedPage from "../../TitledPage.svelte";
     import Loading from "@/Loading.svelte";
+    import { editStream } from "../../livestream/store.svelte";
 
 </script>
 
@@ -26,12 +27,12 @@
 
                 {#if livestreams.length > 0}
                     {#each livestreams as livestream}
-                        <Button onClick={() => goto(`/livestream?edit&id=${livestream.id}`)}>
+                        <Button onClick={() => editStream(livestream.id)}>
                             {livestream.title}
                         </Button>
                     {/each}
                 {:else}
-                    <div>No livestreams yet!</div>
+                    <div>No livestreams yet!</div>editStream
                 {/if}
             {:catch}
                 <div>Failed to load livestreams</div>

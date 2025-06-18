@@ -2,15 +2,18 @@
 const {
     title,
     onClick = () => {},
+    small = false,
 }: {
     title: string,
     onClick?: () => void,
+    small?: boolean,
 } = $props();
 </script>
 
 <listing-display
     onclick={onClick}
     tabindex="-1"
+    class:small
 >
     {title}
 </listing-display>
@@ -23,5 +26,9 @@ listing-display {
     aspect-ratio: 1/1;
 
     background: #5009097f;
+
+    &.small {
+        width: 5rem;
+    }
 }
 </style>

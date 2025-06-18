@@ -11,7 +11,6 @@ export const PATCH: RequestHandler = requiresLoggedInUser(async (user, {request}
         livestreamId: string,
         livestreamTitle: string,
         livestreamDescription: string,
-        livestreamListingIds: string[],
     } = await request.json();
     
     
@@ -46,16 +45,16 @@ export const PATCH: RequestHandler = requiresLoggedInUser(async (user, {request}
         })
         .where(eq(livestreamTable.id, livestreamId));
 
-    await db.delete(livestreamListingAssociationTable)
-        .where(eq(livestreamListingAssociationTable.livestreamId, livestreamId));
+    // await db.delete(livestreamListingAssociationTable)
+    //     .where(eq(livestreamListingAssociationTable.livestreamId, livestreamId));
     
-    if (livestreamListingIds.length > 0) {
-        await db.insert(livestreamListingAssociationTable)
-            .values(livestreamListingIds.map(listingId => ({
-                listingId,
-                livestreamId,
-            })));
-    }
+    // if (livestreamListingIds.length > 0) {
+    //     await db.insert(livestreamListingAssociationTable)
+    //         .values(livestreamListingIds.map(listingId => ({
+    //             listingId,
+    //             livestreamId,
+    //         })));
+    // }
 
 
     return json({});
