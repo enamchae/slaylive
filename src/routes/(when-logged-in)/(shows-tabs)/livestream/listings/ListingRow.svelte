@@ -1,15 +1,13 @@
 <script lang="ts">
     import RichTextEntry from "@/RichTextEntry.svelte";
-    import Button from "@/Button.svelte";
-import ListingDisplay from "@/listing/ListingDisplay.svelte";
+    import ListingDisplay from "@/listing/ListingDisplay.svelte";
+    import type { getStreamInfo } from "$api/api";
 
 const {
     listing,
-    editing,
     onSetPrice,
 }: {
-    listing: any,
-    editing: boolean,
+    listing: Awaited<ReturnType<typeof getStreamInfo>>["listings"][0],
     onSetPrice: (price: number) => void,
 } = $props();
 

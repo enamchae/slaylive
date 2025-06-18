@@ -16,6 +16,7 @@ const {
     onClickListing: (listing: Listing) => void,
     selectedIds?: Set<string>,
 } = $props();
+
 </script>
 
 <listings-list>

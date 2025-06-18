@@ -5,8 +5,10 @@ import { streamState, setStreamId } from "../store.svelte";
 import Loading from "@/Loading.svelte";
 import Button from "@/Button.svelte";
 import { apiFetchAuthenticated } from "$routes/util";
+    import { editStreamDetails } from "$api/api";
 
 
+const streamId = $derived(streamState().id);
 const streamData = $derived(streamState().data);
 
 let newStreamData = $state<{
@@ -40,17 +42,11 @@ const saveLivestreamData = async () => {
     //     return;
     // }
 
-    if (streamState().id !== null) {
-        await apiFetchAuthenticated("livestream/edit", {
-            method: "PATCH",
-            body: JSON.stringify({
-                livestreamId: streamState().id,
-                livestreamTitle: newStreamData.title,
-                livestreamDescription: newStreamData.description,
-            }),
-            headers: {
-                "Content-Type": "application/json",
-            },
+    if (streamId !== null) {
+        await editStreamDetails({
+            livestreamId: streamId,
+            livestreamTitle: newStreamData.title,
+            livestreamDescription: newStreamData.description,
         });
     } else {
         const {livestreamId} = await apiFetchAuthenticated<{livestreamId: string}>("livestream/new", {

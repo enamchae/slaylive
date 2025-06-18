@@ -41,7 +41,7 @@ export class GetEndpoint<T=null, Payload extends Record<string, string>=any, Out
     }
 }
 
-export class PostEndpoint<T=null, Payload extends Record<string, string>=any, Output=any> {
+export class PostEndpoint<T=null, Payload extends Record<string, any>=any, Output=any> {
     constructor(
         private readonly handle: (
             payload: Payload,

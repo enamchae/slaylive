@@ -7,7 +7,7 @@ import { goto } from "$app/navigation";
     import PageScroller from "@/PageScroller.svelte";
     import { StreamVideoClient, type Call, type StreamVideoParticipant, type User } from "@stream-io/video-client";
     import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
-    import { setHostSession } from "$api/api";
+    import { setStreamHostSession } from "$api/api";
 
 
 const {
@@ -96,8 +96,8 @@ $effect(() => {
 
             assignCallData({localParticipant: participant});
 
-            setHostSession({
-                livestreamId: streamId,
+            setStreamHostSession({
+                streamId,
                 sessionId: participant.sessionId,
             });
         });

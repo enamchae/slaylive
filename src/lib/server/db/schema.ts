@@ -19,7 +19,7 @@ export const listingImageTable = pgTable("listingImage", {
 	listingId: uuid().notNull().references(() => listingTable.id),
 });
 
-export const livestreamTable = pgTable("livestream", {
+export const streamTable = pgTable("stream", {
 	id: uuid().primaryKey(),
 	hostUserId: uuid().notNull().references(() => userTable.id),
 	hostSessionId: uuid(),
@@ -28,18 +28,19 @@ export const livestreamTable = pgTable("livestream", {
 	description: varchar("description", {length: 4096}).notNull().default(""),
 });
 
-export const livestreamListingAssociationTable = pgTable("livestreamListingAssociation", {
+export const streamListingAssociationTable = pgTable("streamListingAssociation", {
 	listingId: uuid().notNull().references(() => listingTable.id),
-	livestreamId: uuid().notNull().references(() => livestreamTable.id),
+	streamId: uuid().notNull().references(() => streamTable.id),
 	price: decimal().notNull().default("0"),
+	active: boolean().notNull().default(false),
 }, table => [
-	primaryKey({columns: [table.listingId, table.livestreamId]}),
+	primaryKey({columns: [table.listingId, table.streamId]}),
 ]);
 
 export const listingPurchaseTable = pgTable("listingPurchase", {
 	purchaseId: uuid().notNull().primaryKey(),
 	listingId: uuid().notNull().references(() => listingTable.id),
-	livestreamId: uuid().notNull().references(() => livestreamTable.id),
+	streamId: uuid().notNull().references(() => streamTable.id),
 	cost: decimal().notNull().default("0"),
 	buyerUserId: uuid().notNull().references(() => userTable.id),
 });

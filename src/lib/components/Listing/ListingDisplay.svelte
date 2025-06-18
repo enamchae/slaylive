@@ -3,23 +3,27 @@ const {
     title,
     onClick = () => {},
     small = false,
+    selected = false,
 }: {
     title: string,
     onClick?: () => void,
     small?: boolean,
+    selected?: boolean,
 } = $props();
+
 </script>
 
-<listing-display
+<button
     onclick={onClick}
     tabindex="-1"
     class:small
+    class:selected
 >
     {title}
-</listing-display>
+</button>
 
 <style lang="scss">
-listing-display {
+button {
     display: grid;
     place-items: center;
     width: 10rem;
@@ -29,6 +33,10 @@ listing-display {
 
     &.small {
         width: 5rem;
+    }
+
+    &.selected {
+        outline: 2px solid #fff;
     }
 }
 </style>

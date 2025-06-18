@@ -1,7 +1,7 @@
 import {error, json, type RequestHandler} from "@sveltejs/kit";
 import {and, eq} from "drizzle-orm";
 
-import { listingTable, livestreamTable, livestreamListingAssociationTable, userTable as userTable } from "$/lib/server/db/schema";
+import { listingTable, streamTable, streamListingAssociationTable, userTable as userTable } from "$/lib/server/db/schema";
 import { db } from "$/lib/server/db";
 import { requiresLoggedInUser } from "../../middleware";
 import { validate } from "$lib/validation";
@@ -45,14 +45,14 @@ export const PUT: RequestHandler = requiresLoggedInUser(async (user, {request}) 
             },
         }),
     
-        db.insert(livestreamTable)
+        db.insert(streamTable)
             .values({
                 id: livestreamId,
                 hostUserId: user.id,
                 title: livestreamTitle,
                 description: livestreamDescription,
             })
-            .then(() => db.insert(livestreamListingAssociationTable)
+            .then(() => db.insert(streamListingAssociationTable)
                 .values(livestreamListingIds.map(listingId => ({
                     listingId,
                     livestreamId,
@@ -71,8 +71,8 @@ const generateLivestreamId = async () => {
         id = crypto.randomUUID();
 
         const calls = await db.select({})
-            .from(livestreamTable)
-            .where(eq(livestreamTable.id, id))
+            .from(streamTable)
+            .where(eq(streamTable.id, id))
             .limit(1);
         if (calls.length === 0) break;
     }

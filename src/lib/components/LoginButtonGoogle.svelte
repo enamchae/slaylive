@@ -82,9 +82,10 @@ div {
     align-items: center;
 
     > img {
-        background: #ffffffaf;
+        background: #ffffff3f;
         padding: 0.5rem;
         border-radius: 50%;
+        filter: drop-shadow(0 0 0.125rem #fff);
     }
 }
 </style>

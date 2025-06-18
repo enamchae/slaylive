@@ -1,4 +1,4 @@
-import { getLivestreamDetails } from "$api/api";
+import { getStreamInfo } from "$api/api";
 import { goto } from "$app/navigation";
 import type { Call, StreamVideoParticipant } from "@stream-io/video-client";
 
@@ -23,6 +23,7 @@ let data = $state<{
     active: boolean,
     listings: {
         id: string,
+        title: string,
     }[],
 }>({
     title: "",
@@ -39,8 +40,8 @@ export const resetStreamData = () => {
     if (id === null) return;
 
     (async () => {
-        const newStreamData = await getLivestreamDetails({
-            livestreamId: id,
+        const newStreamData = await getStreamInfo({
+            streamId: id,
         });
 
         data = {

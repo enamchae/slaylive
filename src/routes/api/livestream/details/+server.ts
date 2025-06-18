@@ -1,5 +1,5 @@
 import { db } from "$/lib/server/db";
-import { livestreamTable, livestreamListingAssociationTable } from "$/lib/server/db/schema";
+import { streamTable, streamListingAssociationTable, listingTable } from "$/lib/server/db/schema";
 import { error } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import { GetEndpoint, requiresLoggedInUser } from "../../middleware";
@@ -7,24 +7,36 @@ import { GetEndpoint, requiresLoggedInUser } from "../../middleware";
 
 const get = new GetEndpoint(
     async (payload: {
-        livestreamId: string,
+        streamId: string,
     }) => {
         // if (livestreamId === null) return error(400, "Missing livestream id");
 
         const livestreams = await db.select({
-            id: livestreamTable.id,
-            title: livestreamTable.title,
-            description: livestreamTable.description,
-            hostUserId: livestreamTable.hostUserId,
-            active: livestreamTable.active,
+            id: streamTable.id,
+            title: streamTable.title,
+            description: streamTable.description,
+            hostUserId: streamTable.hostUserId,
+            active: streamTable.active,
         })
-            .from(livestreamTable)
-            .where(eq(livestreamTable.id, payload.livestreamId))
+            .from(streamTable)
+            .where(eq(streamTable.id, payload.streamId))
             .limit(1);
 
         if (livestreams.length === 0) return error(404, "No livestream found");
 
         const livestreamObj = livestreams[0];
+
+
+        const listings = await db.select({
+            id: streamListingAssociationTable.listingId,
+            title: listingTable.title,
+        })
+            .from(streamListingAssociationTable)
+            .where(eq(streamListingAssociationTable.streamId, payload.streamId))
+            .innerJoin(
+                listingTable,
+                eq(streamListingAssociationTable.listingId, listingTable.id),
+            );
 
         return {
             id: livestreamObj.id,
@@ -32,14 +44,10 @@ const get = new GetEndpoint(
             description: livestreamObj.description,
             hostUserId: livestreamObj.hostUserId,
             active: livestreamObj.active,
-            listings: await db.select({
-                id: livestreamListingAssociationTable.listingId,
-            })
-                .from(livestreamListingAssociationTable)
-                .where(eq(livestreamListingAssociationTable.livestreamId, payload.livestreamId)),
+            listings,
         };
     },
 );
 
 export const GET = requiresLoggedInUser((user, event) => get.callHandler(null, event));
-export type GetLivestreamDetails = typeof get;
+export type GetStreamInfo = typeof get;

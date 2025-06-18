@@ -1,5 +1,5 @@
 import { db } from "$/lib/server/db";
-import { livestreamTable } from "$/lib/server/db/schema";
+import { streamTable } from "$/lib/server/db/schema";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import { GetEndpoint, requiresLoggedInUser } from "../../middleware";
@@ -12,11 +12,11 @@ const get = new GetEndpoint(
         // if (call_id === null) return error(400, "Missing call id");
 
         const calls = await db.select({
-            hostUserId: livestreamTable.hostUserId,
-            hostSessionId: livestreamTable.hostSessionId,
+            hostUserId: streamTable.hostUserId,
+            hostSessionId: streamTable.hostSessionId,
         })
-            .from(livestreamTable)
-            .where(eq(livestreamTable.id, payload.call_id))
+            .from(streamTable)
+            .where(eq(streamTable.id, payload.call_id))
             .limit(1);
 
         if (calls.length === 0) return error(404, "No livestream with the given id");

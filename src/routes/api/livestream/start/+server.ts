@@ -3,18 +3,18 @@ import { eq, and } from "drizzle-orm";
 
 import { streamio } from "$api/global";
 import { db } from "$/lib/server/db";
-import { livestreamTable } from "$/lib/server/db/schema";
+import { streamTable } from "$/lib/server/db/schema";
 import { PostEndpoint, requiresLoggedInUser } from "$api/middleware";
 import type { User } from "@supabase/supabase-js";
 
 const endpoint = new PostEndpoint(
     async (payload: {livestreamId: string}, {user}: {user: User}) => {
         const calls = await db.select({})
-            .from(livestreamTable)
+            .from(streamTable)
             .where(
                 and(
-                    eq(livestreamTable.hostUserId, user.id),
-                    eq(livestreamTable.active, true)
+                    eq(streamTable.hostUserId, user.id),
+                    eq(streamTable.active, true)
                 )
             )
             .limit(1);
@@ -34,9 +34,9 @@ const endpoint = new PostEndpoint(
                 },
             }),
         
-            db.update(livestreamTable)
+            db.update(streamTable)
                 .set({active: true})
-                .where(eq(livestreamTable.id, payload.livestreamId)),
+                .where(eq(streamTable.id, payload.livestreamId)),
         ]);
 
         return {};

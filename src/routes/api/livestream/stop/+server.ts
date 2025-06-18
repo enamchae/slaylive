@@ -3,15 +3,15 @@ import { eq, and } from "drizzle-orm";
 
 import { streamio } from "$api/global";
 import { db } from "$/lib/server/db";
-import { livestreamTable } from "$/lib/server/db/schema";
+import { streamTable } from "$/lib/server/db/schema";
 import { PostEndpoint, requiresLoggedInUser } from "$api/middleware";
 import type { User } from "@supabase/supabase-js";
 
 const endpoint = new PostEndpoint(
     async (payload: {livestreamId: string}, {user}: {user: User}) => {
         const livestreams = await db.select()
-            .from(livestreamTable)
-            .where(eq(livestreamTable.id, payload.livestreamId))
+            .from(streamTable)
+            .where(eq(streamTable.id, payload.livestreamId))
             .limit(1);
         if (livestreams.length === 0) {
             return error(400, "No livestream with the given id");
@@ -30,9 +30,9 @@ const endpoint = new PostEndpoint(
         await Promise.all([
             call.end(),
         
-            db.update(livestreamTable)
+            db.update(streamTable)
                 .set({active: false})
-                .where(eq(livestreamTable.id, payload.livestreamId)),
+                .where(eq(streamTable.id, payload.livestreamId)),
         ]);
 
 
