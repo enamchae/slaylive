@@ -55,5 +55,5 @@ const post = new PostEndpoint(
 );
 
 
-export const POST: RequestHandler = requiresLoggedInUser(async (user, event) => post.callHandler({user}, event));
+export const POST = requiresLoggedInUser(async (user, event) => post.callHandler({user}, event));
 export type UserLogin = typeof post;

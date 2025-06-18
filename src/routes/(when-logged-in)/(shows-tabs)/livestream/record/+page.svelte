@@ -1,7 +1,7 @@
 <script lang="ts">
     import { apiFetchAuthenticated } from "$routes/util";
     import Button from "@/Button.svelte";
-    import { fetchStreamData, streamState } from "../store.svelte";
+    import { streamState } from "../store.svelte";
     import { store } from "$routes/store.svelte";
     import ParticipantVideo from "@/stream/ParticipantVideo.svelte";
     import StreamViewerInteraction from "@/stream/interaction/StreamViewerInteraction.svelte";
@@ -9,41 +9,24 @@
     import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
     import { onDestroy } from "svelte";
     import { LivestreamEventType, type LivestreamEvent } from "@/stream/interaction/CallEvent";
+    import { startStream, stopStream } from "$api/api";
 
 
 
 let waiting = $state(false);
 
-let streamData = $state<{
-    active: boolean
-} | null>(null);
-
+const streamData = $derived(streamState().data);
 const streamId = $derived(streamState().id);
-
-$effect(() => {
-    (async () => {
-        const data = await fetchStreamData(streamId);
-
-        streamData = {
-            active: data.active,
-        };
-    })();
-});
+const callData = $derived(streamState().callData);
 
     
 const startLivestream = async () => {
-    if (streamData === null) return;
+    if (streamId === null) return;
 
     waiting = true;
-
-    await apiFetchAuthenticated("livestream/start", {
-        method: "POST",
-        body: JSON.stringify({
-            livestreamId: streamId,
-        }),
-        headers: {
-            "Content-Type": "application/json",
-        },
+    
+    await startStream({
+        livestreamId: streamId,
     });
 
     waiting = false;
@@ -52,94 +35,17 @@ const startLivestream = async () => {
 
 
 const stopLivestream = async () => {
-    if (streamData === null) return;
+    if (streamId === null) return;
 
     waiting = true;
 
-    await apiFetchAuthenticated("livestream/stop", {
-        method: "POST",
-        body: JSON.stringify({
-            livestreamId: streamId,
-        }),
-        headers: {
-            "Content-Type": "application/json",
-        },
+    await stopStream({
+        livestreamId: streamId,
     });
-    
+
     waiting = false;
     streamData.active = false;
 };
-
-// set up the user object
-let user = $derived(
-    store.user === null
-        ? null
-        : <User>{
-            id: store.user.streamioAuth.id,
-            name: store.user.name,
-            image: `https://getstream.io/random_svg/?id=${store.user.streamioAuth.id}&name=${store.user.name}`,
-        }
-);
-
-let nParticipants = $state(0);
-let started = $state(false);
-
-let call = $state<Call | null>(null);
-let localParticipant = $state<StreamVideoParticipant | null>(null);
-
-(async () => {
-    if (streamId === null || store.user === null || user === null) return;
-
-    const client = new StreamVideoClient({
-        apiKey: PUBLIC_STREAM_API_KEY,
-        token: store.user.streamioAuth.token,
-        user,
-    });
-    call = client.call('livestream', streamId);
-
-    await call.join();
-    
-    try {
-        await Promise.all([
-            call.camera.enable(),
-            call.microphone.enable(),
-        ]);
-    } catch (error) {
-        alert(`Camera is inaccessible or permission was denied: ${error}`);
-        return;
-    }
-
-    // Render local participant's video
-    call.state.localParticipant$.subscribe(participant => {
-        if (!participant) return;
-
-        localParticipant = participant;
-
-        apiFetchAuthenticated("livestream/set-host-session", {
-            method: "PATCH",
-            body: JSON.stringify({
-                livestreamId: streamId,
-                sessionId: participant.sessionId,
-            }),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-    });
-
-    // Render the number of users who joined
-    call.state.participantCount$.subscribe((count) => {
-        nParticipants = count || 0;
-    });
-
-    call.state.backstage$.subscribe((backstage) => {
-        started = !backstage;
-    });
-})();
-
-onDestroy(() => {
-    call?.leave();
-});
 
 
 const updateListingState = async (
@@ -150,9 +56,9 @@ const updateListingState = async (
         imageUrls: string[],
     },
 ) => {
-    if (call === null) return;
+    if (callData === null) return;
 
-    await call.sendCustomEvent({
+    await callData.call.sendCustomEvent({
         type: LivestreamEventType.UpdateListing,
         data: {
             listing: {
@@ -169,7 +75,7 @@ const updateListingState = async (
 
 
 
-{#if streamData !== null && store.user !== null}
+{#if streamData !== null && callData !== null && store.user !== null}
     <button-row>
         <Button
             onClick={() => startLivestream()}
@@ -185,41 +91,39 @@ const updateListingState = async (
     
     <button-row>
         <Button
-            onClick={() => call?.goLive()}
-            disabled={!streamData.active || waiting || started}
+            onClick={() => callData.call.goLive()}
+            disabled={waiting || callData.started}
             strong
         >Start broadcast</Button>
 
         <Button
-            onClick={() => call?.stopLive()}
-            disabled={!streamData.active || waiting || !started}
+            onClick={() => callData.call.stopLive()}
+            disabled={waiting || !callData.started}
         >Stop broadcast</Button>
     </button-row>
 
     {#if streamId !== null}
         <backstage-container>
             <div>
-                {#if nParticipants === 0}
+                {#if callData.nParticipants === 0}
                     Loading call
                 {:else}
-                    {nParticipants - 1} viewers
+                    {callData.nParticipants - 1} viewers
                 {/if}
             </div>
 
-            {#if call !== null}
-                {#if localParticipant !== null}
-                    <ParticipantVideo
-                        {call}
-                        sessionId={localParticipant.sessionId}
-                    />
-                {/if}
-
-                <StreamViewerInteraction
-                    userId={store.user.streamioAuth.id}
-                    userName={store.user.name}
-                    {call}
+            {#if callData.localParticipant !== null}
+                <ParticipantVideo
+                    call={callData.call}
+                    sessionId={callData.localParticipant.sessionId}
                 />
             {/if}
+
+            <StreamViewerInteraction
+                userId={store.user.streamioAuth.id}
+                userName={store.user.name}
+                call={callData.call}
+            />
         </backstage-container>
     {/if}
 {/if}

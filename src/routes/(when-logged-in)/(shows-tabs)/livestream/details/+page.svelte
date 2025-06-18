@@ -1,51 +1,39 @@
 <script lang="ts">
 
 import RichTextEntry from "@/RichTextEntry.svelte";
-import { streamState, setStreamId, fetchStreamData } from "../store.svelte";
-    import Loading from "@/Loading.svelte";
-    import Button from "@/Button.svelte";
-    import { apiFetchAuthenticated } from "$routes/util";
+import { streamState, setStreamId } from "../store.svelte";
+import Loading from "@/Loading.svelte";
+import Button from "@/Button.svelte";
+import { apiFetchAuthenticated } from "$routes/util";
 
 
-let streamData = $state<{
+const streamData = $derived(streamState().data);
+
+let newStreamData = $state<{
     title: string,
     description: string,
-} | null>(null);
-
-let lastSavedStreamData = $state<{
-    title: string,
-    description: string,
-} | null>(null);
-
+// svelte-ignore state_referenced_locally
+}>(streamData);
 
 $effect(() => {
-    (async () => {
-        const data = await fetchStreamData(streamState().id);
-
-        streamData = {
-            title: data.title,
-            description: data.description,
-        };
-
-        lastSavedStreamData = {...streamData};
-    })();
+    newStreamData = {...streamData};
 });
 
 
 const setLivestreamText = (text: string) => {
-    if (streamData === null) return;
+    if (newStreamData === null) return;
 
-    streamData.title = text;
+    newStreamData.title = text;
 };
 
 const setLivestreamDescription = (text: string) => {
-    if (streamData === null) return;
+    if (newStreamData === null) return;
 
-    streamData.description = text;
+    newStreamData.description = text;
 };
 
 const saveLivestreamData = async () => {
-    if (streamData === null) return;
+    if (newStreamData === null) return;
 
     // const validationResult = validate.listing({title: listing.title, description: listing.description});
     // if (!validationResult.ok) {
@@ -57,8 +45,8 @@ const saveLivestreamData = async () => {
             method: "PATCH",
             body: JSON.stringify({
                 livestreamId: streamState().id,
-                livestreamTitle: streamData.title,
-                livestreamDescription: streamData.description,
+                livestreamTitle: newStreamData.title,
+                livestreamDescription: newStreamData.description,
             }),
             headers: {
                 "Content-Type": "application/json",
@@ -68,8 +56,8 @@ const saveLivestreamData = async () => {
         const {livestreamId} = await apiFetchAuthenticated<{livestreamId: string}>("livestream/new", {
             method: "PUT",
             body: JSON.stringify({
-                livestreamTitle: streamData.title,
-                livestreamDescription: streamData.description,
+                livestreamTitle: newStreamData.title,
+                livestreamDescription: newStreamData.description,
             }),
             headers: {
                 "Content-Type": "application/json",
@@ -79,13 +67,13 @@ const saveLivestreamData = async () => {
         setStreamId(livestreamId);
     }
 
-    lastSavedStreamData = {...streamData};
+    streamData.title = newStreamData.title;
+    streamData.description = newStreamData.description;
 };
 
 const discardLivestreamData = () => {
-    if (lastSavedStreamData === null) return;
-    
-    streamData = {...lastSavedStreamData};
+    newStreamData.title = streamData.title;
+    newStreamData.description = streamData.description;
 };
 </script>
 

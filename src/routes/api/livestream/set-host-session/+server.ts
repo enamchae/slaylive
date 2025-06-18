@@ -1,28 +1,32 @@
-import { error, type RequestHandler, json } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 
 import { db } from "$/lib/server/db";
 import { livestreamTable } from "$/lib/server/db/schema";
 import { and, eq } from "drizzle-orm";
-import { requiresLoggedInUser } from "$api/middleware";
+import { PostEndpoint, requiresLoggedInUser } from "$api/middleware";
+import type { User } from "@supabase/supabase-js";
 
-export const PATCH: RequestHandler = requiresLoggedInUser(async (user, {request}) => {
-    const {livestreamId, sessionId} = await request.json();
+const endpoint = new PostEndpoint(
+    async (payload: {livestreamId: string, sessionId: string}, {user}: {user: User}) => {
+        const livestreamMatches = and(
+            eq(livestreamTable.id, payload.livestreamId),
+            eq(livestreamTable.hostUserId, user.id),
+        );
 
-    const livestreamMatches = and(
-        eq(livestreamTable.id, livestreamId),
-        eq(livestreamTable.hostUserId, user.id),
-    );
+        const calls = await db.select({})
+            .from(livestreamTable)
+            .where(livestreamMatches)
+            .limit(1);
+        if (calls.length === 0) return error(400, "Call not found");
 
-    const calls = await db.select({})
-        .from(livestreamTable)
-        .where(livestreamMatches)
-        .limit(1);
-    if (calls.length === 0) return error(400, "Call not found");
+        
+        await db.update(livestreamTable)
+            .set({hostSessionId: payload.sessionId})
+            .where(livestreamMatches);
 
-    
-    await db.update(livestreamTable)
-        .set({hostSessionId: sessionId})
-        .where(livestreamMatches);
+        return {};
+    },
+);
 
-    return json({});
-});
+export const PATCH = requiresLoggedInUser(async (user, event) => endpoint.callHandler({user}, event));
+export type SetHostSession = typeof endpoint;

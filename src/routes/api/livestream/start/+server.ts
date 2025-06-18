@@ -4,41 +4,44 @@ import { eq, and } from "drizzle-orm";
 import { streamio } from "$api/global";
 import { db } from "$/lib/server/db";
 import { livestreamTable } from "$/lib/server/db/schema";
-import { requiresLoggedInUser } from "$api/middleware";
+import { PostEndpoint, requiresLoggedInUser } from "$api/middleware";
+import type { User } from "@supabase/supabase-js";
 
-export const POST: RequestHandler = requiresLoggedInUser(async (user, event) => {
-    const calls = await db.select({})
-        .from(livestreamTable)
-        .where(
-            and(
-                eq(livestreamTable.hostUserId, user.id),
-                eq(livestreamTable.active, true)
+const endpoint = new PostEndpoint(
+    async (payload: {livestreamId: string}, {user}: {user: User}) => {
+        const calls = await db.select({})
+            .from(livestreamTable)
+            .where(
+                and(
+                    eq(livestreamTable.hostUserId, user.id),
+                    eq(livestreamTable.active, true)
+                )
             )
-        )
-        .limit(1);
-    if (calls.length !== 0) {
-        return error(400, "Host already has an ongoing stream");
-    }
+            .limit(1);
+        if (calls.length !== 0) {
+            return error(400, "Host already has an ongoing stream");
+        }
 
-    const {livestreamId} = await event.request.json();
+        const call = streamio.video.call("livestream", payload.livestreamId);
 
-    const call = streamio.video.call("livestream", livestreamId);
+        await Promise.all([
+            call.create({
+                data: {
+                    created_by_id: user.id,
+                    members: [
+                        {user_id:  user.id, role: "user"},
+                    ],
+                },
+            }),
+        
+            db.update(livestreamTable)
+                .set({active: true})
+                .where(eq(livestreamTable.id, payload.livestreamId)),
+        ]);
 
-    await Promise.all([
-        call.create({
-            data: {
-                created_by_id: user.id,
-                members: [
-                    {user_id:  user.id, role: "user"},
-                ],
-            },
-        }),
-    
-        db.update(livestreamTable)
-            .set({active: true})
-            .where(eq(livestreamTable.id, livestreamId)),
-    ]);
+        return {};
+    },
+);
 
-
-    return json({});
-});
+export const POST = requiresLoggedInUser(async (user, event) => endpoint.callHandler({user}, event));
+export type StartLivestream = typeof endpoint;

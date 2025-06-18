@@ -1,10 +1,13 @@
 <script lang="ts">
-import type { Snippet } from "svelte";
-import { streamState } from "./store.svelte";
+import { onDestroy, type Snippet } from "svelte";
+import { assignCallData, resetStreamData, setCallData, streamState } from "./store.svelte";
 import { goto } from "$app/navigation";
     import { store } from "$routes/store.svelte";
     import Tabber from "@/Tabber.svelte";
     import PageScroller from "@/PageScroller.svelte";
+    import { StreamVideoClient, type Call, type StreamVideoParticipant, type User } from "@stream-io/video-client";
+    import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
+    import { setHostSession } from "$api/api";
 
 
 const {
@@ -37,7 +40,86 @@ $effect(() => {
             goto("/livestream/record");
             break;
     }
-})
+});
+
+
+
+const streamId = $derived(streamState().id);
+
+let streamioUser = $derived(
+    store.user === null
+        ? null
+        : <User>{
+            id: store.user.streamioAuth.id,
+            name: store.user.name,
+            image: `https://getstream.io/random_svg/?id=${store.user.streamioAuth.id}&name=${store.user.name}`,
+        }
+);
+
+
+const callData = $derived(streamState().callData);
+
+$effect(() => {
+    (async () => {
+        if (streamId === null || store.user === null || streamioUser === null) return;
+
+        const client = StreamVideoClient.getOrCreateInstance({
+            apiKey: PUBLIC_STREAM_API_KEY,
+            token: store.user.streamioAuth.token,
+            user: streamioUser,
+        });
+        const call = client.call('livestream', streamId);
+
+        setCallData({
+            call,
+            nParticipants: 0,
+            localParticipant: null,
+            started: false,
+        });
+
+
+        await call.join();
+        
+        try {
+            await Promise.all([
+                call.camera.enable(),
+                call.microphone.enable(),
+            ]);
+        } catch (error) {
+            alert(`Camera is inaccessible or permission was denied: ${error}`);
+            return;
+        }
+
+        // Render local participant's video
+        call.state.localParticipant$.subscribe(participant => {
+            if (!participant) return;
+
+            assignCallData({localParticipant: participant});
+
+            setHostSession({
+                livestreamId: streamId,
+                sessionId: participant.sessionId,
+            });
+        });
+
+        // Render the number of users who joined
+        call.state.participantCount$.subscribe((count) => {
+            assignCallData({nParticipants: count});
+        });
+
+        call.state.backstage$.subscribe((backstage) => {
+            assignCallData({started: !backstage});
+        });
+    })();
+});
+
+onDestroy(() => {
+    if (callData === null) return;
+
+    callData.call.leave();
+});
+
+resetStreamData();
 </script>
 
 

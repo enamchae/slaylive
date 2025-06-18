@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { fade } from "svelte/transition";
-
 let {
     label = null,
     initialText,
@@ -9,7 +7,7 @@ let {
     placeholder,
     classes = "",
 }: {
-    label?: string,
+    label?: string | null,
     initialText: string,
     active?: boolean,
     onInput: (value: string) => void,
@@ -56,7 +54,7 @@ const updateText = () => {
 
     <entry-editable-container>
         {#if text.length === 0}
-            <rich-text-placeholder transition:fade={{duration: 125}}>{placeholder}</rich-text-placeholder>
+            <rich-text-placeholder>{placeholder}</rich-text-placeholder>
         {/if}
 
         <rich-text-entry
