@@ -16,6 +16,7 @@ export type LivestreamUpdateListing = {
         price: string,
         title: string,
         description: string,
+        active: boolean,
         // images: string[],
     },
 };

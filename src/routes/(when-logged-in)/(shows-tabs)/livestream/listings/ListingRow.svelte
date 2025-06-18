@@ -44,11 +44,15 @@ const savePrice = async () => {
 const toggleActivation = async () => {
     if (streamId === null) return;
 
+    waiting = true;
+
     await editStreamListingActivation({
         streamId,
         listingId: listing.id,
         active: !listing.active,
     });
+
+    waiting = false;
 
     listing.active = !listing.active;
 
@@ -58,13 +62,7 @@ const toggleActivation = async () => {
     await callData.call.sendCustomEvent({
         type: LivestreamEventType.UpdateListing,
         data: {
-            listing: {
-                id: listing.id,
-                price: "1.25",
-                title: listing.title,
-                description: listing.description,
-                // images: listing.imageUrls,
-            },
+            listing,
         },
     } satisfies LivestreamEvent<LivestreamEventType.UpdateListing>);
 };
@@ -78,7 +76,7 @@ const toggleActivation = async () => {
     />
 
     <listing-settings>
-        <h3>{listing.title}</h3>
+        <h4>{listing.title}</h4>
 
         <RichTextEntry
             label="price"
@@ -93,7 +91,13 @@ const toggleActivation = async () => {
         <Button
             onClick={toggleActivation}
             disabled={waiting}
-        >Activate</Button>
+        >
+            {#if listing.active}
+                Deactivate
+            {:else}
+                Activate
+            {/if}
+        </Button>
     </listing-actions>
 </listing-row>
 

@@ -3,8 +3,8 @@
     import { goto } from "$app/navigation";
     import Button from "@/Button.svelte";
 
-const joinCall = (callId: string) => {
-    goto(`/watch?call_id=${encodeURIComponent(callId)}`);
+const joinStream = (streamId: string) => {
+    goto(`/watch?streamId=${encodeURIComponent(streamId)}`);
 };
 </script>
 
@@ -15,7 +15,7 @@ const joinCall = (callId: string) => {
         {#each livestreams as livestream (livestream.id)}
             <div>
                 <Button
-                    onClick={() => joinCall(livestream.id)}
+                    onClick={() => joinStream(livestream.id)}
                 >
                     {livestream.title}
                 </Button>

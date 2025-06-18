@@ -2,11 +2,11 @@
 const {
     currentLabel,
     labels,
-    onClick,
+    onClickTab: onClick,
 }: {
     currentLabel: string,
     labels: string[],
-    onClick: (label: string) => void,
+    onClickTab: (label: string) => void,
 } = $props();
 
 </script>

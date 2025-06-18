@@ -9,12 +9,12 @@ import ParticipantVideo from "@/stream/ParticipantVideo.svelte";
     import { getLivestreamHost } from "$api/api";
 
 let {
-    callId,
+    streamId,
     userToken,
     userId,
     userName,
 }: {
-    callId: string,
+    streamId: string,
     userToken: string,
     userId: string,
     userName: string,
@@ -47,11 +47,11 @@ let participants = $state<StreamVideoParticipant[]>([]);
 
 (async () => {
     const client = StreamVideoClient.getOrCreateInstance({ apiKey: PUBLIC_STREAM_API_KEY, token: userToken, user });
-    call = client.call('livestream', callId);
+    call = client.call('livestream', streamId);
 
     await call.join();
 
-    ({hostSessionId} = await getLivestreamHost({call_id: callId}));
+    ({hostSessionId} = await getLivestreamHost({call_id: streamId}));
 
 
     // Render the number of users who joined
@@ -111,6 +111,7 @@ onDestroy(() => {
                 {userId}
                 {userName}
                 {call}
+                {streamId}
             />
         {/if}
 

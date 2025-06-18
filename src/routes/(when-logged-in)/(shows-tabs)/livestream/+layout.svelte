@@ -128,7 +128,7 @@ resetStreamData();
         <Tabber
             currentLabel={currentTab}
             labels={Object.values(tabberTabs)}
-            onClick={label => {
+            onClickTab={label => {
                 currentTab = label;
             }}
         />

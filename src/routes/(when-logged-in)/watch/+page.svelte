@@ -3,16 +3,16 @@ import Watch from "./Watch.svelte";
 import {store} from "$routes/store.svelte";
     import { onMount } from "svelte";
 
-let callId = $state<string | null>(null);
+let streamId = $state<string | null>(null);
 onMount(() => {
-    callId = new URLSearchParams(location.search).get("call_id") ?? null;
+    streamId = new URLSearchParams(location.search).get("streamId") ?? null;
 });
 </script>
 
 <main>
-    {#if callId !== null && store.user !== null}
+    {#if streamId !== null && store.user !== null}
         <Watch
-            {callId}
+            {streamId}
             userToken={store.user.streamioAuth.token}
             userId={store.user.streamioAuth.id}
             userName={store.user.streamioAuth.name}
