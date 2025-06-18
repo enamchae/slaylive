@@ -62,13 +62,15 @@ onDestroy(() => {
             {call}
         />
     {:else if currentTab === tabs.listings}
-        {#if streamInfo !== null}
-            {#each streamInfo.listings as listing (listing.id)}
-                {#if listing.active}
-                    <WatchListing {listing} />
-                {/if}
-            {/each}
-        {/if}
+        <watch-listings>
+            {#if streamInfo !== null}
+                {#each streamInfo.listings as listing (listing.id)}
+                    {#if listing.active}
+                        <WatchListing {listing} />
+                    {/if}
+                {/each}
+            {/if}
+        </watch-listings>
     {/if}
 
     <Tabber
@@ -77,3 +79,14 @@ onDestroy(() => {
         onClickTab={tab => currentTab = tab}
     />
 </watch-menu>
+
+<style lang="scss">
+watch-listings {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    max-height: 40vh;
+    overflow-y: auto;
+}
+</style>
