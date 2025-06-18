@@ -4,13 +4,15 @@ let {
     initialText,
     active = true,
     onInput,
+    onChange,
     placeholder,
     classes = "",
 }: {
     label?: string | null,
     initialText: string,
     active?: boolean,
-    onInput: (value: string) => void,
+    onInput?: (value: string) => void,
+    onChange?: (value: string) => void,
     placeholder: string,
     classes?: string,
 } = $props();
@@ -40,7 +42,7 @@ const updateText = () => {
     if (entry === null) return;
 
     text = entry.textContent ?? "";
-    onInput(text);
+    onInput?.(text);
 };
 </script>
 
@@ -62,7 +64,10 @@ const updateText = () => {
             contenteditable
             oninput={() => updateText()}
             onfocus={() => editing = true}
-            onblur={() => editing = false}
+            onblur={() => {
+                editing = false;
+                onChange?.(text);
+            }}
             bind:this={entry}
         >{lastText}</rich-text-entry>
     </entry-editable-container>

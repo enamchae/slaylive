@@ -1,14 +1,9 @@
 <script lang="ts">
-    import { apiFetchAuthenticated } from "$routes/util";
     import Button from "@/Button.svelte";
     import { streamState } from "../store.svelte";
     import { store } from "$routes/store.svelte";
     import ParticipantVideo from "@/stream/ParticipantVideo.svelte";
     import StreamViewerInteraction from "@/stream/interaction/StreamViewerInteraction.svelte";
-    import { StreamVideoClient, type Call, type StreamVideoParticipant, type User } from "@stream-io/video-client";
-    import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
-    import { onDestroy } from "svelte";
-    import { LivestreamEventType, type LivestreamEvent } from "@/stream/interaction/CallEvent";
     import { startStream, stopStream } from "$api/api";
 
 
@@ -45,31 +40,6 @@ const stopLivestream = async () => {
 
     waiting = false;
     streamData.active = false;
-};
-
-
-const updateListingState = async (
-    listing: {
-        id: string,
-        name: string,
-        desc: string,
-        imageUrls: string[],
-    },
-) => {
-    if (callData === null) return;
-
-    await callData.call.sendCustomEvent({
-        type: LivestreamEventType.UpdateListing,
-        data: {
-            listing: {
-                id: listing.id,
-                price: 125,
-                name: listing.name,
-                desc: listing.desc,
-                images: listing.imageUrls,
-            },
-        },
-    } satisfies LivestreamEvent<LivestreamEventType.UpdateListing>);
 };
 </script>
 

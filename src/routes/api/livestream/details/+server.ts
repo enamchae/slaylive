@@ -30,6 +30,9 @@ const get = new GetEndpoint(
         const listings = await db.select({
             id: streamListingAssociationTable.listingId,
             title: listingTable.title,
+            description: listingTable.description,
+            price: streamListingAssociationTable.price,
+            active: streamListingAssociationTable.active,
         })
             .from(streamListingAssociationTable)
             .where(eq(streamListingAssociationTable.streamId, payload.streamId))

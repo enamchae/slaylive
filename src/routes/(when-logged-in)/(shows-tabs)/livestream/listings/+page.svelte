@@ -3,12 +3,13 @@
     import { streamState } from "../store.svelte";
     import ListingRow from "./ListingRow.svelte";
     import { goto } from "$app/navigation";
+    import { LivestreamEventType, type LivestreamEvent } from "@/stream/interaction/CallEvent";
 
 const streamData = $derived(streamState().data);
 </script>
 
 
-<livestream-listings>
+<stream-listings>
     <Button
         onClick={() => goto("/livestream/listings/edit-selection")}
     >
@@ -19,7 +20,14 @@ const streamData = $derived(streamState().data);
     {#each streamData.listings as listing (listing.id)}
         <ListingRow
             {listing}
-            onSetPrice={console.log}
         />
     {/each}
-</livestream-listings>
+</stream-listings>
+
+<style lang="scss">
+stream-listings {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+</style>

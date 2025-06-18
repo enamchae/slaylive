@@ -13,10 +13,10 @@ export type LivestreamReaction = {
 export type LivestreamUpdateListing = {
     listing: {
         id: string,
-        price: number,
-        name: string,
-        desc: string,
-        images: string[],
+        price: string,
+        title: string,
+        description: string,
+        // images: string[],
     },
 };
 

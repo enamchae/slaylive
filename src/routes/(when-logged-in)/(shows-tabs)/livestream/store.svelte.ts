@@ -17,15 +17,9 @@ export const setStreamId = (newId: string) => {
 };
 
 
-let data = $state<{
-    title: string,
-    description: string,
-    active: boolean,
-    listings: {
-        id: string,
-        title: string,
-    }[],
-}>({
+let data = $state<
+    Pick<Awaited<ReturnType<typeof getStreamInfo>>, "title" | "description" | "active" | "listings">
+>({
     title: "",
     description: "",
     active: false,
