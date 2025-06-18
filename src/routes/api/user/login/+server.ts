@@ -10,8 +10,6 @@ import type { User } from "@supabase/supabase-js";
 
 
 const post = new PostEndpoint(
-    () => ({}),
-
     async (payload, {user}: {user: User}) => {
         let members = await db.select({
             canSell: userTable.canSell,
@@ -58,4 +56,4 @@ const post = new PostEndpoint(
 
 
 export const POST: RequestHandler = requiresLoggedInUser(async (user, event) => post.callHandler({user}, event));
-export type Endpoint = typeof post;
+export type UserLogin = typeof post;

@@ -4,8 +4,8 @@
     import { store } from "$routes/store.svelte";
     import TabbedPage from "../../TitledPage.svelte";
     import Loading from "@/Loading.svelte";
-    import { getListingsBySeller } from "$api/listing/by-seller/endpoint";
     import ListingDisplayList from "@/listing/ListingDisplayList.svelte";
+    import { getListingsBySeller } from "$api/api";
 
 </script>
 

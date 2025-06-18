@@ -2,10 +2,10 @@
     import Button from "@/Button.svelte";
     import { goto } from "$app/navigation";
     import { store } from "$routes/store.svelte";
-    import { getLivestreamsBySeller } from "$routes/api/livestream/by-seller/endpoint";
     import TabbedPage from "../../TitledPage.svelte";
     import Loading from "@/Loading.svelte";
     import { editStream } from "../../livestream/store.svelte";
+    import { getLivestreamsBySeller } from "$api/api";
 
 </script>
 

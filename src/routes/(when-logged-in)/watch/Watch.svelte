@@ -4,9 +4,9 @@ import { onDestroy } from "svelte";
 
 import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
 import ParticipantVideo from "@/stream/ParticipantVideo.svelte";
-import { getLivestreamHost } from "$api/livestream/get-host/endpoint";
     import Button from "@/Button.svelte";
     import WatchMenu from "./WatchMenu.svelte";
+    import { getLivestreamHost } from "$api/api";
 
 let {
     callId,

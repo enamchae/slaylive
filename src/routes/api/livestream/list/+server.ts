@@ -5,8 +5,6 @@ import { GetEndpoint, requiresLoggedInUser } from "../../middleware";
 
 
 const get = new GetEndpoint(
-    () => ({}),
-
     async () => {
         const livestreams = await db.select()
             .from(livestreamTable)
@@ -17,4 +15,4 @@ const get = new GetEndpoint(
 );
 
 export const GET = requiresLoggedInUser((user, event) => get.callHandler(null, event));
-export type Endpoint = typeof get;
+export type GetLivestreamList = typeof get;

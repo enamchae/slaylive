@@ -20,7 +20,6 @@ export const requiresLoggedInUser = (handle: (user: User, ...args: Parameters<Re
 
 export class GetEndpoint<T=null, Payload extends Record<string, string>=any, Output=any> {
     constructor(
-        private readonly validatePayload: (searchParams: URLSearchParams, ...args: Parameters<RequestHandler>) => Awaited<ReturnType<RequestHandler>> | Payload,
         private readonly handle: (
             payload: Payload,
             data: T,
@@ -29,12 +28,7 @@ export class GetEndpoint<T=null, Payload extends Record<string, string>=any, Out
     ) {}
 
     async callHandler(data: T, ...[event, ...args]: Parameters<RequestHandler>): Promise<Response> {
-        const payload = this.validatePayload(event.url.searchParams, event, ...args);
-        if (payload instanceof Response) {
-            return payload;
-        }
-
-        const out = await this.handle(payload, data, event, ...args);
+        const out = await this.handle(Object.fromEntries(event.url.searchParams) as Payload, data, event, ...args);
         if (out instanceof Response) {
             return out;
         }
@@ -49,7 +43,6 @@ export class GetEndpoint<T=null, Payload extends Record<string, string>=any, Out
 
 export class PostEndpoint<T=null, Payload extends Record<string, string>=any, Output=any> {
     constructor(
-        private readonly validatePayload: (dirty: object, ...args: Parameters<RequestHandler>) => Awaited<ReturnType<RequestHandler>> | Payload,
         private readonly handle: (
             payload: Payload,
             data: T,
@@ -58,12 +51,7 @@ export class PostEndpoint<T=null, Payload extends Record<string, string>=any, Ou
     ) {}
 
     async callHandler(data: T, ...[event, ...args]: Parameters<RequestHandler>): Promise<Response> {
-        const payload = this.validatePayload(await event.request.json(), event, ...args);
-        if (payload instanceof Response) {
-            return payload;
-        }
-
-        const out = await this.handle(payload, data, event, ...args);
+        const out = await this.handle((await event.request.json()) as Payload, data, event, ...args);
         if (out instanceof Response) {
             return out;
         }

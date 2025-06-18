@@ -1,4 +1,4 @@
-import { getLivestreamDetails } from "$api/livestream/details/endpoint";
+import { getLivestreamDetails } from "$api/api";
 import { goto } from "$app/navigation";
 
 let id = $state<string | null>(null);

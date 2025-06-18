@@ -4,8 +4,6 @@ import { GetEndpoint, requiresLoggedInUser } from "../../middleware";
 
 
 const get = new GetEndpoint(
-    () => ({}),
-    
     async () => {
         const listings = await db.select({
             id: listingTable.id,
@@ -20,4 +18,4 @@ const get = new GetEndpoint(
 );
 
 export const GET = requiresLoggedInUser((user, event) => get.callHandler(null, event));
-export type Endpoint = typeof get;
+export type GetListingList = typeof get;

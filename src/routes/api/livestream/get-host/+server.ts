@@ -6,14 +6,11 @@ import { GetEndpoint, requiresLoggedInUser } from "../../middleware";
 
 
 const get = new GetEndpoint(
-    searchParams => {
-        const call_id = searchParams.get("call_id");
-        if (call_id === null) return error(400, "Missing call id");
+    async (payload: {
+        call_id: string,
+    }) => {
+        // if (call_id === null) return error(400, "Missing call id");
 
-        return { call_id };
-    },
-
-    async payload => {
         const calls = await db.select({
             hostUserId: livestreamTable.hostUserId,
             hostSessionId: livestreamTable.hostSessionId,
@@ -35,4 +32,4 @@ const get = new GetEndpoint(
 );
 
 export const GET = requiresLoggedInUser((user, event) => get.callHandler(null, event));
-export type Endpoint = typeof get;
+export type GetLivestreamHost = typeof get;

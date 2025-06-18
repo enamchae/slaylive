@@ -6,14 +6,11 @@ import { GetEndpoint, requiresLoggedInUser } from "$api/middleware";
 
 
 const get = new GetEndpoint(
-    searchParams => {
-        const sellerUserId = searchParams.get("sellerUserId");
-        if (sellerUserId === null) return error(400, "Missing seller user id");
-
-        return { sellerUserId };
-    },
-
-    async payload => {
+    async (payload: {
+        sellerUserId: string,
+    }) => {
+        // if (sellerUserId === null) return error(400, "Missing seller user id");
+        
         const livestreams = await db.select({
             id: livestreamTable.id,
             title: livestreamTable.title,
@@ -29,4 +26,4 @@ const get = new GetEndpoint(
 );
 
 export const GET = requiresLoggedInUser((user, event) => get.callHandler(null, event));
-export type Endpoint = typeof get;
+export type GetLivestreamsBySeller = typeof get;

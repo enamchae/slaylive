@@ -6,14 +6,11 @@ import { GetEndpoint, requiresLoggedInUser } from "../../middleware";
 
 
 const get = new GetEndpoint(
-    searchParams => {
-        const livestreamId = searchParams.get("livestreamId");
-        if (livestreamId === null) return error(400, "Missing livestream id");
+    async (payload: {
+        livestreamId: string,
+    }) => {
+        // if (livestreamId === null) return error(400, "Missing livestream id");
 
-        return { livestreamId };
-    },
-
-    async payload => {
         const livestreams = await db.select({
             id: livestreamTable.id,
             title: livestreamTable.title,
@@ -45,4 +42,4 @@ const get = new GetEndpoint(
 );
 
 export const GET = requiresLoggedInUser((user, event) => get.callHandler(null, event));
-export type Endpoint = typeof get;
+export type GetLivestreamDetails = typeof get;

@@ -6,14 +6,11 @@ import { GetEndpoint, requiresLoggedInUser } from "../../middleware";
 
 
 const get = new GetEndpoint(
-    searchParams => {
-        const listingId = searchParams.get("listingId");
-        if (listingId === null) return error(400, "Missing listing id");
+    async (payload: {
+        listingId: string,
+    }) => {
+        // if (listingId === null) return error(400, "Missing listing id");
 
-        return { listingId };
-    },
-
-    async payload => {
         const listings = await db.select({
             title: listingTable.title,
             description: listingTable.description,
@@ -39,4 +36,4 @@ const get = new GetEndpoint(
 );
 
 export const GET = requiresLoggedInUser((user, event) => get.callHandler(null, event));
-export type Endpoint = typeof get;
+export type GetListingDetails = typeof get;

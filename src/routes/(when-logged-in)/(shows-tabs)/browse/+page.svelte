@@ -1,8 +1,8 @@
 <script>
 import ListingDisplayList from "@/listing/ListingDisplayList.svelte";
 import { goto } from "$app/navigation";
-import { getListingList } from "$api/listing/list/endpoint";
     import TitledPage from "../TitledPage.svelte";
+    import { getListingList } from "$api/api";
 </script>
 
 <TitledPage

@@ -4,12 +4,11 @@ import ListingPhotoAddButton from "@/listing/ListingPhotoAddButton.svelte";
 import ListingPhotoButton from "@/listing/ListingPhotoButton.svelte";
 import RichTextEntry from "@/RichTextEntry.svelte";
 import SubtleExclamation from "@/SubtleExclamation.svelte";
-import { goto } from "$app/navigation";
-import {apiFetch, apiFetchAuthenticated} from "$routes/util";
+import {apiFetchAuthenticated} from "$routes/util";
 import { onDestroy } from "svelte";
     import { store } from "$routes/store.svelte";
-    import { getListingDetails } from "$api/listing/details/endpoint";
     import TitledPage from "../TitledPage.svelte";
+    import { getListingDetails } from "$api/api";
 
 
 const searchParams = new URLSearchParams(location.search);

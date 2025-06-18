@@ -11,7 +11,7 @@ export type OutputOf<T> =
     never;
 
 
-export const apiGetter = <T extends GetEndpoint<any>>(urlString: string, authenticated: boolean) => {
+export const apiGetter = <T extends GetEndpoint>(urlString: string, authenticated: boolean) => {
     const url = apiUrl(urlString);
 
     const doFetch = authenticated ? apiFetchAuthenticated : apiFetch; 
