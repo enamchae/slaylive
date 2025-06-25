@@ -2,8 +2,9 @@ import { pgTable, serial, text, integer, uuid, date, boolean, primaryKey, decima
 
 export const userTable = pgTable("user", {
 	id: uuid().primaryKey(),
-	name: varchar({length: 64}).notNull(),
+	name: varchar({length: 64}),
 	canSell: boolean().notNull().default(false),
+	finishedProfileSetup: boolean().notNull().default(false),
 });
 
 export const listingTable = pgTable("listing", {

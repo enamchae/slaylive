@@ -11,6 +11,7 @@ export type UserData = Readonly<{
     id: string,
     name: string,
     canSell: boolean,
+    finishedProfileSetup: boolean,
 }>;
 
 export class Resolvable<T> {

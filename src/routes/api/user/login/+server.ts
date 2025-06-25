@@ -13,6 +13,7 @@ const post = new PostEndpoint(
     async (payload, {user}: {user: User}) => {
         let members = await db.select({
             canSell: userTable.canSell,
+            finishedProfileSetup: userTable.finishedProfileSetup,
         })
             .from(userTable)
             .where(eq(userTable.id, user.id))
@@ -22,11 +23,13 @@ const post = new PostEndpoint(
             await db.insert(userTable)
                 .values({
                     id: user.id,
-                    name: "",
+                    name: null,
+                    finishedProfileSetup: false,
                 });
 
             members = await db.select({
                 canSell: userTable.canSell,
+                finishedProfileSetup: userTable.finishedProfileSetup,
             })
                 .from(userTable)
                 .where(eq(userTable.id, user.id))
@@ -50,6 +53,7 @@ const post = new PostEndpoint(
             userName,
             streamioUserToken,
             canSell: members[0].canSell,
+            finishedProfileSetup: members[0].finishedProfileSetup,
         };
     },
 );

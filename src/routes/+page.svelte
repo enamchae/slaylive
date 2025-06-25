@@ -14,7 +14,12 @@ const {supabase} = $derived(data);
 
 onMount(() => {
     if (store.user === null) return;
-    goto("/");
+
+    if (store.user.finishedProfileSetup) {
+        goto("/now-live");
+    } else {
+        goto("/onboarding/name");
+    }
 });
 
 const updateLoginState = async (user: User, accessToken: string) => {
@@ -36,9 +41,14 @@ const updateLoginState = async (user: User, accessToken: string) => {
 		id: response.userId,
 		name: response.userName,
         canSell: response.canSell,
+        finishedProfileSetup: response.finishedProfileSetup,
     };
 
-    goto("/now-live");
+    if (response.finishedProfileSetup) {
+        goto("/now-live");
+    } else {
+        goto("/onboarding/name");
+    }
 };
 </script>
 

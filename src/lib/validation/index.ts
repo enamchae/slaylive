@@ -1,4 +1,5 @@
 import { validListing } from "./listing";
+import { validUsername } from "./username";
 
 class ValidationResult {
     constructor(
@@ -15,4 +16,5 @@ const createValidator = <T>(validationSource: (arg: T) => Generator<string, void
 
 export const validate = {
     listing: createValidator(validListing),
+    username: createValidator(validUsername),
 };

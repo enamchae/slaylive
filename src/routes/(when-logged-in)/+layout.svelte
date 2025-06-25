@@ -6,13 +6,18 @@ import { store } from "$routes/store.svelte";
 let { children } = $props();
 
 onMount(() => {
-    if (store.user !== null) return;
-    setTimeout(() => {
+    if (store.user === null) {
         goto("/");
-    });
+        return;
+    }
+
+    if (!store.user.finishedProfileSetup) {
+        goto("/onboarding/name");
+        return;
+    }
 });
 </script>
 
-{#if store.user !== null}
+{#if store.user !== null && store.user.finishedProfileSetup}
     {@render children()}
 {/if}

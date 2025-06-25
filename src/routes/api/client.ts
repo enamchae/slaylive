@@ -14,6 +14,7 @@ import type { SetStreamHostSession } from "./livestream/set-host-session/+server
 import type { StartLivestream } from "./livestream/start/+server";
 import type { StopLivestream } from "./livestream/stop/+server";
 import type { UserLogin } from "./user/login/+server";
+import type { UpdateProfile } from "./user/update-profile/+server";
 import type { EditListing } from "./listing/edit/+server";
 import type { NewListing } from "./listing/new/+server";
 import type { NewLivestream } from "./livestream/new/+server";
@@ -47,5 +48,6 @@ export const api = {
     },
     user: {
         login: apiPoster<UserLogin>("user/login", false),
+        updateProfile: apiPoster<UpdateProfile>("user/update-profile", true),
     },
 };
