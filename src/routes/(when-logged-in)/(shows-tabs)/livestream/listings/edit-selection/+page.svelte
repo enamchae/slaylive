@@ -3,7 +3,7 @@
     import { store } from "$routes/store.svelte";
     import Loading from "@/Loading.svelte";
     import ListingDisplayList from "@/listing/ListingDisplayList.svelte";
-    import { editStreamListingSelection, getListingsBySeller } from "$api/api";
+    import { api } from "$api/client";
     import { SvelteSet } from "svelte/reactivity";
     import { streamState, refreshStreamData } from "../../store.svelte";
 
@@ -22,7 +22,7 @@ const save = async () => {
 
     waiting = true;
 
-    await editStreamListingSelection({
+    await api.stream.edit.listing.selection({
         streamId,
         listingIds: [...selectedListingIds],
     });
@@ -41,7 +41,7 @@ const cancel = async () => {
 </script>
 
 {#if store.user !== null}
-    {#await getListingsBySeller({sellerUserId: store.user.id})}
+    {#await api.listing.bySeller({sellerUserId: store.user.id})}
         <Loading />
     {:then response}
         {@const listings = response.listings}

@@ -7,7 +7,7 @@ import SubtleExclamation from "@/SubtleExclamation.svelte";
 import { onDestroy } from "svelte";
     import { store } from "$routes/store.svelte";
     import TitledPage from "../TitledPage.svelte";
-    import { getListingDetails, editListing, newListing } from "$api/api";
+    import { api } from "$api/client";
 
 
 const searchParams = new URLSearchParams(location.search);
@@ -17,7 +17,7 @@ const listingId = searchParams.get("id") ?? null;
 
 const listingPromise = listingId === null
     ? Promise.resolve({title: "", description: "", imageUrls: [], onDisplay: false})
-    : getListingDetails({ listingId });
+    : api.listing.details({ listingId });
 
 let listing = $state<{
     title: string,
@@ -60,14 +60,14 @@ const saveListing = async () => {
     }
 
     if (listingId !== null) {
-        await editListing({
+        await api.listing.edit({
             listingId,
             listingTitle: listing.title,
             listingDescription: listing.description,
             listingOnDisplay: listing.onDisplay,
         });
     } else {
-        await newListing({
+        await api.listing.new({
             listingTitle: listing.title,
             listingDescription: listing.description,
             listingOnDisplay: listing.onDisplay,

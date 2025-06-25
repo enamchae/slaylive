@@ -1,4 +1,4 @@
-import { getStreamInfo } from "$api/api";
+import { api } from "$api/client";
 import { goto } from "$app/navigation";
 import type { Call, StreamVideoParticipant } from "@stream-io/video-client";
 
@@ -18,7 +18,7 @@ export const setStreamId = (newId: string) => {
 
 
 let data = $state<
-    Pick<Awaited<ReturnType<typeof getStreamInfo>>, "title" | "description" | "active" | "listings">
+    Pick<Awaited<ReturnType<typeof api.stream.details>>, "title" | "description" | "active" | "listings">
 >({
     title: "",
     description: "",
@@ -34,7 +34,7 @@ export const resetStreamData = () => {
     if (id === null) return;
 
     (async () => {
-        const newStreamData = await getStreamInfo({
+        const newStreamData = await api.stream.details({
             streamId: id,
         });
 

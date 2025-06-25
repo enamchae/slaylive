@@ -2,7 +2,7 @@
 import ListingDisplayList from "@/listing/ListingDisplayList.svelte";
 import { goto } from "$app/navigation";
     import TitledPage from "../TitledPage.svelte";
-    import { getListingList } from "$api/api";
+    import { api } from "$api/client";
 </script>
 
 <TitledPage
@@ -10,7 +10,7 @@ import { goto } from "$app/navigation";
 >
     <browse-listings>
         
-        {#await getListingList({})}
+        {#await api.listing.list({})}
             <div>Loading listings...</div>
         {:then response}
             {@const listings = response.listings}

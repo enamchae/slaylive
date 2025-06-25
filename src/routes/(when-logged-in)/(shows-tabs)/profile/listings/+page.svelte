@@ -5,7 +5,7 @@
     import TabbedPage from "../../TitledPage.svelte";
     import Loading from "@/Loading.svelte";
     import ListingDisplayList from "@/listing/ListingDisplayList.svelte";
-    import { getListingsBySeller } from "$api/api";
+    import { api } from "$api/client";
 
 </script>
 
@@ -21,7 +21,7 @@
             >Create new</Button>
 
             <listings-list>
-                {#await getListingsBySeller({sellerUserId: store.user.id})}
+                {#await api.listing.bySeller({sellerUserId: store.user.id})}
                     <Loading />
                 {:then response}
                     {@const listings = response.listings}

@@ -4,7 +4,7 @@
     import { store } from "$routes/store.svelte";
     import ParticipantVideo from "@/stream/ParticipantVideo.svelte";
     import StreamViewerInteraction from "@/stream/interaction/StreamViewerInteraction.svelte";
-    import { startStream, stopStream } from "$api/api";
+    import { api } from "$api/client";
 
 
 
@@ -20,7 +20,7 @@ const startLivestream = async () => {
 
     waiting = true;
     
-    await startStream({
+    await api.stream.start({
         livestreamId: streamId,
     });
 
@@ -34,7 +34,7 @@ const stopLivestream = async () => {
 
     waiting = true;
 
-    await stopStream({
+    await api.stream.stop({
         livestreamId: streamId,
     });
 

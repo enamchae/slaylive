@@ -1,12 +1,12 @@
 <script lang="ts">
-    import type { getStreamInfo } from "$api/api";
+    import type { api } from "$api/client";
     import Button from "@/Button.svelte";
     import ListingDisplay from "@/listing/ListingDisplay.svelte";
 
 const {
     listing,
 }: {
-    listing: Awaited<ReturnType<typeof getStreamInfo>>["listings"][0],
+    listing: Awaited<ReturnType<typeof api.stream.details>>["listings"][0],
 } = $props();
 </script>
 

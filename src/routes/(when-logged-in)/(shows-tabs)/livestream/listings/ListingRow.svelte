@@ -1,7 +1,7 @@
 <script lang="ts">
     import RichTextEntry from "@/RichTextEntry.svelte";
     import ListingDisplay from "@/listing/ListingDisplay.svelte";
-    import { editStreamListingActivation, editStreamListingPrice, type getStreamInfo } from "$api/api";
+    import { api } from "$api/client";
     import Button from "@/Button.svelte";
     import { streamState } from "../store.svelte";
     import { LivestreamEventType, type LivestreamEvent } from "@/stream/interaction/CallEvent";
@@ -9,7 +9,7 @@
 const {
     listing,
 }: {
-    listing: Awaited<ReturnType<typeof getStreamInfo>>["listings"][0],
+    listing: Awaited<ReturnType<typeof api.stream.details>>["listings"][0],
 } = $props();
 
 
@@ -30,7 +30,7 @@ const savePrice = async () => {
 
     waiting = true;
 
-    await editStreamListingPrice({
+    await api.stream.edit.listing.price({
         streamId,
         listingId: listing.id,
         price: newPrice,
@@ -46,7 +46,7 @@ const toggleActivation = async () => {
 
     waiting = true;
 
-    await editStreamListingActivation({
+    await api.stream.edit.listing.activation({
         streamId,
         listingId: listing.id,
         active: !listing.active,

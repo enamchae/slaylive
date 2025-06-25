@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { getLivestreamList } from "$api/api";
+    import { api } from "$api/client";
     import { goto } from "$app/navigation";
     import Button from "@/Button.svelte";
 
@@ -9,7 +9,7 @@ const joinStream = (streamId: string) => {
 </script>
 
 <now-live>
-    {#await getLivestreamList({})}
+    {#await api.stream.list({})}
         <div>Loading ongoing livestreams</div>
     {:then livestreams}
         {#each livestreams as livestream (livestream.id)}

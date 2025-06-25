@@ -5,7 +5,7 @@ import {type User} from "@supabase/supabase-js";
 
 import LoginButtonGoogle from "@/LoginButtonGoogle.svelte";
 import { store } from "./store.svelte";
-import { userLogin } from "$api/api";
+import { api } from "$api/client";
 
 let { data } = $props();
 
@@ -18,7 +18,7 @@ onMount(() => {
 });
 
 const updateLoginState = async (user: User, accessToken: string) => {
-    const response = await userLogin({}, {
+    const response = await api.user.login({}, {
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${accessToken}`,

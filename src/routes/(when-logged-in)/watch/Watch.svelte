@@ -6,7 +6,7 @@ import { PUBLIC_STREAM_API_KEY } from "$env/static/public";
 import ParticipantVideo from "@/stream/ParticipantVideo.svelte";
     import Button from "@/Button.svelte";
     import WatchMenu from "./WatchMenu.svelte";
-    import { getLivestreamHost } from "$api/api";
+    import { api } from "$api/client";
 
 let {
     streamId,
@@ -51,7 +51,7 @@ let participants = $state<StreamVideoParticipant[]>([]);
 
     await call.join();
 
-    ({hostSessionId} = await getLivestreamHost({call_id: streamId}));
+    ({hostSessionId} = await api.stream.getHost({call_id: streamId}));
 
 
     // Render the number of users who joined

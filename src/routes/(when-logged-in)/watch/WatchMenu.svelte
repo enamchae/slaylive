@@ -4,7 +4,7 @@ import StreamViewerInteraction from "@/stream/interaction/StreamViewerInteractio
     import Tabber from "@/Tabber.svelte";
     import { LivestreamEventType, type LivestreamEvent } from "@/stream/interaction/CallEvent";
     import { onDestroy, onMount } from "svelte";
-    import { getStreamInfo } from "$api/api";
+    import { api } from "$api/client";
     import WatchListing from "./WatchListing.svelte";
 
 const {
@@ -27,10 +27,10 @@ const tabs = {
 let currentTab = $state(tabs.chat);
 
 
-let streamInfo = $state<Awaited<ReturnType<typeof getStreamInfo>> | null>(null);
+let streamInfo = $state<Awaited<ReturnType<typeof api.stream.details>> | null>(null);
 
 (async () => {
-    streamInfo = await getStreamInfo({ streamId });
+    streamInfo = await api.stream.details({ streamId });
 })();
 
 const onCustomEvent = (customEvent: CustomVideoEvent) => {

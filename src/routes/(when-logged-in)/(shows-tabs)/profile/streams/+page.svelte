@@ -5,7 +5,7 @@
     import TabbedPage from "../../TitledPage.svelte";
     import Loading from "@/Loading.svelte";
     import { editStream } from "../../livestream/store.svelte";
-    import { getLivestreamsBySeller } from "$api/api";
+    import { api } from "$api/client";
 
 </script>
 
@@ -20,7 +20,7 @@
                 strong
             >New stream</Button>
 
-            {#await getLivestreamsBySeller({sellerUserId: store.user.id})}
+            {#await api.stream.bySeller({sellerUserId: store.user.id})}
                 <Loading />
             {:then response}
                 {@const livestreams = response.livestreams}
