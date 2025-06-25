@@ -1,5 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
+import { GetEndpoint, PostEndpoint } from "./endpoint-server";
 
 export const requiresLoggedInUser = (handle: (user: User, ...args: Parameters<RequestHandler>) => ReturnType<RequestHandler>): RequestHandler => 
     async (event, ...args) => {
@@ -15,51 +16,8 @@ export const requiresLoggedInUser = (handle: (user: User, ...args: Parameters<Re
         return handle(userResponse.data.user, event, ...args);
     };
 
+// Re-export endpoint classes for convenience
+export { GetEndpoint, PostEndpoint };
 
 
 
-export class GetEndpoint<T=null, Payload extends Record<string, string>=any, Output=any> {
-    constructor(
-        private readonly handle: (
-            payload: Payload,
-            data: T,
-            ...args: Parameters<RequestHandler>
-        ) => ReturnType<RequestHandler> | Promise<Output>,
-    ) {}
-
-    async callHandler(data: T, ...[event, ...args]: Parameters<RequestHandler>): Promise<Response> {
-        const out = await this.handle(Object.fromEntries(event.url.searchParams) as Payload, data, event, ...args);
-        if (out instanceof Response) {
-            return out;
-        }
-        
-        return json(out);
-    }
-    
-    handler(data: T): RequestHandler {
-        return (...args) => this.callHandler(data, ...args);
-    }
-}
-
-export class PostEndpoint<T=null, Payload extends Record<string, any>=any, Output=any> {
-    constructor(
-        private readonly handle: (
-            payload: Payload,
-            data: T,
-            ...args: Parameters<RequestHandler>
-        ) => ReturnType<RequestHandler> | Promise<Output>,
-    ) {}
-
-    async callHandler(data: T, ...[event, ...args]: Parameters<RequestHandler>): Promise<Response> {
-        const out = await this.handle((await event.request.json()) as Payload, data, event, ...args);
-        if (out instanceof Response) {
-            return out;
-        }
-        
-        return json(out);
-    }
-    
-    handler(data: T): RequestHandler {
-        return (...args) => this.callHandler(data, ...args);
-    }
-}

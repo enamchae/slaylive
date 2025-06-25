@@ -3,42 +3,50 @@ import {eq} from "drizzle-orm";
 
 import { listingTable, userTable as userTable } from "$/lib/server/db/schema";
 import { db } from "$/lib/server/db";
-import { requiresLoggedInUser } from "../../middleware";
+import { PostEndpoint, requiresLoggedInUser } from "../../middleware";
 import { validate } from "$lib/validation";
+import type { User } from "@supabase/supabase-js";
 
-export const PUT: RequestHandler = requiresLoggedInUser(async (user, {request}) => {
-    const {listingTitle, listingDescription, listingOnDisplay} = await request.json();
+const endpoint = new PostEndpoint(
+    async (
+        payload: {
+            listingTitle: string,
+            listingDescription: string,
+            listingOnDisplay: boolean,
+        },
+        {user}: {user: User},
+    ) => {
+        const userObjs = await db.select({canSell: userTable.canSell})
+            .from(userTable)
+            .where(eq(userTable.id, user.id))
+            .limit(1);
 
+        if (userObjs.length === 0) return error(500, "User not found");
 
-    const userObjs = await db.select({canSell: userTable.canSell})
-        .from(userTable)
-        .where(eq(userTable.id, user.id))
-        .limit(1);
+        const userObj = userObjs[0];
+        if (!userObj.canSell) return error(403, "User is not a seller");
 
-    if (userObjs.length === 0) return error(500, "User not found");
+        const validationResult = validate.listing({title: payload.listingTitle, description: payload.listingDescription});
+        if (!validationResult.ok) {
+            return error(400, JSON.stringify({errors: validationResult.errors}));
+        }
 
-    const userObj = userObjs[0];
-    if (!userObj.canSell) return error(403, "User is not a seller");
+        const listingId = await generateListingId();
+        await db.insert(listingTable)
+            .values({
+                id: listingId,
+                sellerUserId: user.id,
+                title: payload.listingTitle,
+                description: payload.listingDescription,
+                onDisplay: payload.listingOnDisplay,
+            });
 
+        return {listingId};
+    },
+);
 
-    const validationResult = validate.listing({title: listingTitle, description: listingDescription});
-    if (!validationResult.ok) {
-        return error(400, JSON.stringify({errors: validationResult.errors}));
-    }
-
-
-    const listingId = await generateListingId();
-    await db.insert(listingTable)
-        .values({
-            id: listingId,
-            sellerUserId: user.id,
-            title: listingTitle,
-            description: listingDescription,
-            onDisplay: listingOnDisplay,
-        });
-
-    return json({});
-});
+export const PUT = requiresLoggedInUser(async (user, event) => endpoint.callHandler({user}, event));
+export type NewListing = typeof endpoint;
 
 const generateListingId = async () => {
     let productId: string;

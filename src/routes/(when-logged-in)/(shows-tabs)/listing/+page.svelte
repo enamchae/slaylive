@@ -4,11 +4,10 @@ import ListingPhotoAddButton from "@/listing/ListingPhotoAddButton.svelte";
 import ListingPhotoButton from "@/listing/ListingPhotoButton.svelte";
 import RichTextEntry from "@/RichTextEntry.svelte";
 import SubtleExclamation from "@/SubtleExclamation.svelte";
-import {apiFetchAuthenticated} from "$routes/util";
 import { onDestroy } from "svelte";
     import { store } from "$routes/store.svelte";
     import TitledPage from "../TitledPage.svelte";
-    import { getListingDetails } from "$api/api";
+    import { getListingDetails, editListing, newListing } from "$api/api";
 
 
 const searchParams = new URLSearchParams(location.search);
@@ -61,29 +60,17 @@ const saveListing = async () => {
     }
 
     if (listingId !== null) {
-        await apiFetchAuthenticated("listing/edit", {
-            method: "PATCH",
-            body: JSON.stringify({
-                listingId,
-                listingTitle: listing.title,
-                listingDescription: listing.description,
-                listingOnDisplay: listing.onDisplay,
-            }),
-            headers: {
-                "Content-Type": "application/json",
-            },
+        await editListing({
+            listingId,
+            listingTitle: listing.title,
+            listingDescription: listing.description,
+            listingOnDisplay: listing.onDisplay,
         });
     } else {
-        await apiFetchAuthenticated("listing/new", {
-            method: "PUT",
-            body: JSON.stringify({
-                listingTitle: listing.title,
-                listingDescription: listing.description,
-                listingOnDisplay: listing.onDisplay,
-            }),
-            headers: {
-                "Content-Type": "application/json",
-            },
+        await newListing({
+            listingTitle: listing.title,
+            listingDescription: listing.description,
+            listingOnDisplay: listing.onDisplay,
         });
     }
 

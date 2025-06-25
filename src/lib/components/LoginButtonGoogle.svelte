@@ -17,8 +17,7 @@ SocialLogin.initialize({
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 
 import googleLogo from "$/public/google.svg";
-import { store } from "$/routes/store.svelte";
-    import Button from "./Button.svelte";
+import Button from "./Button.svelte";
 
 const {
     supabase,
@@ -38,7 +37,7 @@ const supabaseSignin = async () => {
 
     return await supabase.auth.signInWithIdToken({
         provider: "google",
-        token: response.result.idToken,
+        token: (response.result as any).idToken,
     });
     //     }
 

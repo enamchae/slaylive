@@ -88,5 +88,8 @@ watch-listings {
 
     max-height: 40vh;
     overflow-y: auto;
+
+    mask: linear-gradient(#0000, #000 calc(2rem), #000 calc(100% - 2rem), #0000);
+    padding: 2rem 0;
 }
 </style>

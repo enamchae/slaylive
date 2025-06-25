@@ -30,7 +30,7 @@ let data = $state<
 export const resetStreamData = () => {
     data = {title: "", description: "", active: false, listings: []};
 
-    
+
     if (id === null) return;
 
     (async () => {
@@ -46,6 +46,8 @@ export const resetStreamData = () => {
         };
     })();
 };
+
+export const refreshStreamData = resetStreamData;
 
 
 type CallData = {

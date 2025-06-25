@@ -5,8 +5,7 @@ import {type User} from "@supabase/supabase-js";
 
 import LoginButtonGoogle from "@/LoginButtonGoogle.svelte";
 import { store } from "./store.svelte";
-import {apiFetch} from "$routes/util";
-    import { userLogin } from "$api/api";
+import { userLogin } from "$api/api";
 
 let { data } = $props();
 

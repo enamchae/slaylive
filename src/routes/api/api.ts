@@ -1,33 +1,32 @@
-import { apiGetter, apiPoster } from "$/lib/endpoint-typing";
-import type { GetListingsBySeller } from "./listing/by-seller/+server";
-import type { GetListingDetails } from "./listing/details/+server";
-import type { GetListingList } from "./listing/list/+server";
-import type { GetLivestreamsBySeller } from "./livestream/by-seller/+server";
-import type { GetStreamInfo } from "./livestream/details/+server";
-import type { EditStreamDetails } from "./livestream/edit/details/+server";
-import type { EditStreamListingActivation } from "./livestream/edit/listing-activation/+server";
-import type { EditStreamListingPrice } from "./livestream/edit/listing-price/+server";
-import type { EditStreamListingSelection } from "./livestream/edit/listing-selection/+server";
-import type { GetLivestreamHost } from "./livestream/get-host/+server";
-import type { GetLivestreamList } from "./livestream/list/+server";
-import type { SetStreamHostSession } from "./livestream/set-host-session/+server";
-import type { StartLivestream } from "./livestream/start/+server";
-import type { StopLivestream } from "./livestream/stop/+server";
-import type { UserLogin } from "./user/login/+server";
+import { api } from "./client";
 
+// Export individual functions for backward compatibility
+export const getListingDetails = api.listing.details;
+export const getListingList = api.listing.list;
+export const getListingsBySeller = api.listing.bySeller;
+export const editListing = api.listing.edit;
+export const newListing = api.listing.new;
 
-export const getListingsBySeller = apiGetter<GetListingsBySeller>("listing/by-seller", true);
-export const getListingDetails = apiGetter<GetListingDetails>("listing/details", true);
-export const getListingList = apiGetter<GetListingList>("listing/list", true);
-export const getLivestreamsBySeller = apiGetter<GetLivestreamsBySeller>("livestream/by-seller", true);
-export const getStreamInfo = apiGetter<GetStreamInfo>("livestream/details", true);
-export const getLivestreamHost = apiGetter<GetLivestreamHost>("livestream/get-host", true);
-export const getLivestreamList = apiGetter<GetLivestreamList>("livestream/list", true);
-export const userLogin = apiPoster<UserLogin>("user/login", false);
-export const startStream = apiPoster<StartLivestream>("livestream/start", true);
-export const stopStream = apiPoster<StopLivestream>("livestream/stop", true);
-export const setStreamHostSession = apiPoster<SetStreamHostSession>("livestream/set-host-session", true, "PATCH");
-export const editStreamDetails = apiPoster<EditStreamDetails>("livestream/edit/details", true, "PATCH");
-export const editStreamListingSelection = apiPoster<EditStreamListingSelection>("livestream/edit/listing-selection", true, "PATCH");
-export const editStreamListingPrice = apiPoster<EditStreamListingPrice>("livestream/edit/listing-price", true, "PATCH");
-export const editStreamListingActivation = apiPoster<EditStreamListingActivation>("livestream/edit/listing-activation", true, "PATCH");
+export const getLivestreamList = api.stream.list;
+export const getLivestreamHost = api.stream.getHost;
+export const getStreamInfo = api.stream.details;
+export const getLivestreamsBySeller = api.stream.bySeller;
+export const newLivestream = api.stream.new;
+
+export const editStreamDetails = api.stream.edit.details;
+export const editStreamListingSelection = api.stream.edit.listing.selection;
+export const editStreamListingPrice = api.stream.edit.listing.price;
+export const editStreamListingActivation = api.stream.edit.listing.activation;
+
+export const startLivestream = api.stream.start;
+export const stopLivestream = api.stream.stop;
+export const setStreamHostSession = api.stream.setHostSession;
+
+// Aliases for backward compatibility
+export const startStream = api.stream.start;
+export const stopStream = api.stream.stop;
+
+export const userLogin = api.user.login;
+
+// Also export the main api object
+export { api };

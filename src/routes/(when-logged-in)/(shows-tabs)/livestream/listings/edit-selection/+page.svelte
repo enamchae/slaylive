@@ -1,12 +1,11 @@
 <script lang="ts">
     import Button from "@/Button.svelte";
-    import { goto } from "$app/navigation";
     import { store } from "$routes/store.svelte";
     import Loading from "@/Loading.svelte";
     import ListingDisplayList from "@/listing/ListingDisplayList.svelte";
     import { editStreamListingSelection, getListingsBySeller } from "$api/api";
     import { SvelteSet } from "svelte/reactivity";
-    import { streamState } from "../../store.svelte";
+    import { streamState, refreshStreamData } from "../../store.svelte";
 
 let waiting = $state(false);
 const selectedListingIds = $state(
@@ -30,10 +29,9 @@ const save = async () => {
 
     waiting = false;
 
-    streamState().data.listings = selectedListingIds[Symbol.iterator]()
-        .map(id => ({id}))
-        .toArray();
-    
+    // Refresh the stream data to get the updated listings
+    refreshStreamData();
+
     history.back();
 };
 

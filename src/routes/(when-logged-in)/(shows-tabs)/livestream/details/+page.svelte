@@ -4,8 +4,7 @@ import RichTextEntry from "@/RichTextEntry.svelte";
 import { streamState, setStreamId } from "../store.svelte";
 import Loading from "@/Loading.svelte";
 import Button from "@/Button.svelte";
-import { apiFetchAuthenticated } from "$routes/util";
-    import { editStreamDetails } from "$api/api";
+import { editStreamDetails, newLivestream } from "$api/api";
 
 
 const streamId = $derived(streamState().id);
@@ -49,18 +48,12 @@ const saveLivestreamData = async () => {
             livestreamDescription: newStreamData.description,
         });
     } else {
-        const {livestreamId} = await apiFetchAuthenticated<{livestreamId: string}>("livestream/new", {
-            method: "PUT",
-            body: JSON.stringify({
-                livestreamTitle: newStreamData.title,
-                livestreamDescription: newStreamData.description,
-            }),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const response = await newLivestream({
+            livestreamTitle: newStreamData.title,
+            livestreamDescription: newStreamData.description,
+        }) as {livestreamId: string};
 
-        setStreamId(livestreamId);
+        setStreamId(response.livestreamId);
     }
 
     streamData.title = newStreamData.title;

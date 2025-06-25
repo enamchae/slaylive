@@ -1,15 +1,5 @@
-import type { GetEndpoint, PostEndpoint } from "$api/middleware";
-import { apiFetch, apiFetchAuthenticated, apiUrl } from "$/routes/util";
-
-export type PayloadOf<T> =
-    T extends GetEndpoint<any, infer Payload, any> ? Payload :
-    T extends PostEndpoint<any, infer Payload, any> ? Payload :
-    never;
-export type OutputOf<T> =
-    T extends GetEndpoint<any, any, infer Output> ? Output :
-    T extends PostEndpoint<any, any, infer Output> ? Output :
-    never;
-
+import { apiFetch, apiFetchAuthenticated, apiUrl } from "$routes/util";
+import type { GetEndpoint, OutputOf, PayloadOf, PostEndpoint } from "./endpoint-server";
 
 export const apiGetter = <T extends GetEndpoint>(urlString: string, authenticated: boolean) => {
     const url = apiUrl(urlString);
