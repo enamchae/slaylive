@@ -14,10 +14,15 @@ import type { SetStreamHostSession } from "./livestream/set-host-session/+server
 import type { StartLivestream } from "./livestream/start/+server";
 import type { StopLivestream } from "./livestream/stop/+server";
 import type { UserLogin } from "./user/login/+server";
-import type { UpdateProfile } from "./user/update-profile/+server";
+import type { UserEdit } from "./user/edit/+server";
 import type { EditListing } from "./listing/edit/+server";
 import type { NewListing } from "./listing/new/+server";
 import type { NewLivestream } from "./livestream/new/+server";
+import type { CreatePaymentIntent } from "./stripe/payment-intent/create/+server";
+import type { CreateCustomer } from "./stripe/customer/create/+server";
+import type { ListPaymentMethods } from "./stripe/payment-methods/list/+server";
+import type { DeletePaymentMethod } from "./stripe/payment-methods/delete/+server";
+import type { CreateCheckoutSession } from "./stripe/checkout/session/+server";
 
 
 export const api = {
@@ -48,6 +53,21 @@ export const api = {
     },
     user: {
         login: apiPoster<UserLogin>("user/login", false),
-        updateProfile: apiPoster<UpdateProfile>("user/update-profile", true),
+        edit: apiPoster<UserEdit>("user/edit", true),
+    },
+    stripe: {
+        paymentIntent: {
+            create: apiPoster<CreatePaymentIntent>("stripe/payment-intent/create", true),
+        },
+        customer: {
+            create: apiPoster<CreateCustomer>("stripe/customer/create", true),
+        },
+        paymentMethods: {
+            list: apiPoster<ListPaymentMethods>("stripe/payment-methods/list", true),
+            delete: apiPoster<DeletePaymentMethod>("stripe/payment-methods/delete", true, "DELETE"),
+        },
+        checkout: {
+            session: apiPoster<CreateCheckoutSession>("stripe/checkout/session", true),
+        },
     },
 };

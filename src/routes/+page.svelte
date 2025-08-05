@@ -6,6 +6,7 @@ import {type User} from "@supabase/supabase-js";
 import LoginButtonGoogle from "@/LoginButtonGoogle.svelte";
 import { store } from "./store.svelte";
 import { api } from "$api/client";
+    import { hasFinishedProfileSetup } from "$/lib/user-utils";
 
 let { data } = $props();
 
@@ -15,7 +16,7 @@ const {supabase} = $derived(data);
 onMount(() => {
     if (store.user === null) return;
 
-    if (store.user.finishedProfileSetup) {
+    if (!hasFinishedProfileSetup(store.user)) {
         goto("/now-live");
     } else {
         goto("/onboarding/name");
@@ -41,10 +42,10 @@ const updateLoginState = async (user: User, accessToken: string) => {
 		id: response.userId,
 		name: response.userName,
         canSell: response.canSell,
-        finishedProfileSetup: response.finishedProfileSetup,
+        hasFinishedProfileSetup: response.hasFinishedProfileSetup,
     };
 
-    if (response.finishedProfileSetup) {
+    if (!response.hasFinishedProfileSetup) {
         goto("/now-live");
     } else {
         goto("/onboarding/name");

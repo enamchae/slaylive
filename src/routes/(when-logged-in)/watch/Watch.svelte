@@ -7,6 +7,9 @@ import ParticipantVideo from "@/stream/ParticipantVideo.svelte";
     import Button from "@/Button.svelte";
     import WatchMenu from "./WatchMenu.svelte";
     import { api } from "$api/client";
+    import { store } from "$routes/store.svelte";
+    import type { Listing } from "../(shows-tabs)/livestream/Listing";
+    import StripeCheckoutPopover from "@/stripe/StripeCheckoutPopover.svelte";
 
 let {
     streamId,
@@ -72,6 +75,78 @@ let participants = $state<StreamVideoParticipant[]>([]);
 onDestroy(() => {
     call?.leave();
 });
+
+
+let isProcessingPayment = $state(false);
+let paymentError = $state<string | null>(null);
+let showCheckoutPopover = $state(false);
+let checkoutClientSecret = $state<string | null>(null);
+
+const handlePurchase = async (listing: Listing) => {
+    if (!store.user) {
+        paymentError = "Please log in to make a purchase";
+        return;
+    }
+
+    isProcessingPayment = true;
+    paymentError = null;
+
+    try {
+        // OLD CAPACITOR IMPLEMENTATION - COMMENTED OUT
+        // const paymentIntentResponse = await api.stripe.paymentIntent.create({
+        //     listingId: listing.id,
+        //     streamId: streamId,
+        // });
+
+        // await Stripe.createPaymentSheet({
+        //     paymentIntentClientSecret: paymentIntentResponse.clientSecret,
+        //     customerId: paymentIntentResponse.customerId,
+        //     customerEphemeralKeySecret: paymentIntentResponse.ephemeralKey,
+        //     merchantDisplayName: `SLAY - ${paymentIntentResponse?.seller.name}`,
+        // });
+
+        // const result = await Stripe.presentPaymentSheet();
+
+        // if (result.paymentResult === PaymentSheetEventsEnum.Completed) {
+        //     // Payment successful
+        //     console.log('Payment successful!', result);
+        //     paymentError = null;
+        //     // You could show a success message or update the UI here
+        // } else {
+        //     paymentError = "Payment was not completed";
+        // }
+
+        // NEW IMPLEMENTATION: Using embedded checkout popover
+        const checkoutResponse = await api.stripe.checkout.session({
+            listingId: listing.id,
+            streamId: streamId,
+            successUrl: `${location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancelUrl: location.href,
+        });
+
+        checkoutClientSecret = checkoutResponse.clientSecret;
+        showCheckoutPopover = true;
+        isProcessingPayment = false;
+        
+    } catch (error) {
+        console.error('Payment failed:', error);
+        paymentError = error instanceof Error ? error.message : "Payment failed. Please try again.";
+        isProcessingPayment = false;
+    }
+};
+
+const handleCheckoutClose = () => {
+    showCheckoutPopover = false;
+    checkoutClientSecret = null;
+};
+
+const handleCheckoutSuccess = () => {
+    showCheckoutPopover = false;
+    checkoutClientSecret = null;
+    // You could show a success message or refresh the page
+    paymentError = null;
+    console.log('Payment successful!');
+};
 </script>
 
 <watch-container>
@@ -112,9 +187,20 @@ onDestroy(() => {
                 {userName}
                 {call}
                 {streamId}
+                onPurchase={handlePurchase}
+                {paymentError}
+                {isProcessingPayment}
             />
         {/if}
 
+
+        {#if showCheckoutPopover && checkoutClientSecret}
+            <StripeCheckoutPopover
+                sessionId={checkoutClientSecret}
+                onClose={handleCheckoutClose}
+                onSuccess={handleCheckoutSuccess}
+            />
+        {/if}
     </watch-overlays>
 </watch-container>
 

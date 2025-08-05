@@ -1,12 +1,19 @@
 <script lang="ts">
-    import { onDestroy } from "svelte";
+import { onDestroy, onMount } from "svelte";
 import {store} from "./store.svelte";
 import "@/index.scss";
+import { Stripe } from "@capacitor-community/stripe";
+import { PUBLIC_STRIPE_PUBLISHABLE } from "$env/static/public";
 
-let { children, data } = $props();
+const { children, data } = $props();
 
+onMount(async () => {
+	store.buildType.resolve(data.BUILD_TYPE);
 
-store.buildType.resolve(data.BUILD_TYPE);
+	await Stripe.initialize({
+		publishableKey: PUBLIC_STRIPE_PUBLISHABLE,
+	});
+});
 </script>
 
 <content-container>

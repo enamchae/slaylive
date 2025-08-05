@@ -7,41 +7,40 @@ import { db } from "$/lib/server/db";
 import {userTable} from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 import type { User } from "@supabase/supabase-js";
+import { hasFinishedProfileSetup } from "$/lib/user-utils";
 
 
 const post = new PostEndpoint(
     async (payload, {user}: {user: User}) => {
         let members = await db.select({
             canSell: userTable.canSell,
-            finishedProfileSetup: userTable.finishedProfileSetup,
+            name: userTable.name,
+            stripeCustomerId: userTable.stripeCustomerId,
         })
             .from(userTable)
             .where(eq(userTable.id, user.id))
             .limit(1);
 
         if (members.length === 0) {
-            await db.insert(userTable)
+            members = await db.insert(userTable)
                 .values({
                     id: user.id,
                     name: null,
-                    finishedProfileSetup: false,
+                })
+                .returning({
+                    canSell: userTable.canSell,
+                    name: userTable.name,
+                    stripeCustomerId: userTable.stripeCustomerId,
                 });
-
-            members = await db.select({
-                canSell: userTable.canSell,
-                finishedProfileSetup: userTable.finishedProfileSetup,
-            })
-                .from(userTable)
-                .where(eq(userTable.id, user.id))
-                .limit(1);
         }
 
-        const userName = user.id;
+
+        const member = members[0];
 
         const streamioUser: UserRequest = {
             id: user.id,
             role: "user",
-            name: userName,
+            name: member.name,
         }; 
 
         await streamio.upsertUsers([streamioUser]);
@@ -50,10 +49,10 @@ const post = new PostEndpoint(
 
         return {
             userId: user.id,
-            userName,
+            userName: member.name,
             streamioUserToken,
-            canSell: members[0].canSell,
-            finishedProfileSetup: members[0].finishedProfileSetup,
+            canSell: member.canSell,
+            hasFinishedProfileSetup: hasFinishedProfileSetup(member),
         };
     },
 );

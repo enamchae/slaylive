@@ -6,17 +6,24 @@ import StreamViewerInteraction from "@/stream/interaction/StreamViewerInteractio
     import { onDestroy, onMount } from "svelte";
     import { api } from "$api/client";
     import WatchListing from "./WatchListing.svelte";
+    import type { Listing } from "../(shows-tabs)/livestream/Listing";
 
 const {
     userId,
     userName,
     call,
     streamId,
+    onPurchase,
+    paymentError = null,
+    isProcessingPayment = false,
 }: {
     userId: string,
     userName: string,
     call: Call,
     streamId: string,
+    onPurchase: (listing: Listing) => void,
+    paymentError?: string | null,
+    isProcessingPayment?: boolean,
 } = $props();
 
 const tabs = {
@@ -66,7 +73,13 @@ onDestroy(() => {
             {#if streamInfo !== null}
                 {#each streamInfo.listings as listing (listing.id)}
                     {#if listing.active}
-                        <WatchListing {listing} />
+                        <WatchListing
+                            {listing}
+                            {streamId}
+                            onPurchase={() => onPurchase(listing)}
+                            {paymentError}
+                            {isProcessingPayment}
+                        />
                     {/if}
                 {/each}
             {/if}

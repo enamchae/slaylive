@@ -1,5 +1,5 @@
 {
-  "name": "stream-ecommerce",
+  "name": "slaylive",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -42,12 +42,14 @@
     "vitest": "^3.2.3"
   },
   "dependencies": {
-    "@capacitor/android": "^7.3.0",
-    "@capacitor/core": "^7.3.0",
-    "@capacitor/ios": "^7.3.0",
+    "@capacitor-community/stripe": "^7.2.0",
+    "@capacitor/android": "^7.4.0",
+    "@capacitor/core": "^7.4.0",
+    "@capacitor/ios": "^7.4.0",
     "@capgo/capacitor-social-login": "^7.6.8",
     "@stream-io/node-sdk": "^0.4.24",
     "@stream-io/video-client": "^1.23.5",
+    "@stripe/stripe-js": "^7.4.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.50.0",
     "drizzle-orm": "^0.44.2",

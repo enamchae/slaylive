@@ -15,7 +15,7 @@ onMount(() => {
             {streamId}
             userToken={store.user.streamioAuth.token}
             userId={store.user.streamioAuth.id}
-            userName={store.user.streamioAuth.name}
+            userName={store.user.name}
         />
     {/if}
 </main>

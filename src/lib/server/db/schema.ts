@@ -4,7 +4,7 @@ export const userTable = pgTable("user", {
 	id: uuid().primaryKey(),
 	name: varchar({length: 64}),
 	canSell: boolean().notNull().default(false),
-	finishedProfileSetup: boolean().notNull().default(false),
+	stripeCustomerId: varchar({length: 255}),
 });
 
 export const listingTable = pgTable("listing", {
@@ -44,4 +44,20 @@ export const listingPurchaseTable = pgTable("listingPurchase", {
 	streamId: uuid().notNull().references(() => streamTable.id),
 	cost: decimal().notNull().default("0"),
 	buyerUserId: uuid().notNull().references(() => userTable.id),
+	stripePaymentIntentId: varchar({length: 255}),
+	paymentStatus: varchar({length: 50}).notNull().default("pending"),
+	createdAt: date().notNull().defaultNow(),
+});
+
+export const paymentMethodTable = pgTable("paymentMethod", {
+	id: uuid().primaryKey(),
+	userId: uuid().notNull().references(() => userTable.id),
+	stripePaymentMethodId: varchar({length: 255}).notNull(),
+	type: varchar({length: 50}).notNull(), // 'card', 'bank_account', etc.
+	cardBrand: varchar({length: 50}), // 'visa', 'mastercard', etc.
+	cardLast4: varchar({length: 4}),
+	cardExpMonth: integer(),
+	cardExpYear: integer(),
+	isDefault: boolean().notNull().default(false),
+	createdAt: date().notNull().defaultNow(),
 });

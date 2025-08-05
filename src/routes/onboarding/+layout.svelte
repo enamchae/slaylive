@@ -2,7 +2,6 @@
 import { store } from "$routes/store.svelte";
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
-    import { hasFinishedProfileSetup } from "$/lib/user-utils";
 
 let { children } = $props();
 
@@ -11,14 +10,9 @@ onMount(() => {
         goto("/");
         return;
     }
-
-    if (!store.user.hasFinishedProfileSetup) {
-        goto("/onboarding/name");
-        return;
-    }
 });
 </script>
 
-{#if store.user !== null && store.user.hasFinishedProfileSetup}
+{#if store.user !== null}
     {@render children()}
 {/if}

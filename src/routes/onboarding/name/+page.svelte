@@ -12,32 +12,24 @@ let username = $state("");
 let isSubmitting = $state(false);
 let errors = $state<string[]>([]);
 
+
 onMount(() => {
-    // Redirect if user is not logged in
     if (store.user === null) {
         goto("/");
         return;
     }
 
-    // Redirect if user has already finished profile setup
-    if (store.user.finishedProfileSetup) {
-        goto("/now-live");
+    if (store.user.name !== null) {
+        goto("/onboarding/billing-info");
         return;
-    }
-
-    // Pre-fill with existing name if available
-    if (store.user.name && store.user.name !== store.user.id) {
-        username = store.user.name;
     }
 });
 
 const handleSubmit = async () => {
     if (store.user === null) return;
 
-    // Clear previous errors
     errors = [];
 
-    // Validate username
     const validationResult = validate.username({ name: username });
     if (!validationResult.ok) {
         errors = validationResult.errors;
@@ -47,28 +39,20 @@ const handleSubmit = async () => {
     isSubmitting = true;
 
     try {
-        const response = await api.user.updateProfile({
+        await api.user.edit({
             name: username,
-        }, {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${store.user.supabaseAccessToken}`,
-            },
         });
 
-        // Update the store with the new user data
         store.user = {
             ...store.user,
-            name: response.name,
-            finishedProfileSetup: response.finishedProfileSetup,
+            name: username,
             streamioAuth: {
                 ...store.user.streamioAuth,
-                name: response.name,
+                name: username,
             },
         };
 
-        // Redirect to the main app
-        goto("/now-live");
+        goto("/onboarding/billing-info");
     } catch (error) {
         console.error("Failed to update profile:", error);
         errors = ["Failed to update profile. Please try again."];
@@ -85,40 +69,38 @@ const handleKeyPress = (event: KeyboardEvent) => {
 </script>
 
 <main>
-    <onboarding-container>
-        <onboarding-header>
-            <h1>Welcome to SLAY!</h1>
-            <p>Let's get you set up with a username</p>
-        </onboarding-header>
+    <onboarding-header>
+        <h1>Welcome to SLAY!</h1>
+        <p>Let's get you set up with a username</p>
+    </onboarding-header>
 
-        <onboarding-form>
-            <TextInput
-                label="Username"
-                bind:value={username}
-                placeholder="Enter your username"
-                disabled={isSubmitting}
-                onInput={() => errors = []}
-            />
+    <onboarding-form>
+        <TextInput
+            label="Username"
+            bind:value={username}
+            placeholder="Enter your username"
+            disabled={isSubmitting}
+            onInput={() => errors = []}
+        />
 
-            {#if errors.length > 0}
-                <error-list>
-                    {#each errors as error}
-                        <error-item>{error}</error-item>
-                    {/each}
-                </error-list>
-            {/if}
+        {#if errors.length > 0}
+            <error-list>
+                {#each errors as error}
+                    <error-item>{error}</error-item>
+                {/each}
+            </error-list>
+        {/if}
 
-            <button-container>
-                <Button
-                    onClick={handleSubmit}
-                    disabled={isSubmitting || username.trim().length === 0}
-                    strong
-                >
-                    {isSubmitting ? "Setting up..." : "Continue"}
-                </Button>
-            </button-container>
-        </onboarding-form>
-    </onboarding-container>
+        <button-container>
+            <Button
+                onClick={handleSubmit}
+                disabled={isSubmitting || username.trim().length === 0}
+                strong
+            >
+                {isSubmitting ? "Setting up..." : "Continue"}
+            </Button>
+        </button-container>
+    </onboarding-form>
 </main>
 
 <svelte:window onkeypress={handleKeyPress} />
@@ -126,11 +108,11 @@ const handleKeyPress = (event: KeyboardEvent) => {
 <style lang="scss">
 main {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     padding: 2rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 onboarding-container {

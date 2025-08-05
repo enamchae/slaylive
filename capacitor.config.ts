@@ -18,6 +18,11 @@ const config: CapacitorConfig = {
     android: {
         allowMixedContent: true,
     },
+    plugins: {
+        CapacitorStripe: {
+            publishableKey: process.env.PUBLIC_STRIPE_PUBLISHABLE,
+        },
+    },
 };
 
 export default config;

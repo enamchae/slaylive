@@ -1,18 +1,18 @@
 import type { User } from "@supabase/supabase-js";
 
-export type UserData = Readonly<{
+export type UserData = {
     supabaseUser: User,
     supabaseAccessToken: string,
-    streamioAuth: Readonly<{
+    streamioAuth: {
         id: string,
-        name: string,
+        name: string | null,
         token: string,
-    }>,
+    },
     id: string,
-    name: string,
+    name: string | null,
     canSell: boolean,
-    finishedProfileSetup: boolean,
-}>;
+    hasFinishedProfileSetup: boolean,
+};
 
 export class Resolvable<T> {
     readonly promise: Promise<T>;
