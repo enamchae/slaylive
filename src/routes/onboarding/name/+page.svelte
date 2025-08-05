@@ -20,7 +20,7 @@ onMount(() => {
     }
 
     if (store.user.name !== null) {
-        goto("/onboarding/billing-info");
+        goto("/now-live");
         return;
     }
 });
@@ -42,6 +42,8 @@ const handleSubmit = async () => {
         await api.user.edit({
             name: username,
         });
+        
+        await api.stripe.customer.create({});
 
         store.user = {
             ...store.user,
@@ -50,11 +52,11 @@ const handleSubmit = async () => {
                 ...store.user.streamioAuth,
                 name: username,
             },
+            hasFinishedProfileSetup: true,
         };
 
-        goto("/onboarding/billing-info");
+        goto("/now-live");
     } catch (error) {
-        console.error("Failed to update profile:", error);
         errors = ["Failed to update profile. Please try again."];
     } finally {
         isSubmitting = false;

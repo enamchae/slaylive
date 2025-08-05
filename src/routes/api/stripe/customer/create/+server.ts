@@ -8,18 +8,10 @@ import { userTable } from "$/lib/server/db/schema";
 import { eq } from "drizzle-orm";
 
 const endpoint = new PostEndpoint(
-    async (
-        payload: {
-            name?: string;
-            phone?: string;
-        },
-        { user }: { user: User }
-    ) => {
+    async ({}, { user }: { user: User }) => {
         try {
             const customer = await stripe.customers.create({
                 email: user.email,
-                name: payload.name,
-                phone: payload.phone,
                 metadata: {
                     userId: user.id,
                 },
