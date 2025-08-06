@@ -1,8 +1,8 @@
-FROM node:20.5.1-slim AS base
+FROM node:24.5.0-slim AS base
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN npm i -g pnpm@10.11.1
+RUN npm i -g pnpm@10.12.1
 COPY . .
 
 FROM base AS prod-deps

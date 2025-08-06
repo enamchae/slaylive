@@ -4,7 +4,7 @@ import adapterVercel from "@sveltejs/adapter-vercel";
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 const adapter = () => {
-	switch (process.env.PUBLIC_BUILD_TYPE) {
+	switch (process.env.BUILD_TYPE) {
 		case "static": 
 			return adapterStatic({
 				strict: false, // ignore api routes
