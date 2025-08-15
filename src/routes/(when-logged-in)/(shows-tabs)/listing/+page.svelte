@@ -340,8 +340,6 @@ listing-photos {
 
 main-photo {
     aspect-ratio: 1/1;
-    display: grid;
-    place-items: center;
     max-width: 20rem;
 
     background: #5009097f;
@@ -349,7 +347,7 @@ main-photo {
     img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
     }
 }
 
