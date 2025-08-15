@@ -4,7 +4,7 @@ import {eq} from "drizzle-orm";
 import { listingTable, userTable as userTable } from "$/lib/server/db/schema";
 import { db } from "$/lib/server/db";
 import { PostEndpoint, requiresLoggedInUser } from "../../middleware";
-import { validate } from "$lib/validation";
+import { validate } from "$/lib/shared/validation";
 import type { User } from "@supabase/supabase-js";
 
 const endpoint = new PostEndpoint(

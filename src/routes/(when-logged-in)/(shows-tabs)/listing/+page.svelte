@@ -1,5 +1,5 @@
 <script lang="ts">
-import { validate } from "$/lib/validation";
+import { validate } from "$/lib/shared/validation";
 import ListingPhotoAddButton from "@/listing/ListingPhotoAddButton.svelte";
 import ListingPhotoButton from "@/listing/ListingPhotoButton.svelte";
 import RichTextEntry from "@/RichTextEntry.svelte";

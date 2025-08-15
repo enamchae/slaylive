@@ -3,7 +3,7 @@ import { onMount } from "svelte";
 import { goto } from "$app/navigation";
 import { store } from "$routes/store.svelte";
 import { api } from "$api/client";
-import { validate } from "$lib/validation";
+import { validate } from "$/lib/shared/validation";
 
 import Button from "@/Button.svelte";
 import TextInput from "@/TextInput.svelte";

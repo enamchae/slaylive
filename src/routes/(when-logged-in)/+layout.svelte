@@ -2,7 +2,7 @@
 import { store } from "$routes/store.svelte";
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
-    import { hasFinishedProfileSetup } from "$/lib/user-utils";
+    import { hasFinishedProfileSetup } from "$/lib/shared/user-utils";
 
 let { children } = $props();
 

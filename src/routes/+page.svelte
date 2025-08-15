@@ -6,7 +6,7 @@ import {type User} from "@supabase/supabase-js";
 import LoginButtonGoogle from "@/LoginButtonGoogle.svelte";
 import { store } from "./store.svelte";
 import { api } from "$api/client";
-    import { hasFinishedProfileSetup } from "$/lib/user-utils";
+    import { hasFinishedProfileSetup } from "$/lib/shared/user-utils";
 
 let { data } = $props();
 

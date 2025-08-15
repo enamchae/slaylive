@@ -7,7 +7,7 @@ import { db } from "$/lib/server/db";
 import { userTable } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 import type { User } from "@supabase/supabase-js";
-import { validate } from "$lib/validation";
+import { validate } from "$/lib/shared/validation";
 import { post } from "$api/endpoint-server";
 
 

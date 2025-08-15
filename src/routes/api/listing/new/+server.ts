@@ -4,9 +4,10 @@ import {eq} from "drizzle-orm";
 import { listingImageTable, listingTable, userTable } from "$/lib/server/db/schema";
 import { db } from "$/lib/server/db";
 import { PostEndpoint, requiresLoggedInUser } from "../../middleware";
-import { validate } from "$lib/validation";
+import { validate } from "$/lib/shared/validation";
 import type { User } from "@supabase/supabase-js";
 import { supabaseServerClient } from "$/lib/server/supabase";
+import { addListingImage } from "$/lib/server/services/listing-images";
 
 const endpoint = new PostEndpoint(
     async (
@@ -50,26 +51,7 @@ const endpoint = new PostEndpoint(
                 onDisplay: listingOnDisplay,
             });
 
-        for (const listingImage of listingImages) {
-            const listingImageId = await generateListingImageId();
-            await db.insert(listingImageTable)
-                .values({
-                    id: listingImageId,
-                    listingId,
-                });
-
-            const imageUrl = `public/${listingImageId}`;
-            const {error} = await supabaseServerClient
-                .storage
-                .from("listing-images")
-                .upload(imageUrl, listingImage, {
-                    contentType: listingImage.type,
-                    upsert: false,
-                    cacheControl: "3600",
-                });
-                
-            if (error) throw error;
-        }
+        await Promise.all(listingImages.map(image => addListingImage(listingId, image)));
 
         return {listingId};
     },
@@ -91,19 +73,4 @@ const generateListingId = async () => {
     }
 
     return listingId;
-};
-
-const generateListingImageId = async () => {
-    let listingImageId: string;
-    while (true) {
-        listingImageId = crypto.randomUUID();
-
-        const listingImages = await db.select({})
-            .from(listingImageTable)
-            .where(eq(listingImageTable.id, listingImageId))
-            .limit(1);
-        if (listingImages.length === 0) break;
-    }
-
-    return listingImageId;
 };

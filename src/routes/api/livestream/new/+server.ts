@@ -4,7 +4,7 @@ import {and, eq} from "drizzle-orm";
 import { listingTable, streamTable, streamListingAssociationTable, userTable as userTable } from "$/lib/server/db/schema";
 import { db } from "$/lib/server/db";
 import { PostEndpoint, requiresLoggedInUser } from "../../middleware";
-import { validate } from "$lib/validation";
+import { validate } from "$/lib/shared/validation";
 import { streamio } from "../../global";
 import type { User } from "@supabase/supabase-js";
 
