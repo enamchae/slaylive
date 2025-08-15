@@ -45,7 +45,7 @@ const updateLoginState = async (user: User, accessToken: string) => {
         hasFinishedProfileSetup: response.hasFinishedProfileSetup,
     };
 
-    if (!response.hasFinishedProfileSetup) {
+    if (response.hasFinishedProfileSetup) {
         goto("/now-live");
     } else {
         goto("/onboarding/name");
