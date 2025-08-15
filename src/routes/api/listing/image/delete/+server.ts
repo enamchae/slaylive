@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { db } from "$/lib/server/db";
 import { listingImageTable, listingTable, userTable } from "$/lib/server/db/schema";
 import { PostEndpoint, requiresLoggedInUser } from "../../../middleware";
-import { deleteListingImage } from "$/lib/server/services/listing-image";
+import { deleteListingImage } from "$/lib/server/listing-image";
 import type { User } from "@supabase/supabase-js";
 
 const endpoint = new PostEndpoint(

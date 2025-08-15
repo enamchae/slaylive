@@ -1,16 +1,16 @@
 import { eq } from "drizzle-orm";
-import { db } from "../db";
-import { listingImageTable } from "../db/schema";
-import { supabaseServerClient } from "../supabase";
+import { db } from "./db";
+import { listingImageTable } from "./db/schema";
+import { supabaseServerClient } from "./supabase";
 
 const bucket = "listing-images";
 
-const getImageUrl = (imageId: string) => `public/${imageId}`;
+const getBucketUrl = (imageId: string) => `public/${imageId}`;
 
 
 export const addListingImage = async (listingId: string, image: File) => {
     const imageId = await generateListingImageId();
-    const imagePath = getImageUrl(imageId);
+    const imagePath = getBucketUrl(imageId);
 
     await db.insert(listingImageTable)
         .values({
@@ -28,21 +28,16 @@ export const addListingImage = async (listingId: string, image: File) => {
 
     if (error) throw error;
 
-    const {data, error: signedUrlError} = await supabaseServerClient
-        .storage
-        .from(bucket)
-        .createSignedUrl(imagePath, 60 * 60 * 24);
-
-    if (data === null || signedUrlError !== null) throw signedUrlError;
+    const url = await getListingImageUrl(imageId);
 
     return {
         id: imageId,
-        url: data.signedUrl,
+        url,
     };
 };
 
 export const deleteListingImage = async (imageId: string) => {
-    const imageUrl = getImageUrl(imageId);
+    const imageUrl = getBucketUrl(imageId);
 
     const {error} = await supabaseServerClient
         .storage
@@ -53,6 +48,17 @@ export const deleteListingImage = async (imageId: string) => {
 
     await db.delete(listingImageTable)
         .where(eq(listingImageTable.id, imageId));
+};
+
+export const getListingImageUrl = async (imageId: string) => {
+    const {data, error: signedUrlError} = await supabaseServerClient
+        .storage
+        .from(bucket)
+        .createSignedUrl(getBucketUrl(imageId), 60 * 60 * 24);
+
+    if (data === null || signedUrlError !== null) throw signedUrlError;
+
+    return data.signedUrl;
 };
 
 

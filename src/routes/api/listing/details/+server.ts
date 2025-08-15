@@ -1,11 +1,10 @@
 import { db } from "$/lib/server/db";
 import { listingImageTable, listingTable } from "$/lib/server/db/schema";
-import { PUBLIC_SUPABASE_URL } from "$env/static/public";
-import { error, json, type RequestHandler } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import { GetEndpoint, requiresLoggedInUser } from "../../middleware";
 import type { User } from "@supabase/supabase-js";
-import {supabaseServerClient} from "$lib/server/supabase";
+import { getListingImageUrl } from "$/lib/server/listing-image";
 
 
 const get = new GetEndpoint(
@@ -33,17 +32,11 @@ const get = new GetEndpoint(
 
         const imagesWithUrls = await Promise.all(
             images.map(async (image) => {
-                const imagePath = `public/${image.id}`;
-                const {data, error} = await supabaseServerClient
-                    .storage
-                    .from("listing-images")
-                    .createSignedUrl(imagePath, 60 * 60 * 24);
-
-                if (data === null || error !== null) throw error;
+                const url = await getListingImageUrl(image.id);
 
                 return {
                     id: image.id,
-                    url: data.signedUrl,
+                    url,
                 };
             })
         );
