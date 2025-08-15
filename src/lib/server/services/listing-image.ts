@@ -28,15 +28,16 @@ export const addListingImage = async (listingId: string, image: File) => {
 
     if (error) throw error;
 
-    // Get the public URL for the uploaded image
-    const { data: publicUrlData } = supabaseServerClient
+    const {data, error: signedUrlError} = await supabaseServerClient
         .storage
         .from(bucket)
-        .getPublicUrl(imagePath);
+        .createSignedUrl(imagePath, 60 * 60 * 24);
+
+    if (data === null || signedUrlError !== null) throw signedUrlError;
 
     return {
         id: imageId,
-        url: publicUrlData.publicUrl,
+        url: data.signedUrl,
     };
 };
 

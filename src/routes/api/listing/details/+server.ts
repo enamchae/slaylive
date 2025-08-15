@@ -31,18 +31,22 @@ const get = new GetEndpoint(
             .from(listingImageTable)
             .where(eq(listingImageTable.listingId, payload.listingId));
 
-        const imagesWithUrls = images.map((image) => {
-            const imagePath = `public/${image.id}`;
-            const { data: publicUrlData } = supabaseServerClient
-                .storage
-                .from("listing-images")
-                .getPublicUrl(imagePath);
+        const imagesWithUrls = await Promise.all(
+            images.map(async (image) => {
+                const imagePath = `public/${image.id}`;
+                const {data, error} = await supabaseServerClient
+                    .storage
+                    .from("listing-images")
+                    .createSignedUrl(imagePath, 60 * 60 * 24);
 
-            return {
-                id: image.id,
-                url: publicUrlData.publicUrl,
-            };
-        });
+                if (data === null || error !== null) throw error;
+
+                return {
+                    id: image.id,
+                    url: data.signedUrl,
+                };
+            })
+        );
 
         return {
             title: listingObj.title,
