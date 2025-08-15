@@ -12,8 +12,6 @@ const endpoint = new PostEndpoint(
         payload: {
             listingId: string,
             streamId: string,
-            successUrl: string,
-            cancelUrl: string,
         },
         { user }: { user: User }
     ) => {
@@ -106,7 +104,7 @@ const endpoint = new PostEndpoint(
                 sellerName: seller.name || 'Unknown Seller',
             },
             ui_mode: 'embedded',
-            return_url: payload.successUrl,
+            redirect_on_completion: 'never',
         });
 
         if (!session.client_secret) {

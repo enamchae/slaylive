@@ -92,7 +92,6 @@ const handlePurchase = async (listing: Listing) => {
     paymentError = null;
 
     try {
-        // OLD CAPACITOR IMPLEMENTATION - COMMENTED OUT
         // const paymentIntentResponse = await api.stripe.paymentIntent.create({
         //     listingId: listing.id,
         //     streamId: streamId,
@@ -116,12 +115,9 @@ const handlePurchase = async (listing: Listing) => {
         //     paymentError = "Payment was not completed";
         // }
 
-        // NEW IMPLEMENTATION: Using embedded checkout popover
         const checkoutResponse = await api.stripe.checkout.session({
             listingId: listing.id,
             streamId: streamId,
-            successUrl: `${location.origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancelUrl: location.href,
         });
 
         checkoutClientSecret = checkoutResponse.clientSecret;
