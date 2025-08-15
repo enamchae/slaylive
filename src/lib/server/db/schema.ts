@@ -5,7 +5,8 @@ export const userTable = pgTable("user", {
 	name: varchar({length: 64}),
 	canSell: boolean().notNull().default(false),
 	stripeCustomerId: varchar({length: 255}),
-});
+})
+	.enableRLS();
 
 export const listingTable = pgTable("listing", {
 	id: uuid().primaryKey(),
@@ -13,12 +14,14 @@ export const listingTable = pgTable("listing", {
 	title: varchar("title", {length: 1024}).notNull(),
 	description: varchar("description", {length: 4096}).notNull(),
 	onDisplay: boolean().notNull().default(false),
-});
+})
+	.enableRLS();
 
 export const listingImageTable = pgTable("listingImage", {
 	id: uuid().primaryKey(),
 	listingId: uuid().notNull().references(() => listingTable.id),
-});
+})
+	.enableRLS();
 
 export const streamTable = pgTable("stream", {
 	id: uuid().primaryKey(),
@@ -27,7 +30,8 @@ export const streamTable = pgTable("stream", {
 	active: boolean().notNull().default(false),
 	title: varchar("title", {length: 1024}).notNull().default(""),
 	description: varchar("description", {length: 4096}).notNull().default(""),
-});
+})
+	.enableRLS();
 
 export const streamListingAssociationTable = pgTable("streamListingAssociation", {
 	listingId: uuid().notNull().references(() => listingTable.id),
@@ -36,7 +40,8 @@ export const streamListingAssociationTable = pgTable("streamListingAssociation",
 	active: boolean().notNull().default(false),
 }, table => [
 	primaryKey({columns: [table.listingId, table.streamId]}),
-]);
+])
+	.enableRLS();
 
 export const listingPurchaseTable = pgTable("listingPurchase", {
 	purchaseId: uuid().notNull().primaryKey(),
@@ -47,7 +52,8 @@ export const listingPurchaseTable = pgTable("listingPurchase", {
 	stripePaymentIntentId: varchar({length: 255}),
 	paymentStatus: varchar({length: 50}).notNull().default("pending"),
 	createdAt: date().notNull().defaultNow(),
-});
+})
+	.enableRLS();
 
 export const paymentMethodTable = pgTable("paymentMethod", {
 	id: uuid().primaryKey(),
@@ -60,4 +66,5 @@ export const paymentMethodTable = pgTable("paymentMethod", {
 	cardExpYear: integer(),
 	isDefault: boolean().notNull().default(false),
 	createdAt: date().notNull().defaultNow(),
-});
+})
+	.enableRLS();

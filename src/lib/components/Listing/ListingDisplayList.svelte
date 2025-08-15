@@ -1,23 +1,14 @@
 <script lang="ts">
-import { goto } from "$app/navigation";
+import type { ListingWithImages } from "$/lib/server/listing";
 import ListingDisplay from "./ListingDisplay.svelte";
-
-type Listing = {
-    id: string,
-    title: string,
-    images?: {
-        id: string,
-        url: string,
-    }[],
-};
 
 const {
     listings,
     onClickListing,
     selectedIds = new Set(),
 }: {
-    listings: Listing[],
-    onClickListing: (listing: Listing) => void,
+    listings: ListingWithImages[],
+    onClickListing: (listing: ListingWithImages) => void,
     selectedIds?: Set<string>,
 } = $props();
 
