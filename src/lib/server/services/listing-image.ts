@@ -10,7 +10,7 @@ const getImageUrl = (imageId: string) => `public/${imageId}`;
 
 export const addListingImage = async (listingId: string, image: File) => {
     const imageId = await generateListingImageId();
-    const imageUrl = getImageUrl(imageId);
+    const imagePath = getImageUrl(imageId);
 
     await db.insert(listingImageTable)
         .values({
@@ -21,17 +21,37 @@ export const addListingImage = async (listingId: string, image: File) => {
     const {error} = await supabaseServerClient
         .storage
         .from(bucket)
-        .upload(imageUrl, image, {
+        .upload(imagePath, image, {
             contentType: image.type,
             upsert: false,
         });
 
     if (error) throw error;
 
+    // Get the public URL for the uploaded image
+    const { data: publicUrlData } = supabaseServerClient
+        .storage
+        .from(bucket)
+        .getPublicUrl(imagePath);
+
     return {
         id: imageId,
-        url: imageUrl,
+        url: publicUrlData.publicUrl,
     };
+};
+
+export const deleteListingImage = async (imageId: string) => {
+    const imageUrl = getImageUrl(imageId);
+
+    const {error} = await supabaseServerClient
+        .storage
+        .from(bucket)
+        .remove([imageUrl]);
+
+    if (error) throw error;
+
+    await db.delete(listingImageTable)
+        .where(eq(listingImageTable.id, imageId));
 };
 
 

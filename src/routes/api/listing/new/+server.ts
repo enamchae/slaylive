@@ -1,13 +1,11 @@
 import {error, json, type RequestHandler} from "@sveltejs/kit";
 import {eq} from "drizzle-orm";
 
-import { listingImageTable, listingTable, userTable } from "$/lib/server/db/schema";
+import { listingTable, userTable } from "$/lib/server/db/schema";
 import { db } from "$/lib/server/db";
 import { PostEndpoint, requiresLoggedInUser } from "../../middleware";
 import { validate } from "$/lib/shared/validation";
 import type { User } from "@supabase/supabase-js";
-import { supabaseServerClient } from "$/lib/server/supabase";
-import { addListingImage } from "$/lib/server/services/listing-images";
 
 const endpoint = new PostEndpoint(
     async (
@@ -15,12 +13,10 @@ const endpoint = new PostEndpoint(
             listingTitle,
             listingDescription,
             listingOnDisplay,
-            listingImages,
         }: {
             listingTitle: string,
             listingDescription: string,
             listingOnDisplay: boolean,
-            listingImages: File[],
         },
         {user}: {user: User},
     ) => {
@@ -50,8 +46,6 @@ const endpoint = new PostEndpoint(
                 description: listingDescription,
                 onDisplay: listingOnDisplay,
             });
-
-        await Promise.all(listingImages.map(image => addListingImage(listingId, image)));
 
         return {listingId};
     },

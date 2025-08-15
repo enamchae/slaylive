@@ -20,9 +20,12 @@ let fileInput = $state<HTMLInputElement | null>(null);
 <input
     type="file"
     bind:this={fileInput}
+    multiple
+    accept="image/jpeg,image/png,image/webp"
     onchange={() => {
         if (fileInput === null || fileInput.files === null) return;
         onSelectFiles(fileInput.files);
+        fileInput.value = ''; // Reset input to allow selecting same file again
     }}
 />
 

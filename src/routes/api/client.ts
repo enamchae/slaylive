@@ -1,4 +1,4 @@
-import { apiGetter, apiPoster } from "./endpoint-client";
+import { apiGetter, apiPoster, apiFileUploader } from "./endpoint-client";
 import type { GetListingsBySeller } from "./listing/by-seller/+server";
 import type { GetListingDetails } from "./listing/details/+server";
 import type { GetListingList } from "./listing/list/+server";
@@ -23,6 +23,8 @@ import type { CreateCustomer } from "./stripe/customer/create/+server";
 import type { ListPaymentMethods } from "./stripe/payment-methods/list/+server";
 import type { DeletePaymentMethod } from "./stripe/payment-methods/delete/+server";
 import type { CreateCheckoutSession } from "./stripe/checkout/session/+server";
+import type { UploadListingImage } from "./listing/image/upload/+server";
+import type { DeleteListingImage } from "./listing/image/delete/+server";
 
 
 export const api = {
@@ -32,6 +34,10 @@ export const api = {
         list: apiGetter<GetListingList>("listing/list", true),
         edit: apiPoster<EditListing>("listing/edit", true, "PATCH"),
         new: apiPoster<NewListing>("listing/new", true, "PUT"),
+        image: {
+            upload: apiFileUploader<UploadListingImage>("listing/image/upload", true),
+            delete: apiPoster<DeleteListingImage>("listing/image/delete", true, "DELETE"),
+        },
     },
     stream: {
         bySeller: apiGetter<GetLivestreamsBySeller>("livestream/by-seller", true),

@@ -1,6 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
-import { GetEndpoint, PostEndpoint } from "./endpoint-server";
+import { GetEndpoint, PostEndpoint, FilePostEndpoint } from "./endpoint-server";
 
 export const requiresLoggedInUser = (handle: (user: User, ...args: Parameters<RequestHandler>) => ReturnType<RequestHandler>): RequestHandler => 
     async (event, ...args) => {
@@ -17,7 +17,7 @@ export const requiresLoggedInUser = (handle: (user: User, ...args: Parameters<Re
     };
 
 // Re-export endpoint classes for convenience
-export { GetEndpoint, PostEndpoint };
+export { GetEndpoint, PostEndpoint, FilePostEndpoint };
 
 
 

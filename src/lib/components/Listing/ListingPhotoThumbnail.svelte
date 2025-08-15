@@ -29,6 +29,7 @@ listing-thumbnail {
     display: grid;
     place-items: center;
     overflow: hidden;
+    position: relative;
 
     border: #afafaf 1px solid;
 

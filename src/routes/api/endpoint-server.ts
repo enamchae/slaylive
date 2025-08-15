@@ -62,11 +62,43 @@ export class PostEndpoint<T=null, Payload extends Record<string, any>=any, Outpu
     }
 }
 
+export class FilePostEndpoint<T=null, Payload extends Record<string, any>=any, Output=any> {
+    constructor(
+        private readonly handle: (
+            payload: Payload,
+            data: T,
+            ...args: Parameters<RequestHandler>
+        ) => ReturnType<RequestHandler> | Promise<Output>,
+    ) {}
+
+    async callHandler(data: T, ...[event, ...args]: Parameters<RequestHandler>): Promise<Response> {
+        const formData = await event.request.formData();
+        const payload: Record<string, any> = {};
+        
+        for (const [key, value] of formData.entries()) {
+            payload[key] = value;
+        }
+        
+        const out = await this.handle(payload as Payload, data, event, ...args);
+        if (out instanceof Response) {
+            return out;
+        }
+        
+        return json(out);
+    }
+    
+    handler(data: T): RequestHandler {
+        return (...args) => this.callHandler(data, ...args);
+    }
+}
+
 export type PayloadOf<T> =
     T extends GetEndpoint<any, infer Payload, any> ? Payload :
     T extends PostEndpoint<any, infer Payload, any> ? Payload :
+    T extends FilePostEndpoint<any, infer Payload, any> ? Payload :
     never;
 export type OutputOf<T> =
     T extends GetEndpoint<any, any, infer Output> ? Output :
     T extends PostEndpoint<any, any, infer Output> ? Output :
+    T extends FilePostEndpoint<any, any, infer Output> ? Output :
     never;
