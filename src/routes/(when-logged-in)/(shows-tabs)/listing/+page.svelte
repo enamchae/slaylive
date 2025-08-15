@@ -16,14 +16,17 @@ let editing = $state((searchParams.has("new") || searchParams.has("edit")) && (s
 const listingId = searchParams.get("id") ?? null;
 
 const listingPromise = listingId === null
-    ? Promise.resolve({title: "", description: "", imageUrls: [], onDisplay: false})
+    ? Promise.resolve({title: "", description: "", images: [], onDisplay: false})
     : api.listing.details({ listingId });
 
 let listing = $state<{
     title: string,
     description: string,
-    imageUrls: string[],
     onDisplay: boolean,
+    images: {
+        id: string | null,
+        url: string,
+    }[],
 } | null>(null);
 
 (async () => {
@@ -31,7 +34,7 @@ let listing = $state<{
     listing = {
         title: response.title,
         description: response.description,
-        imageUrls: response.imageUrls,
+        images: response.images,
         onDisplay: response.onDisplay,
     };
 })();
@@ -40,14 +43,16 @@ let listingImageSelectedIndex = $state(0);
 
 $effect(() => {
     if (listing === null) return;
-    listingImageSelectedIndex = Math.min(listingImageSelectedIndex, listing.imageUrls.length - 1);
+    listingImageSelectedIndex = Math.min(listingImageSelectedIndex, listing.images.length - 1);
 });
 
 onDestroy(() => {
     if (listing === null) return;
 
-    for (const url of listing.imageUrls) {
-        URL.revokeObjectURL(url);
+    for (const image of listing.images) {
+        if (image.url.startsWith("blob:")) {
+            URL.revokeObjectURL(image.url);
+        }
     }
 });
 
@@ -100,9 +105,9 @@ const saveListing = async () => {
 
                 <listing-photos>
                     <main-photo>
-                        {#if listing.imageUrls.length >= 1}
+                        {#if listing.images.length >= 1}
                             <img
-                                src={listing.imageUrls[listingImageSelectedIndex]}
+                                src={listing.images[listingImageSelectedIndex].url}
                                 alt={`"${listing.title}" main image`}
                             />
                         {:else}
@@ -113,9 +118,9 @@ const saveListing = async () => {
                     </main-photo>
                 
                     <photos-carousel>
-                        {#each listing.imageUrls as listingImageUrl, i (listingImageUrl)}
+                        {#each listing.images as image, i (image.id)}
                             <ListingPhotoButton
-                                imageUrl={listingImageUrl}
+                                imageUrl={image.url}
                                 onClick={() => {
                                     listingImageSelectedIndex = i;
                                 }}
@@ -128,7 +133,10 @@ const saveListing = async () => {
                                     if (listing === null) return;
                                     for (const file of files) {
                                         const url = URL.createObjectURL(file);
-                                        listing.imageUrls.push(url);
+                                        listing.images.push({
+                                            id: null,
+                                            url,
+                                        });
                                     }
                                 }}
                             />
