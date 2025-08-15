@@ -1,16 +1,17 @@
 <script lang="ts">
+    import type { ListingWithImages } from "$/lib/server/listing";
+
 const {
-    title,
+    listing,
     onClick = () => {},
     small = false,
     selected = false,
 }: {
-    title: string,
+    listing: ListingWithImages,
     onClick?: () => void,
     small?: boolean,
     selected?: boolean,
 } = $props();
-
 </script>
 
 <button
@@ -19,7 +20,14 @@ const {
     class:small
     class:selected
 >
-    {title}
+    {#if listing.images.length > 0}
+        <img
+            src={listing.images[0].url}
+            alt={listing.title}
+        />
+    {:else}
+        {listing.title}
+    {/if}
 </button>
 
 <style lang="scss">
@@ -38,5 +46,11 @@ button {
     &.selected {
         outline: 2px solid #fff;
     }
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 </style>

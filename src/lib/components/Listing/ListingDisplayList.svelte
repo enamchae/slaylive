@@ -5,6 +5,10 @@ import ListingDisplay from "./ListingDisplay.svelte";
 type Listing = {
     id: string,
     title: string,
+    images?: {
+        id: string,
+        url: string,
+    }[],
 };
 
 const {
@@ -22,7 +26,7 @@ const {
 <listings-list>
     {#each listings as listing (listing.id)}
         <ListingDisplay
-            title={listing.title}
+            {listing}
             onClick={() => onClickListing(listing)}
             selected={selectedIds.has(listing.id)}
         />

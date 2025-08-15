@@ -61,6 +61,30 @@ export const getListingImageUrl = async (imageId: string) => {
     return data.signedUrl;
 };
 
+export const getListingFirstImage = async (listingId: string) => {
+    const imageResults = await db.select()
+        .from(listingImageTable)
+        .where(eq(listingImageTable.listingId, listingId))
+        .limit(1);
+        
+    if (imageResults.length === 0) return null;
+
+    return {
+        id: imageResults[0].id,
+        url: await getListingImageUrl(imageResults[0].id),
+    };
+};
+
+export const getListingAllImages = async (listingId: string) => {
+    const imageResults = await db.select()
+        .from(listingImageTable)
+        .where(eq(listingImageTable.listingId, listingId));
+
+    return await Promise.all(imageResults.map(async (image) => ({
+        id: image.id,
+        url: await getListingImageUrl(image.id),
+    })));
+};
 
 const generateListingImageId = async () => {
     let listingImageId: string;

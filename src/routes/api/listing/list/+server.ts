@@ -1,21 +1,17 @@
-import { db } from "$/lib/server/db";
-import { listingTable } from "$/lib/server/db/schema";
 import { GetEndpoint, requiresLoggedInUser } from "../../middleware";
+import type { User } from "@supabase/supabase-js";
+import { listListingsWithSingleImage } from "$/lib/server/listing";
 
 
 const get = new GetEndpoint(
-    async () => {
-        const listings = await db.select({
-            id: listingTable.id,
-            title: listingTable.title,
-            description: listingTable.description,
-            sellerUserId: listingTable.sellerUserId,
-        })
-            .from(listingTable);
+    async ({}, user: User) => {
+        const listings = await listListingsWithSingleImage(user);
 
-        return { listings };
+        return {
+            listings,
+        };
     },
 );
 
-export const GET = requiresLoggedInUser((user, event) => get.callHandler(null, event));
+export const GET = requiresLoggedInUser((user, event) => get.callHandler(user, event));
 export type GetListingList = typeof get;

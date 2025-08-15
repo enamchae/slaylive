@@ -16,7 +16,7 @@ const {supabase} = $derived(data);
 onMount(() => {
     if (store.user === null) return;
 
-    if (!hasFinishedProfileSetup(store.user)) {
+    if (hasFinishedProfileSetup(store.user)) {
         goto("/now-live");
     } else {
         goto("/onboarding/name");

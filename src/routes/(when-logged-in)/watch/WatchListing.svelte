@@ -26,7 +26,7 @@ const {
 <watch-listing>
     <listing-display>
         <ListingDisplay
-            title={listing.title}
+            {listing}
         />
     </listing-display>
 

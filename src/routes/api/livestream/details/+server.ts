@@ -1,8 +1,9 @@
 import { db } from "$/lib/server/db";
-import { streamTable, streamListingAssociationTable, listingTable } from "$/lib/server/db/schema";
+import { streamTable, streamListingAssociationTable, listingTable, listingImageTable } from "$/lib/server/db/schema";
 import { error } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import { GetEndpoint, requiresLoggedInUser } from "../../middleware";
+import { getListingImageUrl } from "$/lib/server/listing-image";
 
 
 const get = new GetEndpoint(
@@ -27,19 +28,52 @@ const get = new GetEndpoint(
         const livestreamObj = livestreams[0];
 
 
-        const listings = await db.select({
+        const listingsData = await db.select({
             id: streamListingAssociationTable.listingId,
             title: listingTable.title,
             description: listingTable.description,
             price: streamListingAssociationTable.price,
             active: streamListingAssociationTable.active,
+            imageId: listingImageTable.id,
         })
             .from(streamListingAssociationTable)
             .where(eq(streamListingAssociationTable.streamId, payload.streamId))
             .innerJoin(
                 listingTable,
                 eq(streamListingAssociationTable.listingId, listingTable.id),
+            )
+            .leftJoin(
+                listingImageTable,
+                eq(listingTable.id, listingImageTable.listingId),
             );
+
+        // Group listings by ID and collect their images
+        const listingsMap = new Map<string, any>();
+        
+        for (const listing of listingsData) {
+            if (!listingsMap.has(listing.id)) {
+                listingsMap.set(listing.id, {
+                    id: listing.id,
+                    title: listing.title,
+                    description: listing.description,
+                    price: listing.price,
+                    active: listing.active,
+                    images: [],
+                });
+            }
+
+            const listingObj = listingsMap.get(listing.id)!;
+            
+            if (listing.imageId && !listingObj.images.some((img: any) => img.id === listing.imageId)) {
+                const imageUrl = await getListingImageUrl(listing.imageId);
+                listingObj.images.push({
+                    id: listing.imageId,
+                    url: imageUrl,
+                });
+            }
+        }
+
+        const listings = [...listingsMap.values()];
 
         return {
             id: livestreamObj.id,

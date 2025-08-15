@@ -12,19 +12,6 @@ let username = $state("");
 let isSubmitting = $state(false);
 let errors = $state<string[]>([]);
 
-
-onMount(() => {
-    if (store.user === null) {
-        goto("/");
-        return;
-    }
-
-    if (store.user.name !== null) {
-        goto("/now-live");
-        return;
-    }
-});
-
 const handleSubmit = async () => {
     if (store.user === null) return;
 
@@ -71,11 +58,6 @@ const handleKeyPress = (event: KeyboardEvent) => {
 </script>
 
 <main>
-    <onboarding-header>
-        <h1>Welcome to SLAY!</h1>
-        <p>Let's get you set up with a username</p>
-    </onboarding-header>
-
     <onboarding-form>
         <TextInput
             label="Username"
@@ -129,27 +111,6 @@ onboarding-container {
     border-radius: 2rem;
     padding: 3rem 2rem;
     box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
-}
-
-onboarding-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 0.5rem;
-
-    h1 {
-        color: white;
-        margin: 0;
-        font-size: 2.5rem;
-        font-weight: 700;
-    }
-
-    p {
-        color: rgba(255, 255, 255, 0.8);
-        margin: 0;
-        font-size: 1.1rem;
-    }
 }
 
 onboarding-form {

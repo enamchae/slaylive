@@ -71,7 +71,7 @@ const toggleActivation = async () => {
 
 <listing-row>
     <ListingDisplay
-        title={listing.title}
+        {listing}
         small
     />
 

@@ -30,14 +30,16 @@ import profileIcon from "@/assets/profile.svg";
         selected={page.url.pathname === "/browse"}
     />
     
-    <Tab
-        onClick={() => goto("/profile")}
-        label="profile"
-        icon={profileIcon}
-        accent="#A2C2FF7f"
-        shadowAccent="#268BFF3f"
-        selected={page.url.pathname === "/profile"}
-    />
+    {#if store.isSeller}
+        <Tab
+            onClick={() => goto("/profile")}
+            label="profile"
+            icon={profileIcon}
+            accent="#A2C2FF7f"
+            shadowAccent="#268BFF3f"
+            selected={page.url.pathname === "/profile"}
+        />
+    {/if}
 </tabs-rack>
 
 <style lang="scss">
