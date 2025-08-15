@@ -13,17 +13,13 @@ const {
     userName,
     call,
     streamId,
-    onPurchase,
-    paymentError = null,
-    isProcessingPayment = false,
+    onCheckoutRequest,
 }: {
     userId: string,
     userName: string,
     call: Call,
     streamId: string,
-    onPurchase: (listing: Listing) => void,
-    paymentError?: string | null,
-    isProcessingPayment?: boolean,
+    onCheckoutRequest: (listingId: string, checkoutClientSecret: string) => void,
 } = $props();
 
 const tabs = {
@@ -76,9 +72,7 @@ onDestroy(() => {
                         <WatchListing
                             {listing}
                             {streamId}
-                            onPurchase={() => onPurchase(listing)}
-                            {paymentError}
-                            {isProcessingPayment}
+                            {onCheckoutRequest}
                         />
                     {/if}
                 {/each}

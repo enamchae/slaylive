@@ -4,23 +4,48 @@
     import { store } from "$routes/store.svelte";
     import Button from "@/Button.svelte";
     import ListingDisplay from "@/listing/ListingDisplay.svelte";
-    import StripeCheckoutPopover from "@/stripe/StripeCheckoutPopover.svelte";
     import type { Listing } from "../(shows-tabs)/livestream/Listing";
     // import { PaymentSheetEventsEnum, Stripe } from "@capacitor-community/stripe";
 
 const {
     listing,
     streamId,
-    onPurchase,
-    paymentError = null,
-    isProcessingPayment = false,
+    onCheckoutRequest,
 }: {
     listing: Awaited<ReturnType<typeof api.stream.details>>["listings"][0],
     streamId: string,
-    onPurchase: () => void,
-    paymentError?: string | null,
-    isProcessingPayment?: boolean,
+    onCheckoutRequest: (listingId: string, checkoutClientSecret: string) => void,
 } = $props();
+
+let isProcessingPayment = $state(false);
+let paymentError = $state<string | null>(null);
+
+const handlePurchase = async () => {
+    if (!store.user) {
+        paymentError = "Please log in to make a purchase";
+        return;
+    }
+
+    isProcessingPayment = true;
+    paymentError = null;
+
+    try {
+        const checkoutResponse = await api.stripe.checkout.session({
+            listingId: listing.id,
+            streamId: streamId,
+        });
+
+        onCheckoutRequest(listing.id, checkoutResponse.clientSecret);
+        isProcessingPayment = false;
+        
+    } catch (error) {
+        console.error('Payment failed:', error);
+        paymentError = error instanceof Error ? error.message : "Payment failed. Please try again.";
+        isProcessingPayment = false;
+    }
+};
+
+
 </script>
 
 <watch-listing>
@@ -35,7 +60,7 @@ const {
 
         <purchase-section>
             <Button
-                onClick={onPurchase}
+                onClick={handlePurchase}
                 disabled={isProcessingPayment}
                 strong
             >
@@ -56,6 +81,8 @@ const {
         {listing.description}
     </listing-description>
 </watch-listing>
+
+
 
 <style lang="scss">
 watch-listing {
